@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>שעות האכלה</title>
 
-  <!-- PWA -->
   <link rel="manifest" href="./manifest.json">
   <meta name="theme-color" content="#0b1220">
   <link rel="icon" href="./icon-192.png">
@@ -62,17 +61,8 @@
       justify-content:space-between;
       gap:12px;
     }
-    h1{
-      margin:0;
-      font-size:20px;
-      letter-spacing:.2px;
-    }
-    .sub{
-      margin:6px 0 0 0;
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.4;
-    }
+    h1{ margin:0; font-size:20px; letter-spacing:.2px; }
+    .sub{ margin:6px 0 0 0; color:var(--muted); font-size:13px; line-height:1.4; }
     .pill{
       display:inline-flex;
       align-items:center;
@@ -86,11 +76,7 @@
       user-select:none;
       white-space:nowrap;
     }
-    .main{
-      padding:18px;
-      display:grid;
-      gap:14px;
-    }
+    .main{ padding:18px; display:grid; gap:14px; }
     .bigbtn{
       width:100%;
       border:none;
@@ -104,32 +90,22 @@
       font-weight:750;
       box-shadow: 0 18px 45px rgba(124,92,255,.25);
       cursor:pointer;
-      transition: transform .08s ease, filter .15s ease;
+      transition: transform .08s ease;
       display:flex;
       align-items:center;
       justify-content:center;
       gap:10px;
     }
     .bigbtn:active{transform: translateY(1px) scale(.995)}
-    .row{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:10px;
-    }
-    @media (max-width: 460px){
-      .row{grid-template-columns:1fr}
-    }
+    .row{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
+    @media (max-width: 460px){ .row{grid-template-columns:1fr} }
     .box{
       padding:14px;
       border-radius: var(--radius);
       background: rgba(255,255,255,.06);
       border: 1px solid rgba(255,255,255,.10);
     }
-    .label{
-      color:var(--muted);
-      font-size:12px;
-      margin-bottom:8px;
-    }
+    .label{ color:var(--muted); font-size:12px; margin-bottom:8px; }
     .value{
       font-size:16px;
       font-weight:700;
@@ -137,11 +113,6 @@
       align-items:center;
       gap:10px;
       flex-wrap:wrap;
-    }
-    .value small{
-      font-weight:600;
-      color:var(--muted);
-      font-size:12px;
     }
     input{
       width:100%;
@@ -153,15 +124,7 @@
       outline:none;
       font-size:14px;
     }
-    input:focus{
-      border-color: rgba(25,211,255,.55);
-      box-shadow: 0 0 0 3px rgba(25,211,255,.12);
-    }
-    .actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-    }
+    .actions{ display:flex; gap:10px; flex-wrap:wrap; }
     .btn{
       border:none;
       border-radius: 16px;
@@ -171,7 +134,7 @@
       color:var(--text);
       background: rgba(255,255,255,.08);
       border: 1px solid rgba(255,255,255,.12);
-      transition: filter .15s ease, transform .08s ease;
+      transition: transform .08s ease;
     }
     .btn:active{transform: translateY(1px)}
     .btn.primary{
@@ -190,17 +153,8 @@
       color: #06101f;
       display:none;
     }
-    .btn.toggle{
-      background: rgba(255,255,255,.10);
-      border-color: rgba(255,255,255,.16);
-    }
-    .list{
-      padding:0;
-      margin:0;
-      list-style:none;
-      max-height: 420px;
-      overflow:auto;
-    }
+    .btn.toggle{ background: rgba(255,255,255,.10); border-color: rgba(255,255,255,.16); }
+    .list{ padding:0; margin:0; list-style:none; max-height: 420px; overflow:auto; }
     .item{
       padding:12px 14px;
       border-top: 1px solid rgba(255,255,255,.08);
@@ -210,10 +164,7 @@
       gap:12px;
     }
     .item b{font-size:14px}
-    .item span{
-      color:var(--muted);
-      font-size:12px;
-    }
+    .item span{ color:var(--muted); font-size:12px; }
     .rightCard .header{padding-bottom:12px}
     .toast{
       position: fixed;
@@ -311,14 +262,43 @@
             </div>
           </div>
 
+          <!-- Manual time picker - Android friendly -->
           <div class="box">
-            <div class="label">קביעת שעה ידנית</div>
-            <div class="row" style="margin-top:10px;">
-              <input id="manualTime" type="datetime-local" />
-              <button id="setManualBtn" class="btn primary">עדכן שעה</button>
+            <div class="label">קביעת שעה ידנית (פקד מותאם לאנדרואיד)</div>
+
+            <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+              <div style="flex:1; min-width:160px;">
+                <input id="manualDate" type="date" />
+                <div class="sub" style="margin-top:6px;">תאריך</div>
+              </div>
+
+              <div style="flex:1; min-width:160px;">
+                <div style="display:flex; gap:10px;">
+                  <div style="flex:1;">
+                    <div class="sub">שעה</div>
+                    <div style="display:flex; gap:8px; align-items:center;">
+                      <button id="decManualHour" class="btn">−</button>
+                      <div class="mono" id="manualHourValue">00</div>
+                      <button id="incManualHour" class="btn">+</button>
+                    </div>
+                  </div>
+
+                  <div style="flex:1;">
+                    <div class="sub">דקה</div>
+                    <div style="display:flex; gap:8px; align-items:center;">
+                      <button id="decManualMin" class="btn">−</button>
+                      <div class="mono" id="manualMinValue">00</div>
+                      <button id="incManualMin" class="btn">+</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <button id="setManualBtn" class="btn primary" style="min-width:140px;">עדכן שעה</button>
             </div>
+
             <p class="sub" style="margin:10px 0 0 0;">
-              טיפ: אם תרצה התראות בדפדפן, לחץ “אפשר התראות”.
+              טיפ: זה עוקף את הבעיות של datetime-local באנדרואיד.
             </p>
           </div>
         </div>
@@ -367,11 +347,13 @@
 
     let reminderTimeout = null;
     let tickInterval = null;
-
     let deferredInstallPrompt = null;
 
     let intervalHours = 2;
     let intervalMinutesExtra = 0;
+
+    let manualHour = 0;
+    let manualMin = 0;
 
     const el = {
       feedBtn: document.getElementById("feedBtn"),
@@ -379,8 +361,6 @@
       elapsedValue: document.getElementById("elapsedValue"),
       nextReminderValue: document.getElementById("nextReminderValue"),
       countdownValue: document.getElementById("countdownValue"),
-      manualTime: document.getElementById("manualTime"),
-      setManualBtn: document.getElementById("setManualBtn"),
       enableNotifBtn: document.getElementById("enableNotifBtn"),
       testReminderBtn: document.getElementById("testReminderBtn"),
       clearBtn: document.getElementById("clearBtn"),
@@ -394,6 +374,7 @@
       importBtn: document.getElementById("importBtn"),
       importFile: document.getElementById("importFile"),
       soundToggleBtn: document.getElementById("soundToggleBtn"),
+
       hoursValue: document.getElementById("hoursValue"),
       minutesValue: document.getElementById("minutesValue"),
       intervalTotalText: document.getElementById("intervalTotalText"),
@@ -401,6 +382,15 @@
       decHours: document.getElementById("decHours"),
       incMinutes: document.getElementById("incMinutes"),
       decMinutes: document.getElementById("decMinutes"),
+
+      manualDate: document.getElementById("manualDate"),
+      setManualBtn: document.getElementById("setManualBtn"),
+      manualHourValue: document.getElementById("manualHourValue"),
+      manualMinValue: document.getElementById("manualMinValue"),
+      incManualHour: document.getElementById("incManualHour"),
+      decManualHour: document.getElementById("decManualHour"),
+      incManualMin: document.getElementById("incManualMin"),
+      decManualMin: document.getElementById("decManualMin"),
     };
 
     function nowTs(){ return Date.now(); }
@@ -408,13 +398,7 @@
 
     function formatDateTime(ts){
       const d = new Date(ts);
-      const dd = pad2(d.getDate());
-      const mm = pad2(d.getMonth()+1);
-      const yyyy = d.getFullYear();
-      const hh = pad2(d.getHours());
-      const mi = pad2(d.getMinutes());
-      const ss = pad2(d.getSeconds());
-      return `${dd}/${mm}/${yyyy} ${hh}:${mi}:${ss}`;
+      return `${pad2(d.getDate())}/${pad2(d.getMonth()+1)}/${d.getFullYear()} ${pad2(d.getHours())}:${pad2(d.getMinutes())}:${pad2(d.getSeconds())}`;
     }
 
     function formatTime(ts){
@@ -433,6 +417,58 @@
       return `${s} ש׳`;
     }
 
+    function toast(msg){
+      el.toastBox.textContent = msg;
+      el.toastBox.style.display = "block";
+      clearTimeout(toast._t);
+      toast._t = setTimeout(()=>{ el.toastBox.style.display = "none"; }, 2600);
+    }
+
+    // ----- Sound -----
+    function isSoundEnabled(){
+      const raw = localStorage.getItem(KEY.sound);
+      if (raw === null) return true;
+      return raw === "1";
+    }
+
+    function setSoundEnabled(v){
+      localStorage.setItem(KEY.sound, v ? "1" : "0");
+      renderSoundButton();
+    }
+
+    function renderSoundButton(){
+      const on = isSoundEnabled();
+      el.soundToggleBtn.textContent = on ? "🔊 סאונד: פעיל" : "🔇 סאונד: כבוי";
+    }
+
+    function playTone(freq, ms, gain){
+      if (!isSoundEnabled()) return;
+      try{
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.type = "sine";
+        o.frequency.value = freq;
+        g.gain.value = gain;
+        o.connect(g);
+        g.connect(ctx.destination);
+        o.start();
+        setTimeout(()=>{ o.stop(); ctx.close(); }, ms);
+      }catch{}
+    }
+
+    function clickSound(){ playTone(1200, 55, 0.03); }
+    function successSound(){ playTone(900, 90, 0.04); }
+    function alertSound(){
+      playTone(700, 140, 0.05);
+      setTimeout(()=>playTone(900, 140, 0.05), 170);
+    }
+
+    function vibrate(){
+      if (navigator.vibrate) navigator.vibrate([60, 40, 60]);
+    }
+
+    // ----- Storage -----
     function getIntervalMinutes(){
       const raw = localStorage.getItem(KEY.interval);
       const v = raw ? parseInt(raw,10) : 120;
@@ -474,13 +510,7 @@
       setHistory(arr.slice(0,60));
     }
 
-    function toast(msg){
-      el.toastBox.textContent = msg;
-      el.toastBox.style.display = "block";
-      clearTimeout(toast._t);
-      toast._t = setTimeout(()=>{ el.toastBox.style.display = "none"; }, 2600);
-    }
-
+    // ----- Notifications -----
     function canNotify(){
       return "Notification" in window;
     }
@@ -499,81 +529,35 @@
       return p === "granted";
     }
 
-async function sendNotification(title, body){
-  if (!canNotify()) return;
-  if (Notification.permission !== "granted") return;
+    async function sendNotification(title, body){
+      if (!canNotify()) return;
+      if (Notification.permission !== "granted") return;
 
-  // הכי יציב ב-PWA באנדרואיד: דרך service worker
-  try{
-    if ("serviceWorker" in navigator){
-      const reg = await navigator.serviceWorker.ready;
-      await reg.showNotification(title, {
-        body,
-        icon: "./icon-192.png",
-        badge: "./icon-192.png",
-        tag: "feeding-reminder",
-        renotify: true,
-        silent: false
-      });
-      return;
-    }
-  }catch{}
-
-  // fallback
-  try{
-    new Notification(title, { body });
-  }catch{}
-}
-
-    function vibrate(){
-      if (navigator.vibrate) navigator.vibrate([60, 40, 60]);
-    }
-
-    // ----- Sound (toggle + click sounds) -----
-    function isSoundEnabled(){
-      const raw = localStorage.getItem(KEY.sound);
-      if (raw === null) return true;
-      return raw === "1";
-    }
-    function setSoundEnabled(v){
-      localStorage.setItem(KEY.sound, v ? "1" : "0");
-      renderSoundButton();
-    }
-    function renderSoundButton(){
-      const on = isSoundEnabled();
-      el.soundToggleBtn.textContent = on ? "🔊 סאונד: פעיל" : "🔇 סאונד: כבוי";
-    }
-
-    function playTone(freq, ms, gain){
-      if (!isSoundEnabled()) return;
+      // יציב יותר ב-PWA: דרך service worker
       try{
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const o = ctx.createOscillator();
-        const g = ctx.createGain();
-        o.type = "sine";
-        o.frequency.value = freq;
-        g.gain.value = gain;
-        o.connect(g);
-        g.connect(ctx.destination);
-        o.start();
-        setTimeout(()=>{ o.stop(); ctx.close(); }, ms);
+        if ("serviceWorker" in navigator){
+          const reg = await navigator.serviceWorker.ready;
+          await reg.showNotification(title, {
+            body,
+            icon: "./icon-192.png",
+            badge: "./icon-192.png",
+            tag: "feeding-reminder",
+            renotify: true,
+
+            // מונע סאונד מערכת כפול
+            silent: true
+          });
+          return;
+        }
+      }catch{}
+
+      // fallback
+      try{
+        new Notification(title, { body });
       }catch{}
     }
 
-    function clickSound(){
-      playTone(1200, 60, 0.03);
-    }
-
-    function successSound(){
-      playTone(900, 90, 0.04);
-    }
-
-    function alertSound(){
-      playTone(700, 140, 0.05);
-      setTimeout(()=>playTone(900, 140, 0.05), 170);
-    }
-
-    // ---------- Interval UI ----------
+    // ----- Interval UI (step 1 minute) -----
     function updateIntervalUI(){
       el.hoursValue.textContent = String(intervalHours);
       el.minutesValue.textContent = String(intervalMinutesExtra);
@@ -599,11 +583,13 @@ async function sendNotification(title, body){
     function clampInterval(){
       if (intervalHours < 0) intervalHours = 0;
       if (intervalMinutesExtra < 0) intervalMinutesExtra = 0;
+
       const total = intervalHours * 60 + intervalMinutesExtra;
       if (total < 1){
         intervalHours = 0;
         intervalMinutesExtra = 1;
       }
+
       if (intervalMinutesExtra >= 60){
         intervalHours += Math.floor(intervalMinutesExtra / 60);
         intervalMinutesExtra = intervalMinutesExtra % 60;
@@ -629,7 +615,7 @@ async function sendNotification(title, body){
       };
       el.incMinutes.onclick = () => {
         clickSound();
-        intervalMinutesExtra += 5;
+        intervalMinutesExtra += 1;   // 1 דקה
         clampInterval();
         updateIntervalUI();
         saveIntervalFromUI();
@@ -637,11 +623,11 @@ async function sendNotification(title, body){
       };
       el.decMinutes.onclick = () => {
         clickSound();
-        intervalMinutesExtra -= 5;
+        intervalMinutesExtra -= 1;   // 1 דקה
         if (intervalMinutesExtra < 0) {
           if (intervalHours > 0) {
             intervalHours--;
-            intervalMinutesExtra = 55;
+            intervalMinutesExtra = 59;
           } else {
             intervalMinutesExtra = 0;
           }
@@ -653,7 +639,33 @@ async function sendNotification(title, body){
       };
     }
 
-    // ---------- Reminder scheduling ----------
+    // ----- Manual time picker -----
+    function renderManualTimeUI(){
+      el.manualHourValue.textContent = pad2(manualHour);
+      el.manualMinValue.textContent = pad2(manualMin);
+    }
+
+    function wireManualTimeButtons(){
+      el.incManualHour.onclick = () => { clickSound(); manualHour = (manualHour + 1) % 24; renderManualTimeUI(); };
+      el.decManualHour.onclick = () => { clickSound(); manualHour = (manualHour + 23) % 24; renderManualTimeUI(); };
+
+      el.incManualMin.onclick = () => { clickSound(); manualMin = (manualMin + 1) % 60; renderManualTimeUI(); };
+      el.decManualMin.onclick = () => { clickSound(); manualMin = (manualMin + 59) % 60; renderManualTimeUI(); };
+    }
+
+    function getManualTimestamp(){
+      const dateStr = el.manualDate.value; // YYYY-MM-DD
+      if (!dateStr) return null;
+      const [y,m,d] = dateStr.split("-").map(x => parseInt(x,10));
+      if (!Number.isFinite(y) || !Number.isFinite(m) || !Number.isFinite(d)) return null;
+
+      // זמן מקומי
+      const dt = new Date(y, m-1, d, manualHour, manualMin, 0, 0);
+      const ts = dt.getTime();
+      return Number.isFinite(ts) ? ts : null;
+    }
+
+    // ----- Reminders -----
     function clearReminder(){
       if (reminderTimeout){
         clearTimeout(reminderTimeout);
@@ -683,17 +695,21 @@ async function sendNotification(title, body){
 
       setStatus("ok", "תזכורת פעילה");
 
-      reminderTimeout = setTimeout(()=>{
+      reminderTimeout = setTimeout(async ()=>{
         const msg = "עבר הזמן שקבעת מאז ההאכלה האחרונה";
-        toast("תזכורת: " + msg);
+
+        // סאונד רק פעם אחת (שלנו), ומערכת שקטה
         alertSound();
         vibrate();
-        sendNotification("תזכורת האכלה", msg);
+
+        toast("תזכורת: " + msg);
+        await sendNotification("תזכורת האכלה", msg);
+
         setStatus("warn", "תזכורת הופעלה");
       }, delay);
     }
 
-    // ---------- UI refresh ----------
+    // ----- UI -----
     function renderHistory(){
       const arr = getHistory();
       el.historyCount.textContent = String(arr.length);
@@ -771,7 +787,7 @@ async function sendNotification(title, body){
       toast("נשמר: " + formatDateTime(ts));
     }
 
-    // ---------- Export / Import ----------
+    // ----- Export / Import -----
     function doExport(){
       clickSound();
       const data = {
@@ -782,12 +798,10 @@ async function sendNotification(title, body){
       };
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
       const url = URL.createObjectURL(blob);
-
       const a = document.createElement("a");
       a.href = url;
       a.download = "feeding-backup.json";
       a.click();
-
       URL.revokeObjectURL(url);
       toast("נוצר קובץ גיבוי");
     }
@@ -798,7 +812,6 @@ async function sendNotification(title, body){
       reader.onload = (event) => {
         try{
           const data = JSON.parse(event.target.result);
-
           if (typeof data.interval === "number") setIntervalMinutes(data.interval);
           if (typeof data.last === "number") setLastTs(data.last);
           if (Array.isArray(data.history)) setHistory(data.history);
@@ -817,7 +830,7 @@ async function sendNotification(title, body){
       reader.readAsText(file);
     }
 
-    // ---------- PWA install logic ----------
+    // ----- PWA install -----
     function setupPwaInstall(){
       if ("serviceWorker" in navigator) {
         navigator.serviceWorker.register("./sw.js").catch(()=>{});
@@ -843,30 +856,13 @@ async function sendNotification(title, body){
         }
         el.installPwaBtn.style.display = "none";
         deferredInstallPrompt.prompt();
-        try{
-          await deferredInstallPrompt.userChoice;
-        }catch{}
+        try{ await deferredInstallPrompt.userChoice; }catch{}
         deferredInstallPrompt = null;
       });
     }
 
-    // ---------- Events ----------
+    // ----- Events -----
     el.feedBtn.addEventListener("click", ()=>{ clickSound(); markFeed(nowTs()); });
-
-    el.setManualBtn.addEventListener("click", ()=>{
-      clickSound();
-      const v = el.manualTime.value;
-      if (!v){
-        toast("בחר תאריך ושעה");
-        return;
-      }
-      const ts = new Date(v).getTime();
-      if (!Number.isFinite(ts)){
-        toast("ערך שעה לא תקין");
-        return;
-      }
-      markFeed(ts);
-    });
 
     el.enableNotifBtn.addEventListener("click", async ()=>{
       clickSound();
@@ -874,7 +870,7 @@ async function sendNotification(title, body){
       if (ok){
         successSound();
         toast("התראות הופעלו");
-        sendNotification("שעות האכלה", "התראות מופעלות, תקבל תזכורת בזמן.");
+        await sendNotification("שעות האכלה", "התראות מופעלות, תקבל תזכורת בזמן.");
       }else{
         toast("לא אושרו התראות");
       }
@@ -886,11 +882,11 @@ async function sendNotification(title, body){
       toast("בדיקה: תזכורת תופיע בעוד 10 שניות");
       clearReminder();
       setStatus("ok", "בדיקת תזכורת");
-      reminderTimeout = setTimeout(()=>{
+      reminderTimeout = setTimeout(async ()=>{
         alertSound();
         vibrate();
         toast("בדיקה: תזכורת הופעלה");
-        if (ok) sendNotification("בדיקה", "תזכורת בדיקה הופעלה");
+        if (ok) await sendNotification("בדיקה", "תזכורת בדיקה הופעלה");
         setStatus("warn", "בדיקה הסתיימה");
       }, 10000);
     });
@@ -925,7 +921,17 @@ async function sendNotification(title, body){
       toast(!on ? "סאונד הופעל" : "סאונד כובה");
     });
 
-    // ---------- Init ----------
+    el.setManualBtn.addEventListener("click", ()=>{
+      clickSound();
+      const ts = getManualTimestamp();
+      if (!ts){
+        toast("בחר תאריך תקין");
+        return;
+      }
+      markFeed(ts);
+    });
+
+    // ----- Init -----
     (function init(){
       if (!localStorage.getItem(KEY.interval)){
         setIntervalMinutes(120);
@@ -933,13 +939,15 @@ async function sendNotification(title, body){
 
       renderSoundButton();
 
+      // תאריך ברירת מחדל: היום
       const d = new Date();
-      const yyyy = d.getFullYear();
-      const mm = pad2(d.getMonth()+1);
-      const dd = pad2(d.getDate());
-      const hh = pad2(d.getHours());
-      const mi = pad2(d.getMinutes());
-      el.manualTime.value = `${yyyy}-${mm}-${dd}T${hh}:${mi}`;
+      el.manualDate.value = `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
+
+      // זמן ברירת מחדל: עכשיו (דקות אמיתיות)
+      manualHour = d.getHours();
+      manualMin = d.getMinutes();
+      renderManualTimeUI();
+      wireManualTimeButtons();
 
       loadInterval();
       wireIntervalButtons();
