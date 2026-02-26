@@ -262,9 +262,8 @@
             </div>
           </div>
 
-          <!-- Manual time picker - Android friendly -->
           <div class="box">
-            <div class="label">קביעת שעה ידנית (פקד מותאם לאנדרואיד)</div>
+            <div class="label">קביעת שעה ידנית</div>
 
             <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
               <div style="flex:1; min-width:160px;">
@@ -296,10 +295,6 @@
 
               <button id="setManualBtn" class="btn primary" style="min-width:140px;">עדכן שעה</button>
             </div>
-
-            <p class="sub" style="margin:10px 0 0 0;">
-              טיפ: זה עוקף את הבעיות של datetime-local באנדרואיד.
-            </p>
           </div>
         </div>
 
@@ -424,7 +419,7 @@
       toast._t = setTimeout(()=>{ el.toastBox.style.display = "none"; }, 2600);
     }
 
-    // ----- Sound -----
+    // ----- Sound with Notification.mp3 -----
     function isSoundEnabled(){
       const raw = localStorage.getItem(KEY.sound);
       if (raw === null) return true;
@@ -441,27 +436,64 @@
       el.soundToggleBtn.textContent = on ? "🔊 סאונד: פעיל" : "🔇 סאונד: כבוי";
     }
 
-    function playTone(freq, ms, gain){
+    let notifAudio = null;
+
+    function getNotifAudio(){
+      if (notifAudio) return notifAudio;
+      notifAudio = new Audio("./Notification.mp3");
+      notifAudio.preload = "auto";
+      notifAudio.volume = 1.0; // שנה ל-0.6 אם חזק מדי
+      return notifAudio;
+    }
+
+    async function playNotifMp3(){
+      if (!isSoundEnabled()) return;
+      try{
+        const a = getNotifAudio();
+        a.currentTime = 0;
+        await a.play();
+      }catch{
+        // fallback שקט
+      }
+    }
+
+    // קליק קצר (עדיין טון, לא מפריע)
+    function clickSound(){
       if (!isSoundEnabled()) return;
       try{
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
         const o = ctx.createOscillator();
         const g = ctx.createGain();
         o.type = "sine";
-        o.frequency.value = freq;
-        g.gain.value = gain;
+        o.frequency.value = 1200;
+        g.gain.value = 0.03;
         o.connect(g);
         g.connect(ctx.destination);
         o.start();
-        setTimeout(()=>{ o.stop(); ctx.close(); }, ms);
+        setTimeout(()=>{ o.stop(); ctx.close(); }, 55);
       }catch{}
     }
 
-    function clickSound(){ playTone(1200, 55, 0.03); }
-    function successSound(){ playTone(900, 90, 0.04); }
+    function successSound(){
+      // אפשר להשאיר אותו או למחוק. כאן נשאיר קליל
+      if (!isSoundEnabled()) return;
+      try{
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.type = "sine";
+        o.frequency.value = 900;
+        g.gain.value = 0.04;
+        o.connect(g);
+        g.connect(ctx.destination);
+        o.start();
+        setTimeout(()=>{ o.stop(); ctx.close(); }, 90);
+      }catch{}
+    }
+
+    // צליל התראה: Notification.mp3
     function alertSound(){
-      playTone(700, 140, 0.05);
-      setTimeout(()=>playTone(900, 140, 0.05), 170);
+      playNotifMp3();
     }
 
     function vibrate(){
@@ -533,7 +565,6 @@
       if (!canNotify()) return;
       if (Notification.permission !== "granted") return;
 
-      // יציב יותר ב-PWA: דרך service worker
       try{
         if ("serviceWorker" in navigator){
           const reg = await navigator.serviceWorker.ready;
@@ -543,15 +574,12 @@
             badge: "./icon-192.png",
             tag: "feeding-reminder",
             renotify: true,
-
-            // מונע סאונד מערכת כפול
-            silent: true
+            silent: true  // בלי סאונד מערכת
           });
           return;
         }
       }catch{}
 
-      // fallback
       try{
         new Notification(title, { body });
       }catch{}
@@ -615,7 +643,7 @@
       };
       el.incMinutes.onclick = () => {
         clickSound();
-        intervalMinutesExtra += 1;   // 1 דקה
+        intervalMinutesExtra += 1;
         clampInterval();
         updateIntervalUI();
         saveIntervalFromUI();
@@ -623,7 +651,7 @@
       };
       el.decMinutes.onclick = () => {
         clickSound();
-        intervalMinutesExtra -= 1;   // 1 דקה
+        intervalMinutesExtra -= 1;
         if (intervalMinutesExtra < 0) {
           if (intervalHours > 0) {
             intervalHours--;
@@ -648,18 +676,15 @@
     function wireManualTimeButtons(){
       el.incManualHour.onclick = () => { clickSound(); manualHour = (manualHour + 1) % 24; renderManualTimeUI(); };
       el.decManualHour.onclick = () => { clickSound(); manualHour = (manualHour + 23) % 24; renderManualTimeUI(); };
-
       el.incManualMin.onclick = () => { clickSound(); manualMin = (manualMin + 1) % 60; renderManualTimeUI(); };
       el.decManualMin.onclick = () => { clickSound(); manualMin = (manualMin + 59) % 60; renderManualTimeUI(); };
     }
 
     function getManualTimestamp(){
-      const dateStr = el.manualDate.value; // YYYY-MM-DD
+      const dateStr = el.manualDate.value;
       if (!dateStr) return null;
       const [y,m,d] = dateStr.split("-").map(x => parseInt(x,10));
       if (!Number.isFinite(y) || !Number.isFinite(m) || !Number.isFinite(d)) return null;
-
-      // זמן מקומי
       const dt = new Date(y, m-1, d, manualHour, manualMin, 0, 0);
       const ts = dt.getTime();
       return Number.isFinite(ts) ? ts : null;
@@ -697,14 +722,10 @@
 
       reminderTimeout = setTimeout(async ()=>{
         const msg = "עבר הזמן שקבעת מאז ההאכלה האחרונה";
-
-        // סאונד רק פעם אחת (שלנו), ומערכת שקטה
         alertSound();
         vibrate();
-
         toast("תזכורת: " + msg);
         await sendNotification("תזכורת האכלה", msg);
-
         setStatus("warn", "תזכורת הופעלה");
       }, delay);
     }
@@ -862,9 +883,15 @@
     }
 
     // ----- Events -----
-    el.feedBtn.addEventListener("click", ()=>{ clickSound(); markFeed(nowTs()); });
+    el.feedBtn.addEventListener("click", ()=>{
+      // מחמם את האודיו כדי שאנדרואיד לא יחסום ניגון ראשון
+      getNotifAudio();
+      clickSound();
+      markFeed(nowTs());
+    });
 
     el.enableNotifBtn.addEventListener("click", async ()=>{
+      getNotifAudio();
       clickSound();
       const ok = await requestNotifyPermission();
       if (ok){
@@ -877,6 +904,7 @@
     });
 
     el.testReminderBtn.addEventListener("click", async ()=>{
+      getNotifAudio();
       clickSound();
       const ok = await requestNotifyPermission();
       toast("בדיקה: תזכורת תופיע בעוד 10 שניות");
@@ -922,6 +950,7 @@
     });
 
     el.setManualBtn.addEventListener("click", ()=>{
+      getNotifAudio();
       clickSound();
       const ts = getManualTimestamp();
       if (!ts){
@@ -939,15 +968,18 @@
 
       renderSoundButton();
 
-      // תאריך ברירת מחדל: היום
       const d = new Date();
       el.manualDate.value = `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
 
-      // זמן ברירת מחדל: עכשיו (דקות אמיתיות)
       manualHour = d.getHours();
       manualMin = d.getMinutes();
-      renderManualTimeUI();
-      wireManualTimeButtons();
+      el.manualHourValue.textContent = pad2(manualHour);
+      el.manualMinValue.textContent = pad2(manualMin);
+
+      document.getElementById("incManualHour").onclick = () => { clickSound(); manualHour = (manualHour + 1) % 24; el.manualHourValue.textContent = pad2(manualHour); };
+      document.getElementById("decManualHour").onclick = () => { clickSound(); manualHour = (manualHour + 23) % 24; el.manualHourValue.textContent = pad2(manualHour); };
+      document.getElementById("incManualMin").onclick  = () => { clickSound(); manualMin  = (manualMin + 1) % 60; el.manualMinValue.textContent  = pad2(manualMin); };
+      document.getElementById("decManualMin").onclick  = () => { clickSound(); manualMin  = (manualMin + 59) % 60; el.manualMinValue.textContent  = pad2(manualMin); };
 
       loadInterval();
       wireIntervalButtons();
