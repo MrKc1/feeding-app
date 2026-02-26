@@ -6,19 +6,29 @@ self.addEventListener("activate", (event) => {
   event.waitUntil(clients.claim());
 });
 
-// מאפשר לחיצה על ההתראה להחזיר אותך לאפליקציה
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
-  event.waitUntil(
-    (async () => {
-      const allClients = await clients.matchAll({ type: "window", includeUncontrolled: true });
-      if (allClients.length > 0) {
-        allClients[0].focus();
+
+  event.waitUntil((async () => {
+    const targetUrl = new URL("./feeding.html", self.registration.scope).href;
+
+    const allClients = await clients.matchAll({
+      type: "window",
+      includeUncontrolled: true
+    });
+
+    // נסה להחזיר לפוקוס חלון קיים של האפליקציה
+    for (const client of allClients) {
+      const url = client.url || "";
+      if (url.includes("/feeding.html") || url.startsWith(self.registration.scope)) {
+        await client.focus();
         return;
       }
-      await clients.openWindow("./feeding.html");
-    })()
-  );
+    }
+
+    // אם אין חלון פתוח, פתח חדש
+    await clients.openWindow(targetUrl);
+  })());
 });
 
 self.addEventListener("fetch", (event) => {
