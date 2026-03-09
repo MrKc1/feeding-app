@@ -35,6 +35,7 @@
       --ring-shadow: rgba(124,92,255,.12);
       --toast-bg: rgba(7,13,24,.92);
       --button-text:#eef3ff;
+      --panel-bg: rgba(255,255,255,.05);
     }
 
     html[data-theme="light"]{
@@ -60,6 +61,7 @@
       --ring-shadow: rgba(107,82,255,.10);
       --toast-bg: rgba(255,255,255,.96);
       --button-text:#162033;
+      --panel-bg: rgba(255,255,255,.62);
     }
 
     *{box-sizing:border-box}
@@ -164,38 +166,6 @@
       gap:14px;
     }
 
-    .theme-switcher{
-      display:inline-flex;
-      gap:6px;
-      flex-wrap:wrap;
-      align-items:center;
-      justify-content:flex-start;
-      margin-top:10px;
-    }
-
-    .theme-btn{
-      border:none;
-      border-radius:999px;
-      padding:9px 12px;
-      cursor:pointer;
-      font-weight:700;
-      font-size:12px;
-      background: var(--chip-bg);
-      color:var(--text);
-      border:1px solid var(--border);
-      transition: transform .08s ease, background .18s ease, color .18s ease;
-    }
-
-    .theme-btn:active{
-      transform:scale(.97);
-    }
-
-    .theme-btn.active{
-      background: var(--chip-active-bg);
-      color: var(--chip-active-color);
-      border-color: transparent;
-    }
-
     .bigbtn{
       width:100%;
       border:none;
@@ -217,6 +187,7 @@
       justify-content:center;
       gap:10px;
       min-height:74px;
+      text-align:center;
     }
 
     .bigbtn:active{
@@ -472,12 +443,8 @@
 
     .controls-grid{
       display:grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr;
       gap:12px;
-    }
-
-    @media (max-width: 760px){
-      .controls-grid{grid-template-columns:1fr}
     }
 
     .preset-row{
@@ -575,18 +542,6 @@
       margin-top:8px;
     }
 
-    .manual-date{
-      width:100%;
-      background: var(--input-bg);
-      border:1px solid var(--border);
-      color:var(--text);
-      border-radius: 16px;
-      padding:12px 12px;
-      outline:none;
-      font-size:14px;
-      margin-bottom:10px;
-    }
-
     .actions{
       display:flex;
       gap:10px;
@@ -624,6 +579,84 @@
       border-color: rgba(124,92,255,.34);
       color:#06101f;
       display:none;
+    }
+
+    .settings-panel{
+      display:none;
+      padding:16px;
+      border-radius: var(--radius);
+      border:1px solid var(--border);
+      background: var(--panel-bg);
+      gap:14px;
+    }
+
+    .settings-panel.open{
+      display:grid;
+    }
+
+    .settings-section{
+      display:grid;
+      gap:10px;
+    }
+
+    .settings-title{
+      font-size:13px;
+      color:var(--muted);
+      font-weight:700;
+    }
+
+    .theme-row{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap:8px;
+    }
+
+    .theme-btn{
+      border:none;
+      border-radius:14px;
+      padding:11px 10px;
+      cursor:pointer;
+      font-weight:800;
+      font-size:13px;
+      background: var(--chip-bg);
+      color:var(--text);
+      border:1px solid var(--border);
+      transition: transform .08s ease, background .18s ease, color .18s ease;
+      text-align:center;
+    }
+
+    .theme-btn:active{
+      transform:scale(.97);
+    }
+
+    .theme-btn.active{
+      background: var(--chip-active-bg);
+      color: var(--chip-active-color);
+      border-color: transparent;
+    }
+
+    .settings-grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+    }
+
+    @media (max-width: 760px){
+      .settings-grid{
+        grid-template-columns:1fr;
+      }
+    }
+
+    .manual-date{
+      width:100%;
+      background: var(--input-bg);
+      border:1px solid var(--border);
+      color:var(--text);
+      border-radius: 16px;
+      padding:12px 12px;
+      outline:none;
+      font-size:14px;
+      margin-bottom:10px;
     }
 
     .history-list{
@@ -730,12 +763,6 @@
         <div>
           <h1>שעות האכלה</h1>
           <p class="sub">כפתור אחד, תזכורת ברורה, ופחות טעויות בלילה.</p>
-
-          <div class="theme-switcher" aria-label="מצב תצוגה">
-            <button id="themeAutoBtn" class="theme-btn" type="button">אוטומטי</button>
-            <button id="themeDarkBtn" class="theme-btn" type="button">לילה</button>
-            <button id="themeLightBtn" class="theme-btn" type="button">יום</button>
-          </div>
         </div>
 
         <div class="pill" title="סטטוס התזכורת">
@@ -839,47 +866,68 @@
 
             <div id="intervalTotalText" class="interval-summary">המרווח שנבחר: שעתיים</div>
           </div>
-
-          <div class="box">
-            <div class="label">קביעת שעה ידנית</div>
-
-            <input id="manualDate" class="manual-date" type="date" />
-
-            <div class="stepper-row">
-              <div class="stepper">
-                <button id="decManualHour" class="stepper-btn" type="button" aria-label="הפחת שעה ידנית">−</button>
-                <div id="manualHourValue" class="stepper-value mono">00</div>
-                <button id="incManualHour" class="stepper-btn" type="button" aria-label="הוסף שעה ידנית">+</button>
-                <div class="stepper-label">שעה</div>
-              </div>
-
-              <div class="stepper">
-                <button id="decManualMin" class="stepper-btn" type="button" aria-label="הפחת דקה ידנית">−</button>
-                <div id="manualMinValue" class="stepper-value mono">00</div>
-                <button id="incManualMin" class="stepper-btn" type="button" aria-label="הוסף דקה ידנית">+</button>
-                <div class="stepper-label">דקה</div>
-              </div>
-            </div>
-
-            <div style="margin-top:12px;">
-              <button id="setManualBtn" class="btn primary" type="button">עדכן שעה</button>
-            </div>
-          </div>
         </div>
 
         <div class="actions">
-          <button id="enableNotifBtn" class="btn" type="button">אפשר התראות</button>
-          <button id="testReminderBtn" class="btn" type="button">בדיקת תזכורת (10 שניות)</button>
-          <button id="exportBtn" class="btn" type="button">גיבוי</button>
-          <button id="importBtn" class="btn" type="button">שחזור</button>
-          <input type="file" id="importFile" style="display:none" accept=".json">
-          <button id="installPwaBtn" class="btn install" type="button">התקן אפליקציה</button>
-          <button id="clearBtn" class="btn danger" type="button">איפוס נתונים</button>
+          <button id="settingsToggleBtn" class="btn" type="button">הגדרות</button>
         </div>
 
-        <p class="sub" style="margin-top:4px;">
-          התראות משמיעות את צליל מערכת ההפעלה. השינוי של הצליל נעשה דרך הגדרות ההתראות במכשיר.
-        </p>
+        <div id="settingsPanel" class="settings-panel">
+          <div class="settings-section">
+            <div class="settings-title">מצב תצוגה</div>
+            <div class="theme-row" aria-label="מצב תצוגה">
+              <button id="themeAutoBtn" class="theme-btn" type="button">אוטומטי</button>
+              <button id="themeDarkBtn" class="theme-btn" type="button">לילה</button>
+              <button id="themeLightBtn" class="theme-btn" type="button">יום</button>
+            </div>
+          </div>
+
+          <div class="settings-grid">
+            <div class="settings-section">
+              <div class="settings-title">קביעת שעה ידנית</div>
+
+              <input id="manualDate" class="manual-date" type="date" />
+
+              <div class="stepper-row">
+                <div class="stepper">
+                  <button id="decManualHour" class="stepper-btn" type="button" aria-label="הפחת שעה ידנית">−</button>
+                  <div id="manualHourValue" class="stepper-value mono">00</div>
+                  <button id="incManualHour" class="stepper-btn" type="button" aria-label="הוסף שעה ידנית">+</button>
+                  <div class="stepper-label">שעה</div>
+                </div>
+
+                <div class="stepper">
+                  <button id="decManualMin" class="stepper-btn" type="button" aria-label="הפחת דקה ידנית">−</button>
+                  <div id="manualMinValue" class="stepper-value mono">00</div>
+                  <button id="incManualMin" class="stepper-btn" type="button" aria-label="הוסף דקה ידנית">+</button>
+                  <div class="stepper-label">דקה</div>
+                </div>
+              </div>
+
+              <div style="margin-top:12px;">
+                <button id="setManualBtn" class="btn primary" type="button">עדכן שעה</button>
+              </div>
+            </div>
+
+            <div class="settings-section">
+              <div class="settings-title">כלים</div>
+
+              <div class="actions">
+                <button id="enableNotifBtn" class="btn" type="button">אפשר התראות</button>
+                <button id="testReminderBtn" class="btn" type="button">בדיקת תזכורת</button>
+                <button id="exportBtn" class="btn" type="button">גיבוי</button>
+                <button id="importBtn" class="btn" type="button">שחזור</button>
+                <input type="file" id="importFile" style="display:none" accept=".json">
+                <button id="installPwaBtn" class="btn install" type="button">התקן אפליקציה</button>
+                <button id="clearBtn" class="btn danger" type="button">איפוס נתונים</button>
+              </div>
+
+              <p class="sub" style="margin-top:4px;">
+                התראות משמיעות את צליל מערכת ההפעלה. השינוי של הצליל נעשה דרך הגדרות ההתראות במכשיר.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -945,6 +993,8 @@
       progressRing: document.getElementById("progressRing"),
       bottleWrap: document.getElementById("bottleWrap"),
       bottleCheck: document.getElementById("bottleCheck"),
+      settingsToggleBtn: document.getElementById("settingsToggleBtn"),
+      settingsPanel: document.getElementById("settingsPanel"),
       enableNotifBtn: document.getElementById("enableNotifBtn"),
       testReminderBtn: document.getElementById("testReminderBtn"),
       clearBtn: document.getElementById("clearBtn"),
@@ -1304,6 +1354,20 @@
       }, 1400);
     }
 
+    function updateFeedButton(lastTs) {
+      if (!lastTs) {
+        el.feedBtn.textContent = "🍼 סימנתי האכלה עכשיו";
+        return;
+      }
+
+      const dueTs = lastTs + getIntervalMinutes() * 60 * 1000;
+      if (dueTs <= nowTs()) {
+        el.feedBtn.textContent = "🍼 הגיע זמן האכלה - לחיצה לשמירה";
+      } else {
+        el.feedBtn.textContent = "🍼 סימנתי האכלה עכשיו";
+      }
+    }
+
     function updateNextCard(lastTs) {
       el.nextCard.classList.remove("urgent", "overdue");
       el.bottleWrap.classList.remove("urgent");
@@ -1525,11 +1589,21 @@
       showToast(`נשמר: ${formatClock(ts)}`, "בטל", () => applySnapshot(snapshot), 3000);
     }
 
+    function toggleSettings(forceValue = null) {
+      const shouldOpen = forceValue === null
+        ? !el.settingsPanel.classList.contains("open")
+        : !!forceValue;
+
+      el.settingsPanel.classList.toggle("open", shouldOpen);
+      el.settingsToggleBtn.textContent = shouldOpen ? "סגור הגדרות" : "הגדרות";
+    }
+
     function refresh() {
       const lastTs = getLastTs();
 
       updateElapsed(lastTs);
       updateNextCard(lastTs);
+      updateFeedButton(lastTs);
 
       if (!lastTs) {
         setStatus("", "ממתין ללחיצה");
@@ -1713,6 +1787,10 @@
       });
     });
 
+    el.settingsToggleBtn.addEventListener("click", () => {
+      toggleSettings();
+    });
+
     el.feedBtn.addEventListener("click", (e) => {
       if (el.feedBtn.disabled) return;
       createRipple(el.feedBtn, e);
@@ -1800,6 +1878,7 @@
 
       setupPwaInstall();
       setRingProgress(0);
+      toggleSettings(false);
       refresh();
       startTicker();
     })();
