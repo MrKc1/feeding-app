@@ -11,49 +11,60 @@
 
   <style>
     :root{
-      --bg1:#0b1220;
-      --bg2:#0f1b33;
-      --card: rgba(255,255,255,.06);
-      --card2: rgba(255,255,255,.09);
-      --text:#e9eefc;
+      --bg1:#08111f;
+      --bg2:#0d1830;
+      --card: rgba(255,255,255,.05);
+      --card2: rgba(255,255,255,.08);
+      --text:#eef3ff;
       --muted:#a8b3d9;
+      --border: rgba(255,255,255,.10);
+      --accent:#7c5cff;
+      --accent2:#19d3ff;
+      --ok:#2ae98b;
+      --warn:#ffd166;
       --danger:#ff4d6d;
       --shadow: 0 18px 50px rgba(0,0,0,.45);
       --radius: 22px;
       --radius2: 30px;
     }
+
     *{box-sizing:border-box}
+
     body{
       margin:0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, "Heebo", Arial, sans-serif;
       color:var(--text);
       background:
-        radial-gradient(1100px 700px at 90% 10%, rgba(124,92,255,.45), transparent 60%),
-        radial-gradient(900px 600px at 20% 20%, rgba(25,211,255,.25), transparent 55%),
-        radial-gradient(900px 700px at 60% 100%, rgba(42,233,139,.20), transparent 60%),
+        radial-gradient(1100px 700px at 90% 10%, rgba(124,92,255,.28), transparent 60%),
+        radial-gradient(900px 600px at 20% 20%, rgba(25,211,255,.15), transparent 55%),
         linear-gradient(180deg, var(--bg1), var(--bg2));
       min-height:100vh;
       display:flex;
       align-items:center;
       justify-content:center;
-      padding:18px;
+      padding:16px;
     }
+
     .app{
-      width:min(980px, 100%);
+      width:min(1080px, 100%);
       display:grid;
-      grid-template-columns: 1.1fr .9fr;
+      grid-template-columns: 1.15fr .85fr;
       gap:16px;
     }
-    @media (max-width: 860px){
+
+    @media (max-width: 900px){
       .app{grid-template-columns:1fr}
     }
+
     .card{
       background: linear-gradient(180deg, var(--card), var(--card2));
-      border: 1px solid rgba(255,255,255,.10);
+      border: 1px solid var(--border);
       box-shadow: var(--shadow);
       border-radius: var(--radius2);
       overflow:hidden;
+      backdrop-filter: blur(8px);
     }
+
     .header{
       padding:18px 18px 0 18px;
       display:flex;
@@ -61,51 +72,134 @@
       justify-content:space-between;
       gap:12px;
     }
-    h1{ margin:0; font-size:20px; letter-spacing:.2px; }
-    .sub{ margin:6px 0 0 0; color:var(--muted); font-size:13px; line-height:1.4; }
+
+    h1{
+      margin:0;
+      font-size:22px;
+      letter-spacing:.2px;
+    }
+
+    .sub{
+      margin:6px 0 0 0;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.45;
+    }
+
     .pill{
       display:inline-flex;
       align-items:center;
       gap:8px;
       padding:10px 12px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.10);
+      border-radius:999px;
+      background: rgba(255,255,255,.07);
+      border: 1px solid var(--border);
       color:var(--text);
       font-size:12px;
-      user-select:none;
       white-space:nowrap;
     }
-    .main{ padding:18px; display:grid; gap:14px; }
+
+    .dot{
+      width:10px;
+      height:10px;
+      border-radius:999px;
+      background: rgba(168,179,217,.55);
+      box-shadow: 0 0 0 6px rgba(168,179,217,.10);
+      flex:0 0 auto;
+    }
+
+    .dot.ok{
+      background: rgba(42,233,139,.90);
+      box-shadow: 0 0 0 6px rgba(42,233,139,.10);
+    }
+
+    .dot.warn{
+      background: rgba(255,209,102,.95);
+      box-shadow: 0 0 0 6px rgba(255,209,102,.10);
+    }
+
+    .main{
+      padding:18px;
+      display:grid;
+      gap:14px;
+    }
+
     .bigbtn{
       width:100%;
       border:none;
       border-radius: calc(var(--radius2) + 8px);
-      padding:18px 16px;
+      padding:20px 18px;
       background:
-        radial-gradient(1200px 300px at 50% 0%, rgba(255,255,255,.20), transparent 55%),
-        linear-gradient(135deg, rgba(124,92,255,.95), rgba(25,211,255,.70));
+        radial-gradient(1200px 300px at 50% 0%, rgba(255,255,255,.18), transparent 55%),
+        linear-gradient(135deg, rgba(124,92,255,.96), rgba(25,211,255,.72));
       color:white;
-      font-size:18px;
-      font-weight:750;
-      box-shadow: 0 18px 45px rgba(124,92,255,.25);
+      font-size:20px;
+      font-weight:800;
+      box-shadow: 0 18px 45px rgba(124,92,255,.24);
       cursor:pointer;
-      transition: transform .08s ease;
+      position:relative;
+      overflow:hidden;
+      transition: transform .12s ease, opacity .2s ease, filter .2s ease;
       display:flex;
       align-items:center;
       justify-content:center;
       gap:10px;
+      min-height:74px;
     }
-    .bigbtn:active{transform: translateY(1px) scale(.995)}
-    .row{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
-    @media (max-width: 460px){ .row{grid-template-columns:1fr} }
+
+    .bigbtn:active{
+      transform: scale(.988);
+    }
+
+    .bigbtn.locked{
+      opacity:.65;
+      cursor:not-allowed;
+      filter:saturate(.8);
+    }
+
+    .bigbtn.saved{
+      box-shadow: 0 0 0 2px rgba(42,233,139,.28), 0 18px 45px rgba(124,92,255,.20);
+    }
+
+    .ripple{
+      position:absolute;
+      border-radius:50%;
+      transform:scale(0);
+      animation:ripple .65s ease-out forwards;
+      background: rgba(255,255,255,.34);
+      pointer-events:none;
+    }
+
+    @keyframes ripple{
+      to{
+        transform:scale(4.2);
+        opacity:0;
+      }
+    }
+
+    .row{
+      display:grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap:12px;
+    }
+
+    @media (max-width: 760px){
+      .row{grid-template-columns:1fr}
+    }
+
     .box{
-      padding:14px;
+      padding:16px;
       border-radius: var(--radius);
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.05);
+      border: 1px solid var(--border);
     }
-    .label{ color:var(--muted); font-size:12px; margin-bottom:8px; }
+
+    .label{
+      color:var(--muted);
+      font-size:12px;
+      margin-bottom:8px;
+    }
+
     .value{
       font-size:16px;
       font-weight:700;
@@ -114,86 +208,330 @@
       gap:10px;
       flex-wrap:wrap;
     }
-    input{
-      width:100%;
-      background: rgba(0,0,0,.22);
-      border: 1px solid rgba(255,255,255,.12);
+
+    .human-main{
+      font-size:26px;
+      font-weight:800;
+      line-height:1.15;
+      margin-bottom:6px;
+    }
+
+    .human-detail{
+      font-size:13px;
+      color:var(--muted);
+    }
+
+    .next-card{
+      position:relative;
+      overflow:hidden;
+      background:
+        radial-gradient(700px 200px at 10% 0%, rgba(124,92,255,.15), transparent 55%),
+        linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.08));
+      transition: box-shadow .25s ease, border-color .25s ease, transform .2s ease;
+    }
+
+    .next-card.urgent{
+      box-shadow: 0 0 0 1px rgba(255,209,102,.22), 0 0 28px rgba(255,209,102,.10);
+      border-color: rgba(255,209,102,.35);
+    }
+
+    .next-card.overdue{
+      box-shadow: 0 0 0 1px rgba(255,77,109,.22), 0 0 28px rgba(255,77,109,.10);
+      border-color: rgba(255,77,109,.35);
+    }
+
+    .next-grid{
+      display:grid;
+      grid-template-columns: 1fr 130px;
+      gap:12px;
+      align-items:center;
+    }
+
+    @media (max-width: 460px){
+      .next-grid{
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .next-big{
+      font-size:42px;
+      font-weight:900;
+      line-height:1;
+      letter-spacing:.5px;
+      margin:6px 0 10px;
+    }
+
+    .next-sub{
+      font-size:14px;
+      color:var(--muted);
+      min-height:20px;
+    }
+
+    .next-day{
+      font-size:12px;
+      color:var(--muted);
+      min-height:16px;
+    }
+
+    .progress-wrap{
+      width:118px;
+      height:118px;
+      position:relative;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      margin-inline-start:auto;
+    }
+
+    .progress-wrap svg{
+      width:118px;
+      height:118px;
+      transform:rotate(-90deg);
+      display:block;
+    }
+
+    .progress-bg{
+      fill:none;
+      stroke: rgba(255,255,255,.08);
+      stroke-width: 10;
+    }
+
+    .progress-ring{
+      fill:none;
+      stroke: url(#ringGradient);
+      stroke-width: 10;
+      stroke-linecap: round;
+      transition: stroke-dashoffset .35s ease, stroke .25s ease;
+      filter: drop-shadow(0 0 8px rgba(124,92,255,.12));
+    }
+
+    .progress-wrap.pulse{
+      animation: softPulse 2.8s ease-in-out infinite;
+    }
+
+    @keyframes softPulse{
+      0%{ transform:scale(1); }
+      50%{ transform:scale(1.03); }
+      100%{ transform:scale(1); }
+    }
+
+    .progress-center{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:34px;
+      user-select:none;
+    }
+
+    .controls-grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+    }
+
+    @media (max-width: 760px){
+      .controls-grid{grid-template-columns:1fr}
+    }
+
+    .stepper-row{
+      display:flex;
+      gap:14px;
+      align-items:center;
+      justify-content:space-between;
+      flex-wrap:wrap;
+    }
+
+    .stepper{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width: 0;
+    }
+
+    .stepper-label{
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .stepper-value{
+      min-width:40px;
+      text-align:center;
+      font-size:22px;
+      font-weight:800;
+    }
+
+    .stepper-btn{
+      width:46px;
+      height:46px;
+      border:none;
+      border-radius:16px;
+      cursor:pointer;
+      font-size:24px;
+      font-weight:700;
       color:var(--text);
-      border-radius: 14px;
+      background: rgba(255,255,255,.09);
+      border:1px solid var(--border);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      transition: transform .08s ease, background .16s ease, border-color .16s ease;
+      touch-action: manipulation;
+    }
+
+    .stepper-btn:active{
+      transform: scale(.96);
+      background: rgba(255,255,255,.14);
+    }
+
+    .stepper-btn:disabled{
+      opacity:.45;
+      cursor:not-allowed;
+    }
+
+    .interval-summary{
+      font-size:13px;
+      color:var(--muted);
+      margin-top:8px;
+    }
+
+    .manual-date{
+      width:100%;
+      background: rgba(0,0,0,.20);
+      border:1px solid var(--border);
+      color:var(--text);
+      border-radius: 16px;
       padding:12px 12px;
       outline:none;
       font-size:14px;
+      margin-bottom:10px;
     }
-    .actions{ display:flex; gap:10px; flex-wrap:wrap; }
+
+    .actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
     .btn{
       border:none;
-      border-radius: 16px;
-      padding:11px 12px;
+      border-radius:16px;
+      padding:11px 13px;
       cursor:pointer;
       font-weight:700;
       color:var(--text);
       background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.12);
-      transition: transform .08s ease;
+      border:1px solid var(--border);
+      transition: transform .08s ease, background .16s ease;
     }
-    .btn:active{transform: translateY(1px)}
+
+    .btn:active{ transform:translateY(1px); }
+
     .btn.primary{
-      background: linear-gradient(135deg, rgba(42,233,139,.85), rgba(25,211,255,.55));
-      border-color: rgba(42,233,139,.35);
-      color: #081321;
+      background: linear-gradient(135deg, rgba(42,233,139,.86), rgba(25,211,255,.58));
+      border-color: rgba(42,233,139,.30);
+      color:#081321;
     }
+
     .btn.danger{
       background: rgba(255,77,109,.14);
-      border-color: rgba(255,77,109,.35);
-      color: #ffd7df;
+      border-color: rgba(255,77,109,.34);
+      color:#ffd7df;
     }
+
     .btn.install{
       background: linear-gradient(135deg, rgba(124,92,255,.95), rgba(25,211,255,.65));
-      border-color: rgba(124,92,255,.35);
-      color: #06101f;
+      border-color: rgba(124,92,255,.34);
+      color:#06101f;
       display:none;
     }
-    .list{ padding:0; margin:0; list-style:none; max-height: 420px; overflow:auto; }
-    .item{
-      padding:12px 14px;
-      border-top: 1px solid rgba(255,255,255,.08);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
+
+    .history-list{
+      padding:0;
+      margin:0;
+      list-style:none;
+      max-height: 540px;
+      overflow:auto;
     }
-    .item b{font-size:14px}
-    .item span{ color:var(--muted); font-size:12px; }
-    .rightCard .header{padding-bottom:12px}
+
+    .history-item{
+      padding:14px 16px;
+      border-top:1px solid rgba(255,255,255,.08);
+      display:grid;
+      grid-template-columns: 1fr auto;
+      gap:12px;
+      align-items:center;
+    }
+
+    .history-time{
+      font-size:18px;
+      font-weight:800;
+      line-height:1;
+      margin-bottom:6px;
+    }
+
+    .history-date{
+      font-size:12px;
+      color:var(--muted);
+      margin-bottom:6px;
+    }
+
+    .history-gap{
+      font-size:13px;
+      color:#d8def9;
+    }
+
+    .history-right{
+      text-align:left;
+      color:var(--muted);
+      font-size:12px;
+      min-width:70px;
+    }
+
     .toast{
-      position: fixed;
-      bottom: 16px;
-      inset-inline: 16px;
+      position:fixed;
+      inset-inline:16px;
+      bottom:16px;
       display:flex;
       justify-content:center;
       pointer-events:none;
+      z-index:30;
     }
-    .toast > div{
-      pointer-events:auto;
-      background: rgba(0,0,0,.55);
-      border: 1px solid rgba(255,255,255,.14);
-      color: var(--text);
-      padding: 10px 12px;
-      border-radius: 999px;
-      box-shadow: 0 18px 50px rgba(0,0,0,.35);
-      font-size: 13px;
+
+    .toast-inner{
       display:none;
-      max-width: 980px;
-      width: fit-content;
+      align-items:center;
+      gap:10px;
+      pointer-events:auto;
+      background: rgba(7,13,24,.92);
+      color:var(--text);
+      border:1px solid rgba(255,255,255,.12);
+      padding:11px 12px;
+      border-radius:999px;
+      box-shadow: 0 18px 50px rgba(0,0,0,.35);
+      font-size:13px;
+      max-width:min(92vw, 620px);
+      white-space:nowrap;
     }
-    .mono{font-variant-numeric: tabular-nums}
-    .dot{
-      width:10px;height:10px;border-radius:99px;display:inline-block;
-      background: rgba(168,179,217,.55);
-      box-shadow: 0 0 0 6px rgba(168,179,217,.12);
+
+    .toast-text{
+      overflow:hidden;
+      text-overflow:ellipsis;
     }
-    .dot.ok{background: rgba(42,233,139,.85); box-shadow:0 0 0 6px rgba(42,233,139,.12)}
-    .dot.warn{background: rgba(255,205,80,.9); box-shadow:0 0 0 6px rgba(255,205,80,.12)}
+
+    .toast-action{
+      border:none;
+      background: rgba(255,255,255,.10);
+      color:#fff;
+      border-radius:999px;
+      padding:8px 12px;
+      font-weight:800;
+      cursor:pointer;
+      flex:0 0 auto;
+    }
+
+    .mono{ font-variant-numeric: tabular-nums; }
   </style>
 </head>
 
@@ -203,8 +541,9 @@
       <div class="header">
         <div>
           <h1>שעות האכלה</h1>
-          <p class="sub">כפתור אחד, שמירת שעה מדויקת, וספירה לאחור לתזכורת הבאה.</p>
+          <p class="sub">כפתור אחד, תזכורת ברורה, ופחות טעויות בלילה.</p>
         </div>
+
         <div class="pill" title="סטטוס התזכורת">
           <span id="statusDot" class="dot"></span>
           <span id="statusText">ממתין ללחיצה</span>
@@ -218,120 +557,126 @@
 
         <div class="row">
           <div class="box">
-            <div class="label">האכלה אחרונה</div>
-            <div class="value mono" id="lastFeedValue">אין עדיין</div>
-          </div>
-
-          <div class="box">
             <div class="label">עבר מאז</div>
-            <div class="value mono" id="elapsedValue">—</div>
+            <div id="elapsedMain" class="human-main">עדיין אין האכלה</div>
+            <div id="elapsedDetail" class="human-detail">ברגע שתלחץ, יוצג הזמן בצורה ברורה.</div>
+          </div>
+
+          <div id="nextCard" class="box next-card">
+            <div class="next-grid">
+              <div>
+                <div class="label">ההאכלה הבאה</div>
+                <div id="nextReminderMain" class="next-big mono">--:--</div>
+                <div id="nextReminderSub" class="next-sub">טרם נקבעה תזכורת</div>
+                <div id="nextReminderDay" class="next-day"></div>
+              </div>
+
+              <div id="progressWrap" class="progress-wrap">
+                <svg viewBox="0 0 120 120" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#19d3ff"></stop>
+                      <stop offset="100%" stop-color="#7c5cff"></stop>
+                    </linearGradient>
+                  </defs>
+                  <circle class="progress-bg" cx="60" cy="60" r="48"></circle>
+                  <circle id="progressRing" class="progress-ring" cx="60" cy="60" r="48"></circle>
+                </svg>
+                <div class="progress-center">🍼</div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="box">
-          <div class="label">המרווח בין האכלות</div>
-
-          <div style="display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap;">
-            <div style="display:flex; align-items:center; gap:8px;">
-              <button id="decHours" class="btn">−</button>
-              <div class="mono" id="hoursValue">2</div>
-              <button id="incHours" class="btn">+</button>
-              <span>שעות</span>
-            </div>
-
-            <div style="display:flex; align-items:center; gap:8px;">
-              <button id="decMinutes" class="btn">−</button>
-              <div class="mono" id="minutesValue">0</div>
-              <button id="incMinutes" class="btn">+</button>
-              <span>דקות</span>
-            </div>
-
-            <div style="flex:1; min-width: 210px;">
-              <small class="mono" id="intervalTotalText"></small>
-            </div>
-          </div>
-        </div>
-
-        <div class="row">
+        <div class="controls-grid">
           <div class="box">
-            <div class="label">התזכורת הבאה</div>
-            <div class="value mono" id="nextReminderValue">—</div>
-            <div class="value" style="margin-top:8px;">
-              <small class="mono" id="countdownValue">—</small>
+            <div class="label">המרווח בין האכלות</div>
+
+            <div class="stepper-row">
+              <div class="stepper">
+                <button id="decHours" class="stepper-btn" type="button" aria-label="הפחת שעה">−</button>
+                <div id="hoursValue" class="stepper-value mono">2</div>
+                <button id="incHours" class="stepper-btn" type="button" aria-label="הוסף שעה">+</button>
+                <div class="stepper-label">שעות</div>
+              </div>
+
+              <div class="stepper">
+                <button id="decMinutes" class="stepper-btn" type="button" aria-label="הפחת דקה">−</button>
+                <div id="minutesValue" class="stepper-value mono">0</div>
+                <button id="incMinutes" class="stepper-btn" type="button" aria-label="הוסף דקה">+</button>
+                <div class="stepper-label">דקות</div>
+              </div>
             </div>
+
+            <div id="intervalTotalText" class="interval-summary">המרווח שנבחר: שעתיים</div>
           </div>
 
           <div class="box">
             <div class="label">קביעת שעה ידנית</div>
 
-            <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-              <div style="flex:1; min-width:160px;">
-                <input id="manualDate" type="date" />
-                <div class="sub" style="margin-top:6px;">תאריך</div>
+            <input id="manualDate" class="manual-date" type="date" />
+
+            <div class="stepper-row">
+              <div class="stepper">
+                <button id="decManualHour" class="stepper-btn" type="button" aria-label="הפחת שעה ידנית">−</button>
+                <div id="manualHourValue" class="stepper-value mono">00</div>
+                <button id="incManualHour" class="stepper-btn" type="button" aria-label="הוסף שעה ידנית">+</button>
+                <div class="stepper-label">שעה</div>
               </div>
 
-              <div style="flex:1; min-width:160px;">
-                <div style="display:flex; gap:10px;">
-                  <div style="flex:1;">
-                    <div class="sub">שעה</div>
-                    <div style="display:flex; gap:8px; align-items:center;">
-                      <button id="decManualHour" class="btn">−</button>
-                      <div class="mono" id="manualHourValue">00</div>
-                      <button id="incManualHour" class="btn">+</button>
-                    </div>
-                  </div>
-
-                  <div style="flex:1;">
-                    <div class="sub">דקה</div>
-                    <div style="display:flex; gap:8px; align-items:center;">
-                      <button id="decManualMin" class="btn">−</button>
-                      <div class="mono" id="manualMinValue">00</div>
-                      <button id="incManualMin" class="btn">+</button>
-                    </div>
-                  </div>
-                </div>
+              <div class="stepper">
+                <button id="decManualMin" class="stepper-btn" type="button" aria-label="הפחת דקה ידנית">−</button>
+                <div id="manualMinValue" class="stepper-value mono">00</div>
+                <button id="incManualMin" class="stepper-btn" type="button" aria-label="הוסף דקה ידנית">+</button>
+                <div class="stepper-label">דקה</div>
               </div>
+            </div>
 
-              <button id="setManualBtn" class="btn primary" style="min-width:140px;">עדכן שעה</button>
+            <div style="margin-top:12px;">
+              <button id="setManualBtn" class="btn primary" type="button">עדכן שעה</button>
             </div>
           </div>
         </div>
 
         <div class="actions">
-          <button id="enableNotifBtn" class="btn">אפשר התראות</button>
-          <button id="testReminderBtn" class="btn">בדיקת תזכורת (10 שניות)</button>
-
-          <button id="exportBtn" class="btn">גיבוי</button>
-          <button id="importBtn" class="btn">שחזור</button>
+          <button id="enableNotifBtn" class="btn" type="button">אפשר התראות</button>
+          <button id="testReminderBtn" class="btn" type="button">בדיקת תזכורת (10 שניות)</button>
+          <button id="exportBtn" class="btn" type="button">גיבוי</button>
+          <button id="importBtn" class="btn" type="button">שחזור</button>
           <input type="file" id="importFile" style="display:none" accept=".json">
-
-          <button id="installPwaBtn" class="btn install">התקן אפליקציה</button>
-          <button id="clearBtn" class="btn danger">איפוס נתונים</button>
+          <button id="installPwaBtn" class="btn install" type="button">התקן אפליקציה</button>
+          <button id="clearBtn" class="btn danger" type="button">איפוס נתונים</button>
         </div>
 
-        <p class="sub" style="margin-top:6px;">
-          התראות: הסאונד מגיע ממערכת ההפעלה. אם תרצה צליל מותאם, אפשר לשנות אותו בהגדרות ההתראות של האפליקציה/Chrome במכשיר.
+        <p class="sub" style="margin-top:4px;">
+          התראות משמיעות את צליל מערכת ההפעלה. השינוי של הצליל נעשה דרך הגדרות ההתראות במכשיר.
         </p>
       </div>
     </section>
 
-    <aside class="card rightCard">
+    <aside class="card">
       <div class="header">
         <div>
           <h1>היסטוריה</h1>
-          <p class="sub">רשימת האכלות אחרונות (עד 60).</p>
+          <p class="sub">רשימת האכלות אחרונות, כולל כמה זמן עבר מהקודמת.</p>
         </div>
+
         <div class="pill">
           <span class="mono" id="historyCount">0</span>
           <span>אירועים</span>
         </div>
       </div>
 
-      <ul id="historyList" class="list"></ul>
+      <ul id="historyList" class="history-list"></ul>
     </aside>
   </div>
 
-  <div class="toast"><div id="toastBox"></div></div>
+  <div class="toast" aria-live="polite">
+    <div id="toastInner" class="toast-inner">
+      <span id="toastText" class="toast-text"></span>
+      <button id="toastAction" class="toast-action" type="button" style="display:none"></button>
+    </div>
+  </div>
 
   <script>
     const KEY = {
@@ -340,9 +685,13 @@
       history: "feed_history"
     };
 
+    const RING_RADIUS = 48;
+    const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
+
     let reminderTimeout = null;
     let tickInterval = null;
     let deferredInstallPrompt = null;
+    let feedLockTimer = null;
 
     let intervalHours = 2;
     let intervalMinutesExtra = 0;
@@ -350,12 +699,19 @@
     let manualHour = 0;
     let manualMin = 0;
 
+    let toastTimer = null;
+    let toastActionHandler = null;
+
     const el = {
       feedBtn: document.getElementById("feedBtn"),
-      lastFeedValue: document.getElementById("lastFeedValue"),
-      elapsedValue: document.getElementById("elapsedValue"),
-      nextReminderValue: document.getElementById("nextReminderValue"),
-      countdownValue: document.getElementById("countdownValue"),
+      elapsedMain: document.getElementById("elapsedMain"),
+      elapsedDetail: document.getElementById("elapsedDetail"),
+      nextCard: document.getElementById("nextCard"),
+      nextReminderMain: document.getElementById("nextReminderMain"),
+      nextReminderSub: document.getElementById("nextReminderSub"),
+      nextReminderDay: document.getElementById("nextReminderDay"),
+      progressWrap: document.getElementById("progressWrap"),
+      progressRing: document.getElementById("progressRing"),
       enableNotifBtn: document.getElementById("enableNotifBtn"),
       testReminderBtn: document.getElementById("testReminderBtn"),
       clearBtn: document.getElementById("clearBtn"),
@@ -363,11 +719,13 @@
       historyCount: document.getElementById("historyCount"),
       statusDot: document.getElementById("statusDot"),
       statusText: document.getElementById("statusText"),
-      toastBox: document.getElementById("toastBox"),
       installPwaBtn: document.getElementById("installPwaBtn"),
       exportBtn: document.getElementById("exportBtn"),
       importBtn: document.getElementById("importBtn"),
       importFile: document.getElementById("importFile"),
+      toastInner: document.getElementById("toastInner"),
+      toastText: document.getElementById("toastText"),
+      toastAction: document.getElementById("toastAction"),
 
       hoursValue: document.getElementById("hoursValue"),
       minutesValue: document.getElementById("minutesValue"),
@@ -387,108 +745,229 @@
       decManualMin: document.getElementById("decManualMin"),
     };
 
-    function nowTs(){ return Date.now(); }
-    function pad2(n){ return String(n).padStart(2,"0"); }
+    function nowTs() {
+      return Date.now();
+    }
 
-    function formatDateTime(ts){
+    function pad2(n) {
+      return String(n).padStart(2, "0");
+    }
+
+    function formatClock(ts) {
       const d = new Date(ts);
-      return `${pad2(d.getDate())}/${pad2(d.getMonth()+1)}/${d.getFullYear()} ${pad2(d.getHours())}:${pad2(d.getMinutes())}:${pad2(d.getSeconds())}`;
+      return `${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
     }
 
-    function formatTime(ts){
+    function formatDateTime(ts) {
       const d = new Date(ts);
-      return `${pad2(d.getHours())}:${pad2(d.getMinutes())}:${pad2(d.getSeconds())}`;
+      return `${pad2(d.getDate())}/${pad2(d.getMonth() + 1)}/${d.getFullYear()} ${pad2(d.getHours())}:${pad2(d.getMinutes())}:${pad2(d.getSeconds())}`;
     }
 
-    function msToHuman(ms){
-      if (ms < 0) ms = 0;
-      const totalSec = Math.floor(ms/1000);
-      const h = Math.floor(totalSec/3600);
-      const m = Math.floor((totalSec%3600)/60);
-      const s = totalSec%60;
-      if (h > 0) return `${h} ש׳ ${m} ד׳ ${s} ש׳`;
-      if (m > 0) return `${m} ד׳ ${s} ש׳`;
-      return `${s} ש׳`;
+    function formatDateOnly(ts) {
+      const d = new Date(ts);
+      return `${pad2(d.getDate())}/${pad2(d.getMonth() + 1)}/${d.getFullYear()}`;
     }
 
-    function toast(msg){
-      el.toastBox.textContent = msg;
-      el.toastBox.style.display = "block";
-      clearTimeout(toast._t);
-      toast._t = setTimeout(()=>{ el.toastBox.style.display = "none"; }, 2600);
+    function sameDay(a, b) {
+      const da = new Date(a);
+      const db = new Date(b);
+      return da.getFullYear() === db.getFullYear()
+        && da.getMonth() === db.getMonth()
+        && da.getDate() === db.getDate();
     }
 
-    function vibrate(){
-      if (navigator.vibrate) navigator.vibrate([60, 40, 60]);
+    function getRelativeDayLabel(ts) {
+      const d = new Date(ts);
+      const now = new Date();
+      const tomorrow = new Date();
+      tomorrow.setDate(now.getDate() + 1);
+
+      if (sameDay(d, now)) return "היום";
+      if (sameDay(d, tomorrow)) return "מחר";
+      return formatDateOnly(ts);
     }
 
-    // ----- Storage -----
-    function getIntervalMinutes(){
+    function unitText(n, singular, plural) {
+      return `${n} ${n === 1 ? singular : plural}`;
+    }
+
+    function durationParts(ms) {
+      const totalSec = Math.max(0, Math.floor(ms / 1000));
+      const days = Math.floor(totalSec / 86400);
+      const hours = Math.floor((totalSec % 86400) / 3600);
+      const minutes = Math.floor((totalSec % 3600) / 60);
+      const seconds = totalSec % 60;
+      return { days, hours, minutes, seconds, totalSec };
+    }
+
+    function formatDurationShort(ms, maxParts = 2) {
+      const { days, hours, minutes, seconds } = durationParts(ms);
+      const items = [];
+      if (days) items.push(unitText(days, "יום", "ימים"));
+      if (hours) items.push(unitText(hours, "שעה", "שעות"));
+      if (minutes) items.push(unitText(minutes, "דקה", "דקות"));
+      if (seconds && items.length === 0) items.push(unitText(seconds, "שנייה", "שניות"));
+      return items.slice(0, maxParts).join(" ו־") || "פחות מדקה";
+    }
+
+    function formatElapsedHuman(ms) {
+      const { days, hours, minutes, seconds, totalSec } = durationParts(ms);
+
+      if (totalSec < 60) {
+        return {
+          main: `עברו ${unitText(seconds, "שנייה", "שניות")}`,
+          detail: "מההאכלה האחרונה"
+        };
+      }
+
+      if (days > 0) {
+        const base = [unitText(days, "יום", "ימים")];
+        if (hours > 0) base.push(unitText(hours, "שעה", "שעות"));
+        else if (minutes > 0) base.push(unitText(minutes, "דקה", "דקות"));
+        return {
+          main: `עברו ${base.join(" ו־")}`,
+          detail: `כולל ${unitText(seconds, "שנייה", "שניות")}`
+        };
+      }
+
+      if (hours > 0) {
+        const base = [unitText(hours, "שעה", "שעות")];
+        if (minutes > 0) base.push(unitText(minutes, "דקה", "דקות"));
+        return {
+          main: `עברו ${base.join(" ו־")}`,
+          detail: `כולל ${unitText(seconds, "שנייה", "שניות")}`
+        };
+      }
+
+      return {
+        main: `עברו ${unitText(minutes, "דקה", "דקות")}`,
+        detail: `כולל ${unitText(seconds, "שנייה", "שניות")}`
+      };
+    }
+
+    function formatRemainingHuman(ms) {
+      if (ms <= 0) {
+        return `עברו ${formatDurationShort(Math.abs(ms), 2)} מהמועד`;
+      }
+
+      const { totalSec } = durationParts(ms);
+      if (totalSec < 60) return "נותרו פחות מדקה";
+      return `נותרו עוד ${formatDurationShort(ms, 2)}`;
+    }
+
+    function showToast(message, actionLabel = "", actionHandler = null, duration = 2600) {
+      clearTimeout(toastTimer);
+      toastActionHandler = actionHandler || null;
+      el.toastText.textContent = message;
+      el.toastInner.style.display = "inline-flex";
+
+      if (actionLabel && actionHandler) {
+        el.toastAction.textContent = actionLabel;
+        el.toastAction.style.display = "inline-flex";
+      } else {
+        el.toastAction.style.display = "none";
+      }
+
+      toastTimer = setTimeout(hideToast, duration);
+    }
+
+    function hideToast() {
+      clearTimeout(toastTimer);
+      toastTimer = null;
+      toastActionHandler = null;
+      el.toastInner.style.display = "none";
+      el.toastAction.style.display = "none";
+    }
+
+    el.toastAction.addEventListener("click", () => {
+      const fn = toastActionHandler;
+      hideToast();
+      if (typeof fn === "function") fn();
+    });
+
+    function setStatus(kind, text) {
+      el.statusText.textContent = text;
+      el.statusDot.classList.remove("ok", "warn");
+      if (kind === "ok") el.statusDot.classList.add("ok");
+      if (kind === "warn") el.statusDot.classList.add("warn");
+    }
+
+    function getIntervalMinutes() {
       const raw = localStorage.getItem(KEY.interval);
-      const v = raw ? parseInt(raw,10) : 120;
+      const v = raw ? parseInt(raw, 10) : 120;
       return Number.isFinite(v) && v > 0 ? v : 120;
     }
 
-    function setIntervalMinutes(v){
+    function setIntervalMinutes(v) {
       const safe = Math.max(1, Math.floor(v));
       localStorage.setItem(KEY.interval, String(safe));
     }
 
-    function getLastTs(){
+    function getLastTs() {
       const raw = localStorage.getItem(KEY.last);
-      const v = raw ? parseInt(raw,10) : NaN;
+      const v = raw ? parseInt(raw, 10) : NaN;
       return Number.isFinite(v) ? v : null;
     }
 
-    function setLastTs(ts){
+    function setLastTs(ts) {
       localStorage.setItem(KEY.last, String(ts));
     }
 
-    function getHistory(){
-      try{
+    function getHistory() {
+      try {
         const raw = localStorage.getItem(KEY.history);
         const arr = raw ? JSON.parse(raw) : [];
         return Array.isArray(arr) ? arr : [];
-      }catch{
+      } catch {
         return [];
       }
     }
 
-    function setHistory(arr){
+    function setHistory(arr) {
       localStorage.setItem(KEY.history, JSON.stringify(arr));
     }
 
-    function pushHistory(ts){
+    function pushHistory(ts) {
       const arr = getHistory();
       arr.unshift(ts);
-      setHistory(arr.slice(0,60));
+      setHistory(arr.slice(0, 60));
     }
 
-    // ----- Notifications (system sound ON) -----
-    function canNotify(){
+    function clearReminder() {
+      if (reminderTimeout) {
+        clearTimeout(reminderTimeout);
+        reminderTimeout = null;
+      }
+    }
+
+    function vibrate() {
+      if (navigator.vibrate) navigator.vibrate([60, 40, 60]);
+    }
+
+    function canNotify() {
       return "Notification" in window;
     }
 
-    async function requestNotifyPermission(){
-      if (!canNotify()){
-        toast("הדפדפן לא תומך בהתראות");
+    async function requestNotifyPermission() {
+      if (!canNotify()) {
+        showToast("הדפדפן לא תומך בהתראות");
         return false;
       }
       if (Notification.permission === "granted") return true;
-      if (Notification.permission === "denied"){
-        toast("התראות חסומות בדפדפן");
+      if (Notification.permission === "denied") {
+        showToast("התראות חסומות בדפדפן");
         return false;
       }
       const p = await Notification.requestPermission();
       return p === "granted";
     }
 
-    async function sendNotification(title, body){
+    async function sendNotification(title, body) {
       if (!canNotify()) return;
       if (Notification.permission !== "granted") return;
 
-      try{
-        if ("serviceWorker" in navigator){
+      try {
+        if ("serviceWorker" in navigator) {
           const reg = await navigator.serviceWorker.ready;
           await reg.showNotification(title, {
             body,
@@ -496,134 +975,18 @@
             badge: "./icon-192.png",
             tag: "feeding-reminder",
             renotify: true,
-            silent: false   // מערכת ההפעלה תשמיע סאונד
+            silent: false
           });
           return;
         }
-      }catch{}
+      } catch {}
 
-      try{
+      try {
         new Notification(title, { body });
-      }catch{}
+      } catch {}
     }
 
-    // ----- Interval UI (step 1 minute) -----
-    function updateIntervalUI(){
-      el.hoursValue.textContent = String(intervalHours);
-      el.minutesValue.textContent = String(intervalMinutesExtra);
-      const total = intervalHours * 60 + intervalMinutesExtra;
-      el.intervalTotalText.textContent = `סה״כ: ${total} דקות`;
-    }
-
-    function loadInterval(){
-      const total = getIntervalMinutes();
-      intervalHours = Math.floor(total / 60);
-      intervalMinutesExtra = total % 60;
-      updateIntervalUI();
-    }
-
-    function saveIntervalFromUI(){
-      const total = intervalHours * 60 + intervalMinutesExtra;
-      setIntervalMinutes(total);
-      const lastTs = getLastTs();
-      if (lastTs) scheduleReminderFrom(lastTs);
-      refresh();
-    }
-
-    function clampInterval(){
-      if (intervalHours < 0) intervalHours = 0;
-      if (intervalMinutesExtra < 0) intervalMinutesExtra = 0;
-
-      const total = intervalHours * 60 + intervalMinutesExtra;
-      if (total < 1){
-        intervalHours = 0;
-        intervalMinutesExtra = 1;
-      }
-
-      if (intervalMinutesExtra >= 60){
-        intervalHours += Math.floor(intervalMinutesExtra / 60);
-        intervalMinutesExtra = intervalMinutesExtra % 60;
-      }
-    }
-
-    function wireIntervalButtons(){
-      el.incHours.onclick = () => {
-        intervalHours++;
-        clampInterval();
-        updateIntervalUI();
-        saveIntervalFromUI();
-        toast("עודכן מרווח");
-      };
-      el.decHours.onclick = () => {
-        if (intervalHours > 0) intervalHours--;
-        clampInterval();
-        updateIntervalUI();
-        saveIntervalFromUI();
-        toast("עודכן מרווח");
-      };
-      el.incMinutes.onclick = () => {
-        intervalMinutesExtra += 1;
-        clampInterval();
-        updateIntervalUI();
-        saveIntervalFromUI();
-        toast("עודכן מרווח");
-      };
-      el.decMinutes.onclick = () => {
-        intervalMinutesExtra -= 1;
-        if (intervalMinutesExtra < 0) {
-          if (intervalHours > 0) {
-            intervalHours--;
-            intervalMinutesExtra = 59;
-          } else {
-            intervalMinutesExtra = 0;
-          }
-        }
-        clampInterval();
-        updateIntervalUI();
-        saveIntervalFromUI();
-        toast("עודכן מרווח");
-      };
-    }
-
-    // ----- Manual time picker -----
-    function renderManualTimeUI(){
-      el.manualHourValue.textContent = pad2(manualHour);
-      el.manualMinValue.textContent = pad2(manualMin);
-    }
-
-    function wireManualTimeButtons(){
-      el.incManualHour.onclick = () => { manualHour = (manualHour + 1) % 24; renderManualTimeUI(); };
-      el.decManualHour.onclick = () => { manualHour = (manualHour + 23) % 24; renderManualTimeUI(); };
-      el.incManualMin.onclick = () => { manualMin = (manualMin + 1) % 60; renderManualTimeUI(); };
-      el.decManualMin.onclick = () => { manualMin = (manualMin + 59) % 60; renderManualTimeUI(); };
-    }
-
-    function getManualTimestamp(){
-      const dateStr = el.manualDate.value;
-      if (!dateStr) return null;
-      const [y,m,d] = dateStr.split("-").map(x => parseInt(x,10));
-      if (!Number.isFinite(y) || !Number.isFinite(m) || !Number.isFinite(d)) return null;
-      const dt = new Date(y, m-1, d, manualHour, manualMin, 0, 0);
-      const ts = dt.getTime();
-      return Number.isFinite(ts) ? ts : null;
-    }
-
-    // ----- Reminders -----
-    function clearReminder(){
-      if (reminderTimeout){
-        clearTimeout(reminderTimeout);
-        reminderTimeout = null;
-      }
-    }
-
-    function setStatus(kind, text){
-      el.statusText.textContent = text;
-      el.statusDot.classList.remove("ok","warn");
-      if (kind === "ok") el.statusDot.classList.add("ok");
-      if (kind === "warn") el.statusDot.classList.add("warn");
-    }
-
-    function scheduleReminderFrom(lastTs){
+    function scheduleReminderFrom(lastTs) {
       clearReminder();
       if (!lastTs) return;
 
@@ -631,122 +994,284 @@
       const dueTs = lastTs + intervalMs;
       const delay = dueTs - nowTs();
 
-      if (delay <= 0){
-        setStatus("warn", "עבר זמן התזכורת");
+      if (delay <= 0) {
+        setStatus("warn", "זמן האכלה הגיע");
         return;
       }
 
       setStatus("ok", "תזכורת פעילה");
 
-      reminderTimeout = setTimeout(async ()=>{
-        const msg = "עבר הזמן שקבעת מאז ההאכלה האחרונה";
+      reminderTimeout = setTimeout(async () => {
+        const msg = "הגיע הזמן להאכלה הבאה";
         vibrate();
-        toast("תזכורת: " + msg);
+        showToast("תזכורת: " + msg, "", null, 2800);
         await sendNotification("תזכורת האכלה", msg);
-        setStatus("warn", "תזכורת הופעלה");
+        setStatus("warn", "זמן האכלה הגיע");
+        refresh();
       }, delay);
     }
 
-    // ----- UI -----
-    function renderHistory(){
+    function setRingProgress(progressRatio) {
+      const ratio = Math.max(0, Math.min(1, progressRatio));
+      const offset = RING_CIRCUMFERENCE * (1 - ratio);
+      el.progressRing.style.strokeDasharray = `${RING_CIRCUMFERENCE}`;
+      el.progressRing.style.strokeDashoffset = `${offset}`;
+    }
+
+    function updateNextCard(lastTs) {
+      el.nextCard.classList.remove("urgent", "overdue");
+      el.progressWrap.classList.remove("pulse");
+
+      if (!lastTs) {
+        el.nextReminderMain.textContent = "--:--";
+        el.nextReminderSub.textContent = "טרם נקבעה תזכורת";
+        el.nextReminderDay.textContent = "";
+        setRingProgress(0);
+        return;
+      }
+
+      const intervalMs = getIntervalMinutes() * 60 * 1000;
+      const dueTs = lastTs + intervalMs;
+      const remainMs = dueTs - nowTs();
+
+      el.nextReminderMain.textContent = formatClock(dueTs);
+      el.nextReminderDay.textContent = getRelativeDayLabel(dueTs);
+      el.nextReminderSub.textContent = remainMs <= 0
+        ? `זמן האכלה הגיע · ${formatRemainingHuman(remainMs)}`
+        : formatRemainingHuman(remainMs);
+
+      const progress = remainMs <= 0 ? 0 : remainMs / intervalMs;
+      setRingProgress(progress);
+
+      if (remainMs <= 0) {
+        el.nextCard.classList.add("overdue");
+      } else if (remainMs <= 15 * 60 * 1000) {
+        el.nextCard.classList.add("urgent");
+        el.progressWrap.classList.add("pulse");
+      }
+    }
+
+    function updateElapsed(lastTs) {
+      if (!lastTs) {
+        el.elapsedMain.textContent = "עדיין אין האכלה";
+        el.elapsedDetail.textContent = "ברגע שתלחץ, יוצג הזמן בצורה ברורה.";
+        return;
+      }
+
+      const elapsed = nowTs() - lastTs;
+      const human = formatElapsedHuman(elapsed);
+      el.elapsedMain.textContent = human.main;
+      el.elapsedDetail.textContent = human.detail;
+    }
+
+    function renderHistory() {
       const arr = getHistory();
       el.historyCount.textContent = String(arr.length);
       el.historyList.innerHTML = "";
 
-      if (arr.length === 0){
+      if (arr.length === 0) {
         const li = document.createElement("li");
-        li.className = "item";
-        li.innerHTML = `<div><b>אין נתונים עדיין</b><div><span>לחץ על הכפתור בזמן האכלה</span></div></div>`;
+        li.className = "history-item";
+        li.innerHTML = `
+          <div>
+            <div class="history-time">אין נתונים עדיין</div>
+            <div class="history-gap">לחץ על הכפתור בזמן האכלה</div>
+          </div>
+          <div class="history-right">—</div>
+        `;
         el.historyList.appendChild(li);
         return;
       }
 
-      arr.forEach((ts, idx)=>{
+      arr.forEach((ts, idx) => {
         const li = document.createElement("li");
-        li.className = "item";
+        li.className = "history-item";
+
+        const prev = arr[idx + 1];
+        const gapText = prev
+          ? `${formatDurationShort(ts - prev, 2)} מהקודמת`
+          : "האכלה ראשונה ברשומה";
+
         li.innerHTML = `
           <div>
-            <b>${idx === 0 ? "האחרונה" : "האכלה"}</b>
-            <div><span class="mono">${formatDateTime(ts)}</span></div>
+            <div class="history-time mono">${formatClock(ts)}</div>
+            <div class="history-date mono">${formatDateTime(ts)}</div>
+            <div class="history-gap">${gapText}</div>
           </div>
-          <div class="mono" style="text-align:left;">
-            ${formatTime(ts)}
-          </div>
+          <div class="history-right">${idx === 0 ? "האחרונה" : "קודמת"}</div>
         `;
+
         el.historyList.appendChild(li);
       });
     }
 
-    function refresh(){
+    function refreshIntervalUI() {
+      el.hoursValue.textContent = String(intervalHours);
+      el.minutesValue.textContent = String(intervalMinutesExtra);
+      const total = intervalHours * 60 + intervalMinutesExtra;
+      el.intervalTotalText.textContent = `המרווח שנבחר: ${formatDurationShort(total * 60 * 1000, 2)}`;
+    }
+
+    function loadInterval() {
+      const total = getIntervalMinutes();
+      intervalHours = Math.floor(total / 60);
+      intervalMinutesExtra = total % 60;
+      refreshIntervalUI();
+    }
+
+    function saveIntervalFromUI() {
+      const total = intervalHours * 60 + intervalMinutesExtra;
+      setIntervalMinutes(total);
       const lastTs = getLastTs();
-      const intervalMin = getIntervalMinutes();
-
-      if (!lastTs){
-        el.lastFeedValue.textContent = "אין עדיין";
-        el.elapsedValue.textContent = "—";
-        el.nextReminderValue.textContent = "—";
-        el.countdownValue.textContent = "—";
-        setStatus("", "ממתין ללחיצה");
-        renderHistory();
-        return;
-      }
-
-      el.lastFeedValue.textContent = formatDateTime(lastTs);
-
-      const elapsedMs = nowTs() - lastTs;
-      el.elapsedValue.textContent = msToHuman(elapsedMs);
-
-      const dueTs = lastTs + intervalMin * 60 * 1000;
-      el.nextReminderValue.textContent = formatDateTime(dueTs);
-
-      const remainMs = dueTs - nowTs();
-      if (remainMs > 0){
-        el.countdownValue.textContent = "בעוד " + msToHuman(remainMs);
-        setStatus("ok", "תזכורת פעילה");
-      }else{
-        el.countdownValue.textContent = "עבר הזמן";
-        setStatus("warn", "עבר זמן התזכורת");
-      }
-
-      renderHistory();
+      if (lastTs) scheduleReminderFrom(lastTs);
+      refresh();
     }
 
-    function startTicker(){
-      if (tickInterval) clearInterval(tickInterval);
-      tickInterval = setInterval(refresh, 500);
+    function normalizeInterval() {
+      if (intervalHours < 0) intervalHours = 0;
+      if (intervalMinutesExtra < 0) intervalMinutesExtra = 0;
+
+      if (intervalMinutesExtra >= 60) {
+        intervalHours += Math.floor(intervalMinutesExtra / 60);
+        intervalMinutesExtra = intervalMinutesExtra % 60;
+      }
+
+      const total = intervalHours * 60 + intervalMinutesExtra;
+      if (total < 1) {
+        intervalHours = 0;
+        intervalMinutesExtra = 1;
+      }
     }
 
-    function markFeed(ts){
+    function renderManualTimeUI() {
+      el.manualHourValue.textContent = pad2(manualHour);
+      el.manualMinValue.textContent = pad2(manualMin);
+    }
+
+    function getManualTimestamp() {
+      const dateStr = el.manualDate.value;
+      if (!dateStr) return null;
+      const [y, m, d] = dateStr.split("-").map(x => parseInt(x, 10));
+      if (!Number.isFinite(y) || !Number.isFinite(m) || !Number.isFinite(d)) return null;
+      const dt = new Date(y, m - 1, d, manualHour, manualMin, 0, 0);
+      const ts = dt.getTime();
+      return Number.isFinite(ts) ? ts : null;
+    }
+
+    function createRipple(button, event) {
+      const rect = button.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height) * 0.9;
+      const ripple = document.createElement("span");
+      ripple.className = "ripple";
+      ripple.style.width = ripple.style.height = `${size}px`;
+
+      const x = (event.clientX || rect.left + rect.width / 2) - rect.left - size / 2;
+      const y = (event.clientY || rect.top + rect.height / 2) - rect.top - size / 2;
+
+      ripple.style.left = `${x}px`;
+      ripple.style.top = `${y}px`;
+
+      button.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 700);
+    }
+
+    function lockFeedButton(ms = 2000) {
+      clearTimeout(feedLockTimer);
+      el.feedBtn.disabled = true;
+      el.feedBtn.classList.add("locked");
+      feedLockTimer = setTimeout(() => {
+        el.feedBtn.disabled = false;
+        el.feedBtn.classList.remove("locked");
+      }, ms);
+    }
+
+    function applySnapshot(snapshot) {
+      if (!snapshot) return;
+
+      if (snapshot.last === null || snapshot.last === undefined) {
+        localStorage.removeItem(KEY.last);
+      } else {
+        setLastTs(snapshot.last);
+      }
+
+      setHistory(snapshot.history || []);
+      const restoredLast = getLastTs();
+      if (restoredLast) scheduleReminderFrom(restoredLast);
+      else clearReminder();
+
+      refresh();
+      showToast("השמירה בוטלה");
+    }
+
+    function markFeed(ts, source = "normal") {
+      if (source === "normal" && el.feedBtn.disabled) return;
+
+      const snapshot = {
+        last: getLastTs(),
+        history: getHistory().slice()
+      };
+
       setLastTs(ts);
       pushHistory(ts);
       scheduleReminderFrom(ts);
       refresh();
-      toast("נשמר: " + formatDateTime(ts));
+
+      lockFeedButton(2000);
+      el.feedBtn.classList.add("saved");
+      setTimeout(() => el.feedBtn.classList.remove("saved"), 800);
+
+      showToast(`נשמר: ${formatClock(ts)}`, "בטל", () => applySnapshot(snapshot), 3000);
     }
 
-    // ----- Export / Import -----
-    function doExport(){
+    function refresh() {
+      const lastTs = getLastTs();
+
+      updateElapsed(lastTs);
+      updateNextCard(lastTs);
+
+      if (!lastTs) {
+        setStatus("", "ממתין ללחיצה");
+      } else {
+        const dueTs = lastTs + getIntervalMinutes() * 60 * 1000;
+        if (dueTs <= nowTs()) setStatus("warn", "זמן האכלה הגיע");
+        else setStatus("ok", "תזכורת פעילה");
+      }
+
+      renderHistory();
+      refreshIntervalUI();
+    }
+
+    function startTicker() {
+      if (tickInterval) clearInterval(tickInterval);
+      tickInterval = setInterval(refresh, 1000);
+    }
+
+    function doExport() {
       const data = {
         last: getLastTs(),
         interval: getIntervalMinutes(),
         history: getHistory(),
         exported_at: new Date().toISOString()
       };
+
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
       const url = URL.createObjectURL(blob);
+
       const a = document.createElement("a");
       a.href = url;
       a.download = "feeding-backup.json";
       a.click();
+
       URL.revokeObjectURL(url);
-      toast("נוצר קובץ גיבוי");
+      showToast("נוצר קובץ גיבוי");
     }
 
-    function doImportFile(file){
+    function doImportFile(file) {
       const reader = new FileReader();
       reader.onload = (event) => {
-        try{
+        try {
           const data = JSON.parse(event.target.result);
+
           if (typeof data.interval === "number") setIntervalMinutes(data.interval);
           if (typeof data.last === "number") setLastTs(data.last);
           if (Array.isArray(data.history)) setHistory(data.history);
@@ -754,20 +1279,20 @@
           loadInterval();
           const lastTs = getLastTs();
           if (lastTs) scheduleReminderFrom(lastTs);
+          else clearReminder();
 
           refresh();
-          toast("שוחזר בהצלחה");
-        }catch{
-          toast("קובץ לא תקין");
+          showToast("שוחזר בהצלחה");
+        } catch {
+          showToast("קובץ לא תקין");
         }
       };
       reader.readAsText(file);
     }
 
-    // ----- PWA install -----
-    function setupPwaInstall(){
+    function setupPwaInstall() {
       if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register("./sw.js").catch(()=>{});
+        navigator.serviceWorker.register("./sw.js").catch(() => {});
       }
 
       window.addEventListener("beforeinstallprompt", (e) => {
@@ -779,98 +1304,185 @@
       window.addEventListener("appinstalled", () => {
         el.installPwaBtn.style.display = "none";
         deferredInstallPrompt = null;
-        toast("האפליקציה הותקנה");
+        showToast("האפליקציה הותקנה");
       });
 
       el.installPwaBtn.addEventListener("click", async () => {
-        if (!deferredInstallPrompt){
-          toast("כרגע אין אפשרות התקנה. פתח דרך Chrome בכתובת https");
+        if (!deferredInstallPrompt) {
+          showToast("כרגע אין אפשרות התקנה. פתח דרך Chrome בכתובת https");
           return;
         }
+
         el.installPwaBtn.style.display = "none";
         deferredInstallPrompt.prompt();
-        try{ await deferredInstallPrompt.userChoice; }catch{}
+
+        try {
+          await deferredInstallPrompt.userChoice;
+        } catch {}
+
         deferredInstallPrompt = null;
       });
     }
 
-    // ----- Events -----
-    el.feedBtn.addEventListener("click", ()=> markFeed(nowTs()));
+    function attachRepeatPress(button, handler) {
+      let holdTimeout = null;
+      let holdInterval = null;
 
-    el.enableNotifBtn.addEventListener("click", async ()=>{
+      const stop = () => {
+        clearTimeout(holdTimeout);
+        clearInterval(holdInterval);
+        holdTimeout = null;
+        holdInterval = null;
+      };
+
+      button.addEventListener("pointerdown", (e) => {
+        e.preventDefault();
+        handler();
+        holdTimeout = setTimeout(() => {
+          holdInterval = setInterval(handler, 85);
+        }, 360);
+      });
+
+      ["pointerup", "pointerleave", "pointercancel", "lostpointercapture"].forEach(evt => {
+        button.addEventListener(evt, stop);
+      });
+    }
+
+    function initSteppers() {
+      attachRepeatPress(el.incHours, () => {
+        intervalHours += 1;
+        normalizeInterval();
+        saveIntervalFromUI();
+      });
+
+      attachRepeatPress(el.decHours, () => {
+        intervalHours -= 1;
+        normalizeInterval();
+        saveIntervalFromUI();
+      });
+
+      attachRepeatPress(el.incMinutes, () => {
+        intervalMinutesExtra += 1;
+        normalizeInterval();
+        saveIntervalFromUI();
+      });
+
+      attachRepeatPress(el.decMinutes, () => {
+        intervalMinutesExtra -= 1;
+        if (intervalMinutesExtra < 0 && intervalHours > 0) {
+          intervalHours -= 1;
+          intervalMinutesExtra = 59;
+        }
+        normalizeInterval();
+        saveIntervalFromUI();
+      });
+
+      attachRepeatPress(el.incManualHour, () => {
+        manualHour = (manualHour + 1) % 24;
+        renderManualTimeUI();
+      });
+
+      attachRepeatPress(el.decManualHour, () => {
+        manualHour = (manualHour + 23) % 24;
+        renderManualTimeUI();
+      });
+
+      attachRepeatPress(el.incManualMin, () => {
+        manualMin = (manualMin + 1) % 60;
+        renderManualTimeUI();
+      });
+
+      attachRepeatPress(el.decManualMin, () => {
+        manualMin = (manualMin + 59) % 60;
+        renderManualTimeUI();
+      });
+    }
+
+    el.feedBtn.addEventListener("click", (e) => {
+      if (el.feedBtn.disabled) return;
+      createRipple(el.feedBtn, e);
+      markFeed(nowTs(), "normal");
+    });
+
+    el.setManualBtn.addEventListener("click", () => {
+      const ts = getManualTimestamp();
+      if (!ts) {
+        showToast("בחר תאריך תקין");
+        return;
+      }
+      markFeed(ts, "manual");
+    });
+
+    el.enableNotifBtn.addEventListener("click", async () => {
       const ok = await requestNotifyPermission();
-      if (ok){
-        toast("התראות הופעלו");
+      if (ok) {
+        showToast("התראות הופעלו");
         await sendNotification("שעות האכלה", "התראות מופעלות, תקבל תזכורת בזמן.");
-      }else{
-        toast("לא אושרו התראות");
+      } else {
+        showToast("לא אושרו התראות");
       }
     });
 
-    el.testReminderBtn.addEventListener("click", async ()=>{
+    el.testReminderBtn.addEventListener("click", async () => {
       const ok = await requestNotifyPermission();
-      toast("בדיקה: תזכורת תופיע בעוד 10 שניות");
+      showToast("בדיקה: תזכורת תופיע בעוד 10 שניות");
       clearReminder();
       setStatus("ok", "בדיקת תזכורת");
-      reminderTimeout = setTimeout(async ()=>{
+
+      reminderTimeout = setTimeout(async () => {
         vibrate();
-        toast("בדיקה: תזכורת הופעלה");
+        showToast("בדיקה: תזכורת הופעלה");
         if (ok) await sendNotification("בדיקה", "תזכורת בדיקה הופעלה");
-        setStatus("warn", "בדיקה הסתיימה");
+        refresh();
       }, 10000);
     });
 
-    el.clearBtn.addEventListener("click", ()=>{
+    el.clearBtn.addEventListener("click", () => {
+      const snapshot = {
+        last: getLastTs(),
+        history: getHistory().slice()
+      };
+
       localStorage.removeItem(KEY.last);
       localStorage.removeItem(KEY.history);
       clearReminder();
       refresh();
-      toast("הכל אופס");
+
+      showToast("הכל אופס", "בטל", () => applySnapshot(snapshot), 3000);
     });
 
     el.exportBtn.addEventListener("click", doExport);
 
-    el.importBtn.addEventListener("click", ()=>{
+    el.importBtn.addEventListener("click", () => {
       el.importFile.value = "";
       el.importFile.click();
     });
 
-    el.importFile.addEventListener("change", (e)=>{
+    el.importFile.addEventListener("change", (e) => {
       const file = e.target.files && e.target.files[0];
       if (!file) return;
       doImportFile(file);
     });
 
-    el.setManualBtn.addEventListener("click", ()=>{
-      const ts = getManualTimestamp();
-      if (!ts){
-        toast("בחר תאריך תקין");
-        return;
-      }
-      markFeed(ts);
-    });
-
-    // ----- Init -----
-    (function init(){
-      if (!localStorage.getItem(KEY.interval)){
+    (function init() {
+      if (!localStorage.getItem(KEY.interval)) {
         setIntervalMinutes(120);
       }
 
       const d = new Date();
-      el.manualDate.value = `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
-
+      el.manualDate.value = `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
       manualHour = d.getHours();
       manualMin = d.getMinutes();
       renderManualTimeUI();
-      wireManualTimeButtons();
 
       loadInterval();
-      wireIntervalButtons();
+      initSteppers();
 
       const lastTs = getLastTs();
       if (lastTs) scheduleReminderFrom(lastTs);
 
       setupPwaInstall();
+      setRingProgress(0);
       refresh();
       startTicker();
     })();
