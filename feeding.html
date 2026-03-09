@@ -38,6 +38,7 @@
       --panel-bg: rgba(255,255,255,.05);
       --sheet-bg: rgba(8,17,31,.96);
       --sheet-overlay: rgba(0,0,0,.42);
+      --banner-bg: rgba(255,255,255,.06);
     }
 
     html[data-theme="light"]{
@@ -66,6 +67,7 @@
       --panel-bg: rgba(255,255,255,.62);
       --sheet-bg: rgba(255,255,255,.98);
       --sheet-overlay: rgba(18,28,46,.22);
+      --banner-bg: rgba(255,255,255,.72);
     }
 
     *{box-sizing:border-box}
@@ -222,6 +224,48 @@
         transform:scale(4.2);
         opacity:0;
       }
+    }
+
+    .status-banner{
+      padding:14px 16px;
+      border-radius: var(--radius);
+      border:1px solid var(--border);
+      background: var(--banner-bg);
+      display:grid;
+      gap:4px;
+      transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+    }
+
+    .status-banner-title{
+      font-size:13px;
+      font-weight:800;
+      color:var(--muted);
+    }
+
+    .status-banner-text{
+      font-size:15px;
+      font-weight:800;
+      line-height:1.35;
+    }
+
+    .status-banner-sub{
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    .status-banner.ok{
+      border-color: rgba(42,233,139,.28);
+      box-shadow: 0 0 0 1px rgba(42,233,139,.08);
+    }
+
+    .status-banner.warn{
+      border-color: rgba(255,209,102,.30);
+      box-shadow: 0 0 0 1px rgba(255,209,102,.08);
+    }
+
+    .status-banner.overdue{
+      border-color: rgba(255,77,109,.30);
+      box-shadow: 0 0 0 1px rgba(255,77,109,.08);
     }
 
     .row{
@@ -670,6 +714,11 @@
       margin-bottom:10px;
     }
 
+    .history-list-wrap{
+      overflow:hidden;
+      transition: max-height .22s ease, opacity .18s ease;
+    }
+
     .history-list{
       padding:0;
       margin:0;
@@ -735,6 +784,10 @@
       color:var(--danger);
       background: rgba(255,77,109,.10);
       border-color: rgba(255,77,109,.24);
+    }
+
+    .history-toggle{
+      display:none;
     }
 
     .toast{
@@ -877,6 +930,20 @@
       .actions{
         justify-content:flex-start;
       }
+
+      .history-toggle{
+        display:inline-flex;
+      }
+
+      .history-list-wrap.collapsed{
+        max-height:0 !important;
+        opacity:0;
+      }
+
+      .history-list-wrap.expanded{
+        max-height:720px;
+        opacity:1;
+      }
     }
   </style>
 </head>
@@ -900,6 +967,12 @@
         <button id="feedBtn" class="bigbtn" aria-label="סמן האכלה עכשיו">
           🍼 סימנתי האכלה עכשיו
         </button>
+
+        <div id="statusBanner" class="status-banner">
+          <div id="statusBannerTitle" class="status-banner-title">מצב נוכחי</div>
+          <div id="statusBannerText" class="status-banner-text">עדיין אין האכלה שמורה</div>
+          <div id="statusBannerSub" class="status-banner-sub">כשתסמן האכלה, המידע יוצג כאן בצורה ברורה.</div>
+        </div>
 
         <div class="row">
           <div class="box">
@@ -1045,20 +1118,25 @@
       </div>
     </section>
 
-    <aside class="card">
+    <aside class="card" id="historyCard">
       <div class="header">
         <div>
           <h1>היסטוריה</h1>
           <p class="sub">רשימת האכלות אחרונות, כולל כמה זמן עבר מהקודמת.</p>
         </div>
 
-        <div class="pill">
-          <span class="mono" id="historyCount">0</span>
-          <span>אירועים</span>
+        <div style="display:flex; gap:8px; align-items:center;">
+          <button id="historyToggleBtn" class="btn history-toggle" type="button">הצג היסטוריה</button>
+          <div class="pill">
+            <span class="mono" id="historyCount">0</span>
+            <span>אירועים</span>
+          </div>
         </div>
       </div>
 
-      <ul id="historyList" class="history-list"></ul>
+      <div id="historyListWrap" class="history-list-wrap">
+        <ul id="historyList" class="history-list"></ul>
+      </div>
     </aside>
   </div>
 
@@ -1171,7 +1249,8 @@
       last: "feed_last_ts",
       interval: "feed_interval_minutes",
       history: "feed_history",
-      theme: "feed_theme_mode"
+      theme: "feed_theme_mode",
+      historyCollapsed: "feed_history_collapsed"
     };
 
     const RING_RADIUS = 48;
@@ -1211,6 +1290,11 @@
       bottleWrap: document.getElementById("bottleWrap"),
       bottleCheck: document.getElementById("bottleCheck"),
 
+      statusBanner: document.getElementById("statusBanner"),
+      statusBannerTitle: document.getElementById("statusBannerTitle"),
+      statusBannerText: document.getElementById("statusBannerText"),
+      statusBannerSub: document.getElementById("statusBannerSub"),
+
       settingsToggleBtn: document.getElementById("settingsToggleBtn"),
       settingsPanel: document.getElementById("settingsPanel"),
 
@@ -1220,8 +1304,12 @@
       exportBtn: document.getElementById("exportBtn"),
       importBtn: document.getElementById("importBtn"),
 
+      historyCard: document.getElementById("historyCard"),
+      historyListWrap: document.getElementById("historyListWrap"),
+      historyToggleBtn: document.getElementById("historyToggleBtn"),
       historyList: document.getElementById("historyList"),
       historyCount: document.getElementById("historyCount"),
+
       statusDot: document.getElementById("statusDot"),
       statusText: document.getElementById("statusText"),
       installPwaBtn: document.getElementById("installPwaBtn"),
@@ -1473,11 +1561,71 @@
       }
     });
 
+    function getHistoryCollapsed() {
+      const raw = localStorage.getItem(KEY.historyCollapsed);
+      if (raw === null) return isMobile();
+      return raw === "1";
+    }
+
+    function setHistoryCollapsed(v) {
+      localStorage.setItem(KEY.historyCollapsed, v ? "1" : "0");
+      applyHistoryCollapse();
+    }
+
+    function applyHistoryCollapse() {
+      if (!isMobile()) {
+        el.historyListWrap.classList.remove("collapsed");
+        el.historyListWrap.classList.add("expanded");
+        el.historyToggleBtn.textContent = "הסתר היסטוריה";
+        return;
+      }
+
+      const collapsed = getHistoryCollapsed();
+      el.historyListWrap.classList.toggle("collapsed", collapsed);
+      el.historyListWrap.classList.toggle("expanded", !collapsed);
+      el.historyToggleBtn.textContent = collapsed ? "הצג היסטוריה" : "הסתר היסטוריה";
+    }
+
     function setStatus(kind, text) {
       el.statusText.textContent = text;
       el.statusDot.classList.remove("ok", "warn");
       if (kind === "ok") el.statusDot.classList.add("ok");
       if (kind === "warn") el.statusDot.classList.add("warn");
+    }
+
+    function updateStatusBanner(lastTs) {
+      el.statusBanner.classList.remove("ok", "warn", "overdue");
+
+      if (!lastTs) {
+        el.statusBannerTitle.textContent = "מצב נוכחי";
+        el.statusBannerText.textContent = "עדיין אין האכלה שמורה";
+        el.statusBannerSub.textContent = "כשתסמן האכלה, המידע יוצג כאן בצורה ברורה.";
+        return;
+      }
+
+      const dueTs = lastTs + getIntervalMinutes() * 60 * 1000;
+      const remainMs = dueTs - nowTs();
+
+      if (remainMs <= 0) {
+        el.statusBanner.classList.add("overdue");
+        el.statusBannerTitle.textContent = "צריך להאכיל";
+        el.statusBannerText.textContent = `זמן האכלה הגיע`;
+        el.statusBannerSub.textContent = `האכלה אחרונה ב־${formatClock(lastTs)} · עברו ${formatDurationShort(Math.abs(remainMs), 2)} מהמועד`;
+        return;
+      }
+
+      if (remainMs <= 15 * 60 * 1000) {
+        el.statusBanner.classList.add("warn");
+        el.statusBannerTitle.textContent = "מתקרבים לזמן האכלה";
+        el.statusBannerText.textContent = `האכלה אחרונה ב־${formatClock(lastTs)}`;
+        el.statusBannerSub.textContent = `${formatRemainingHuman(remainMs)} · הבאה ב־${formatClock(dueTs)}`;
+        return;
+      }
+
+      el.statusBanner.classList.add("ok");
+      el.statusBannerTitle.textContent = "הכל תקין";
+      el.statusBannerText.textContent = `האכלה אחרונה ב־${formatClock(lastTs)}`;
+      el.statusBannerSub.textContent = `${formatRemainingHuman(remainMs)} · הבאה ב־${formatClock(dueTs)}`;
     }
 
     function getIntervalMinutes() {
@@ -1988,6 +2136,7 @@
       updateElapsed(lastTs);
       updateNextCard(lastTs);
       updateFeedButton(lastTs);
+      updateStatusBanner(lastTs);
 
       if (!lastTs) {
         setStatus("", "ממתין ללחיצה");
@@ -1999,6 +2148,7 @@
 
       renderHistory();
       refreshIntervalUI();
+      applyHistoryCollapse();
     }
 
     function startTicker() {
@@ -2272,6 +2422,11 @@
       });
     });
 
+    el.historyToggleBtn.addEventListener("click", () => {
+      if (!isMobile()) return;
+      setHistoryCollapsed(!getHistoryCollapsed());
+    });
+
     el.settingsToggleBtn.addEventListener("click", () => {
       openSettingsUI();
     });
@@ -2368,6 +2523,7 @@
       if (!isMobile()) {
         closeSheets();
       }
+      applyHistoryCollapse();
     });
 
     (function init() {
@@ -2395,6 +2551,7 @@
       setupPwaInstall();
       setRingProgress(0);
       openDesktopSettings(false);
+      applyHistoryCollapse();
       refresh();
       startTicker();
     })();
