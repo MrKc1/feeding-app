@@ -36,6 +36,8 @@
       --toast-bg: rgba(7,13,24,.92);
       --button-text:#eef3ff;
       --panel-bg: rgba(255,255,255,.05);
+      --sheet-bg: rgba(8,17,31,.96);
+      --sheet-overlay: rgba(0,0,0,.42);
     }
 
     html[data-theme="light"]{
@@ -62,6 +64,8 @@
       --toast-bg: rgba(255,255,255,.96);
       --button-text:#162033;
       --panel-bg: rgba(255,255,255,.62);
+      --sheet-bg: rgba(255,255,255,.98);
+      --sheet-overlay: rgba(18,28,46,.22);
     }
 
     *{box-sizing:border-box}
@@ -700,10 +704,30 @@
     }
 
     .history-right{
-      text-align:left;
-      color:var(--muted);
+      display:flex;
+      gap:8px;
+      align-items:center;
+      justify-content:flex-end;
+      flex-wrap:wrap;
+      min-width:104px;
+    }
+
+    .mini-btn{
+      border:none;
+      border-radius:12px;
+      padding:7px 10px;
       font-size:12px;
-      min-width:70px;
+      font-weight:800;
+      cursor:pointer;
+      background: var(--button-bg);
+      border:1px solid var(--border);
+      color:var(--button-text);
+    }
+
+    .mini-btn.delete{
+      color:var(--danger);
+      background: rgba(255,77,109,.10);
+      border-color: rgba(255,77,109,.24);
     }
 
     .toast{
@@ -713,7 +737,7 @@
       display:flex;
       justify-content:center;
       pointer-events:none;
-      z-index:30;
+      z-index:50;
     }
 
     .toast-inner{
@@ -752,7 +776,101 @@
       background: rgba(22,32,51,.08);
     }
 
+    .sheet-backdrop{
+      position:fixed;
+      inset:0;
+      background: var(--sheet-overlay);
+      opacity:0;
+      pointer-events:none;
+      transition: opacity .18s ease;
+      z-index:70;
+    }
+
+    .sheet-backdrop.open{
+      opacity:1;
+      pointer-events:auto;
+    }
+
+    .mobile-sheet{
+      position:fixed;
+      inset-inline:0;
+      bottom:0;
+      transform: translateY(102%);
+      transition: transform .22s ease;
+      z-index:80;
+      pointer-events:none;
+    }
+
+    .mobile-sheet.open{
+      transform: translateY(0);
+      pointer-events:auto;
+    }
+
+    .mobile-sheet-card{
+      background: var(--sheet-bg);
+      border-top-left-radius: 26px;
+      border-top-right-radius: 26px;
+      border:1px solid var(--border);
+      box-shadow: 0 -18px 42px rgba(0,0,0,.22);
+      padding:14px 16px 20px;
+      max-height: min(82vh, 760px);
+      overflow:auto;
+    }
+
+    .sheet-handle{
+      width:54px;
+      height:5px;
+      border-radius:999px;
+      background: rgba(255,255,255,.18);
+      margin:0 auto 12px;
+    }
+
+    html[data-theme="light"] .sheet-handle{
+      background: rgba(22,32,51,.16);
+    }
+
+    .sheet-header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:12px;
+    }
+
+    .sheet-title{
+      font-size:16px;
+      font-weight:900;
+    }
+
+    .sheet-close{
+      border:none;
+      border-radius:14px;
+      padding:10px 12px;
+      background: var(--button-bg);
+      color:var(--button-text);
+      border:1px solid var(--border);
+      font-weight:800;
+      cursor:pointer;
+    }
+
     .mono{ font-variant-numeric: tabular-nums; }
+
+    @media (min-width: 901px){
+      .sheet-backdrop,
+      .mobile-sheet{
+        display:none !important;
+      }
+    }
+
+    @media (max-width: 900px){
+      .settings-panel{
+        display:none !important;
+      }
+
+      .actions{
+        justify-content:flex-start;
+      }
+    }
   </style>
 </head>
 
@@ -948,6 +1066,103 @@
     </aside>
   </div>
 
+  <div id="sheetBackdrop" class="sheet-backdrop"></div>
+
+  <div id="settingsSheet" class="mobile-sheet" aria-hidden="true">
+    <div class="mobile-sheet-card">
+      <div class="sheet-handle"></div>
+      <div class="sheet-header">
+        <div class="sheet-title">הגדרות</div>
+        <button id="settingsSheetCloseBtn" class="sheet-close" type="button">סגור</button>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-title">מצב תצוגה</div>
+        <div class="theme-row">
+          <button id="themeAutoBtnSheet" class="theme-btn" type="button">אוטומטי</button>
+          <button id="themeDarkBtnSheet" class="theme-btn" type="button">לילה</button>
+          <button id="themeLightBtnSheet" class="theme-btn" type="button">יום</button>
+        </div>
+      </div>
+
+      <div class="settings-section" style="margin-top:14px;">
+        <div class="settings-title">קביעת שעה ידנית</div>
+
+        <input id="manualDateSheet" class="manual-date" type="date" />
+
+        <div class="stepper-row">
+          <div class="stepper">
+            <button id="decManualHourSheet" class="stepper-btn" type="button">−</button>
+            <div id="manualHourValueSheet" class="stepper-value mono">00</div>
+            <button id="incManualHourSheet" class="stepper-btn" type="button">+</button>
+            <div class="stepper-label">שעה</div>
+          </div>
+
+          <div class="stepper">
+            <button id="decManualMinSheet" class="stepper-btn" type="button">−</button>
+            <div id="manualMinValueSheet" class="stepper-value mono">00</div>
+            <button id="incManualMinSheet" class="stepper-btn" type="button">+</button>
+            <div class="stepper-label">דקה</div>
+          </div>
+        </div>
+
+        <div style="margin-top:12px;">
+          <button id="setManualBtnSheet" class="btn primary" type="button">עדכן שעה</button>
+        </div>
+      </div>
+
+      <div class="settings-section" style="margin-top:14px;">
+        <div class="settings-title">כלים</div>
+        <div class="actions">
+          <button id="enableNotifBtnSheet" class="btn" type="button">אפשר התראות</button>
+          <button id="testReminderBtnSheet" class="btn" type="button">בדיקת תזכורת</button>
+          <button id="exportBtnSheet" class="btn" type="button">גיבוי</button>
+          <button id="importBtnSheet" class="btn" type="button">שחזור</button>
+          <button id="clearBtnSheet" class="btn danger" type="button">איפוס נתונים</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="editSheet" class="mobile-sheet" aria-hidden="true">
+    <div class="mobile-sheet-card">
+      <div class="sheet-handle"></div>
+      <div class="sheet-header">
+        <div class="sheet-title">עריכת רשומה</div>
+        <button id="editSheetCloseBtn" class="sheet-close" type="button">סגור</button>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-title">תאריך</div>
+        <input id="editDate" class="manual-date" type="date" />
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-title">שעה</div>
+        <div class="stepper-row">
+          <div class="stepper">
+            <button id="editDecHour" class="stepper-btn" type="button">−</button>
+            <div id="editHourValue" class="stepper-value mono">00</div>
+            <button id="editIncHour" class="stepper-btn" type="button">+</button>
+            <div class="stepper-label">שעה</div>
+          </div>
+
+          <div class="stepper">
+            <button id="editDecMin" class="stepper-btn" type="button">−</button>
+            <div id="editMinValue" class="stepper-value mono">00</div>
+            <button id="editIncMin" class="stepper-btn" type="button">+</button>
+            <div class="stepper-label">דקה</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions" style="margin-top:14px;">
+        <button id="editSaveBtn" class="btn primary" type="button">שמור שינויים</button>
+        <button id="editDeleteBtn" class="btn danger" type="button">מחק רשומה</button>
+      </div>
+    </div>
+  </div>
+
   <div class="toast" aria-live="polite">
     <div id="toastInner" class="toast-inner">
       <span id="toastText" class="toast-text"></span>
@@ -980,6 +1195,12 @@
     let toastTimer = null;
     let toastActionHandler = null;
 
+    let activeSheet = null;
+
+    let editingIndex = null;
+    let editHour = 0;
+    let editMin = 0;
+
     const mediaTheme = window.matchMedia("(prefers-color-scheme: dark)");
 
     const el = {
@@ -993,19 +1214,23 @@
       progressRing: document.getElementById("progressRing"),
       bottleWrap: document.getElementById("bottleWrap"),
       bottleCheck: document.getElementById("bottleCheck"),
+
       settingsToggleBtn: document.getElementById("settingsToggleBtn"),
       settingsPanel: document.getElementById("settingsPanel"),
+
       enableNotifBtn: document.getElementById("enableNotifBtn"),
       testReminderBtn: document.getElementById("testReminderBtn"),
       clearBtn: document.getElementById("clearBtn"),
+      exportBtn: document.getElementById("exportBtn"),
+      importBtn: document.getElementById("importBtn"),
+
       historyList: document.getElementById("historyList"),
       historyCount: document.getElementById("historyCount"),
       statusDot: document.getElementById("statusDot"),
       statusText: document.getElementById("statusText"),
       installPwaBtn: document.getElementById("installPwaBtn"),
-      exportBtn: document.getElementById("exportBtn"),
-      importBtn: document.getElementById("importBtn"),
       importFile: document.getElementById("importFile"),
+
       toastInner: document.getElementById("toastInner"),
       toastText: document.getElementById("toastText"),
       toastAction: document.getElementById("toastAction"),
@@ -1013,6 +1238,10 @@
       themeAutoBtn: document.getElementById("themeAutoBtn"),
       themeDarkBtn: document.getElementById("themeDarkBtn"),
       themeLightBtn: document.getElementById("themeLightBtn"),
+
+      themeAutoBtnSheet: document.getElementById("themeAutoBtnSheet"),
+      themeDarkBtnSheet: document.getElementById("themeDarkBtnSheet"),
+      themeLightBtnSheet: document.getElementById("themeLightBtnSheet"),
 
       hoursValue: document.getElementById("hoursValue"),
       minutesValue: document.getElementById("minutesValue"),
@@ -1031,7 +1260,40 @@
       decManualHour: document.getElementById("decManualHour"),
       incManualMin: document.getElementById("incManualMin"),
       decManualMin: document.getElementById("decManualMin"),
+
+      sheetBackdrop: document.getElementById("sheetBackdrop"),
+      settingsSheet: document.getElementById("settingsSheet"),
+      settingsSheetCloseBtn: document.getElementById("settingsSheetCloseBtn"),
+      manualDateSheet: document.getElementById("manualDateSheet"),
+      setManualBtnSheet: document.getElementById("setManualBtnSheet"),
+      manualHourValueSheet: document.getElementById("manualHourValueSheet"),
+      manualMinValueSheet: document.getElementById("manualMinValueSheet"),
+      incManualHourSheet: document.getElementById("incManualHourSheet"),
+      decManualHourSheet: document.getElementById("decManualHourSheet"),
+      incManualMinSheet: document.getElementById("incManualMinSheet"),
+      decManualMinSheet: document.getElementById("decManualMinSheet"),
+      enableNotifBtnSheet: document.getElementById("enableNotifBtnSheet"),
+      testReminderBtnSheet: document.getElementById("testReminderBtnSheet"),
+      exportBtnSheet: document.getElementById("exportBtnSheet"),
+      importBtnSheet: document.getElementById("importBtnSheet"),
+      clearBtnSheet: document.getElementById("clearBtnSheet"),
+
+      editSheet: document.getElementById("editSheet"),
+      editSheetCloseBtn: document.getElementById("editSheetCloseBtn"),
+      editDate: document.getElementById("editDate"),
+      editHourValue: document.getElementById("editHourValue"),
+      editMinValue: document.getElementById("editMinValue"),
+      editIncHour: document.getElementById("editIncHour"),
+      editDecHour: document.getElementById("editDecHour"),
+      editIncMin: document.getElementById("editIncMin"),
+      editDecMin: document.getElementById("editDecMin"),
+      editSaveBtn: document.getElementById("editSaveBtn"),
+      editDeleteBtn: document.getElementById("editDeleteBtn"),
     };
+
+    function isMobile() {
+      return window.innerWidth <= 900;
+    }
 
     function nowTs() {
       return Date.now();
@@ -1183,13 +1445,25 @@
       return mediaTheme.matches ? "dark" : "light";
     }
 
+    function updateThemeButtons(choice) {
+      const map = [
+        [el.themeAutoBtn, choice === "auto"],
+        [el.themeDarkBtn, choice === "dark"],
+        [el.themeLightBtn, choice === "light"],
+        [el.themeAutoBtnSheet, choice === "auto"],
+        [el.themeDarkBtnSheet, choice === "dark"],
+        [el.themeLightBtnSheet, choice === "light"],
+      ];
+
+      map.forEach(([btn, active]) => {
+        btn.classList.toggle("active", active);
+      });
+    }
+
     function applyTheme(choice = getThemeChoice()) {
       const resolved = getResolvedTheme(choice);
       document.documentElement.setAttribute("data-theme", resolved);
-
-      el.themeAutoBtn.classList.toggle("active", choice === "auto");
-      el.themeDarkBtn.classList.toggle("active", choice === "dark");
-      el.themeLightBtn.classList.toggle("active", choice === "light");
+      updateThemeButtons(choice);
     }
 
     function setThemeChoice(choice) {
@@ -1245,10 +1519,23 @@
       localStorage.setItem(KEY.history, JSON.stringify(arr));
     }
 
+    function applyHistoryArray(arr) {
+      const sorted = [...arr].sort((a, b) => b - a);
+      setHistory(sorted);
+      if (sorted.length > 0) {
+        setLastTs(sorted[0]);
+        scheduleReminderFrom(sorted[0]);
+      } else {
+        localStorage.removeItem(KEY.last);
+        clearReminder();
+      }
+      refresh();
+    }
+
     function pushHistory(ts) {
       const arr = getHistory();
       arr.unshift(ts);
-      setHistory(arr.slice(0, 60));
+      applyHistoryArray(arr.slice(0, 60));
     }
 
     function clearReminder() {
@@ -1414,6 +1701,42 @@
       el.elapsedDetail.textContent = human.detail;
     }
 
+    function deleteHistoryItem(index) {
+      const current = getHistory();
+      if (index < 0 || index >= current.length) return;
+
+      const snapshot = {
+        last: getLastTs(),
+        history: current.slice()
+      };
+
+      current.splice(index, 1);
+      applyHistoryArray(current);
+
+      showToast("הרשומה נמחקה", "בטל", () => {
+        setLastTs(snapshot.last);
+        setHistory(snapshot.history);
+        if (snapshot.last) scheduleReminderFrom(snapshot.last);
+        else clearReminder();
+        refresh();
+      }, 3200);
+    }
+
+    function openEditSheet(index) {
+      const history = getHistory();
+      const ts = history[index];
+      if (!Number.isFinite(ts)) return;
+
+      editingIndex = index;
+      const d = new Date(ts);
+      editHour = d.getHours();
+      editMin = d.getMinutes();
+
+      el.editDate.value = `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+      renderEditTimeUI();
+      openSheet(el.editSheet);
+    }
+
     function renderHistory() {
       const arr = getHistory();
       el.historyCount.textContent = String(arr.length);
@@ -1448,10 +1771,25 @@
             <div class="history-date mono">${formatDateTime(ts)}</div>
             <div class="history-gap">${gapText}</div>
           </div>
-          <div class="history-right">${idx === 0 ? "האחרונה" : "קודמת"}</div>
+          <div class="history-right">
+            <button class="mini-btn" type="button" data-edit-index="${idx}">ערוך</button>
+            <button class="mini-btn delete" type="button" data-delete-index="${idx}">מחק</button>
+          </div>
         `;
 
         el.historyList.appendChild(li);
+      });
+
+      el.historyList.querySelectorAll("[data-edit-index]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          openEditSheet(parseInt(btn.dataset.editIndex, 10));
+        });
+      });
+
+      el.historyList.querySelectorAll("[data-delete-index]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          deleteHistoryItem(parseInt(btn.dataset.deleteIndex, 10));
+        });
       });
     }
 
@@ -1511,14 +1849,32 @@
     function renderManualTimeUI() {
       el.manualHourValue.textContent = pad2(manualHour);
       el.manualMinValue.textContent = pad2(manualMin);
+      el.manualHourValueSheet.textContent = pad2(manualHour);
+      el.manualMinValueSheet.textContent = pad2(manualMin);
+      el.manualDateSheet.value = el.manualDate.value;
     }
 
-    function getManualTimestamp() {
-      const dateStr = el.manualDate.value;
+    function getManualTimestamp(dateValue) {
+      const dateStr = dateValue;
       if (!dateStr) return null;
       const [y, m, d] = dateStr.split("-").map(x => parseInt(x, 10));
       if (!Number.isFinite(y) || !Number.isFinite(m) || !Number.isFinite(d)) return null;
       const dt = new Date(y, m - 1, d, manualHour, manualMin, 0, 0);
+      const ts = dt.getTime();
+      return Number.isFinite(ts) ? ts : null;
+    }
+
+    function renderEditTimeUI() {
+      el.editHourValue.textContent = pad2(editHour);
+      el.editMinValue.textContent = pad2(editMin);
+    }
+
+    function getEditTimestamp() {
+      const dateStr = el.editDate.value;
+      if (!dateStr) return null;
+      const [y, m, d] = dateStr.split("-").map(x => parseInt(x, 10));
+      if (!Number.isFinite(y) || !Number.isFinite(m) || !Number.isFinite(d)) return null;
+      const dt = new Date(y, m - 1, d, editHour, editMin, 0, 0);
       const ts = dt.getTime();
       return Number.isFinite(ts) ? ts : null;
     }
@@ -1589,13 +1945,45 @@
       showToast(`נשמר: ${formatClock(ts)}`, "בטל", () => applySnapshot(snapshot), 3000);
     }
 
-    function toggleSettings(forceValue = null) {
+    function openDesktopSettings(forceValue = null) {
       const shouldOpen = forceValue === null
         ? !el.settingsPanel.classList.contains("open")
         : !!forceValue;
 
       el.settingsPanel.classList.toggle("open", shouldOpen);
       el.settingsToggleBtn.textContent = shouldOpen ? "סגור הגדרות" : "הגדרות";
+    }
+
+    function openSheet(sheetEl) {
+      activeSheet = sheetEl;
+      el.sheetBackdrop.classList.add("open");
+      sheetEl.classList.add("open");
+      sheetEl.setAttribute("aria-hidden", "false");
+    }
+
+    function closeSheets() {
+      activeSheet = null;
+      el.sheetBackdrop.classList.remove("open");
+      [el.settingsSheet, el.editSheet].forEach(sheet => {
+        sheet.classList.remove("open");
+        sheet.setAttribute("aria-hidden", "true");
+      });
+    }
+
+    function openSettingsUI() {
+      if (isMobile()) {
+        openSheet(el.settingsSheet);
+      } else {
+        openDesktopSettings();
+      }
+    }
+
+    function closeSettingsUI() {
+      if (isMobile()) {
+        closeSheets();
+      } else {
+        openDesktopSettings(false);
+      }
     }
 
     function refresh() {
@@ -1659,6 +2047,7 @@
 
           refresh();
           showToast("שוחזר בהצלחה");
+          closeSheets();
         } catch {
           showToast("קובץ לא תקין");
         }
@@ -1772,11 +2161,111 @@
         manualMin = (manualMin + 59) % 60;
         renderManualTimeUI();
       });
+
+      attachRepeatPress(el.incManualHourSheet, () => {
+        manualHour = (manualHour + 1) % 24;
+        renderManualTimeUI();
+      });
+
+      attachRepeatPress(el.decManualHourSheet, () => {
+        manualHour = (manualHour + 23) % 24;
+        renderManualTimeUI();
+      });
+
+      attachRepeatPress(el.incManualMinSheet, () => {
+        manualMin = (manualMin + 1) % 60;
+        renderManualTimeUI();
+      });
+
+      attachRepeatPress(el.decManualMinSheet, () => {
+        manualMin = (manualMin + 59) % 60;
+        renderManualTimeUI();
+      });
+
+      attachRepeatPress(el.editIncHour, () => {
+        editHour = (editHour + 1) % 24;
+        renderEditTimeUI();
+      });
+
+      attachRepeatPress(el.editDecHour, () => {
+        editHour = (editHour + 23) % 24;
+        renderEditTimeUI();
+      });
+
+      attachRepeatPress(el.editIncMin, () => {
+        editMin = (editMin + 1) % 60;
+        renderEditTimeUI();
+      });
+
+      attachRepeatPress(el.editDecMin, () => {
+        editMin = (editMin + 59) % 60;
+        renderEditTimeUI();
+      });
+    }
+
+    function handleEnableNotifications() {
+      return requestNotifyPermission().then(async ok => {
+        if (ok) {
+          showToast("התראות הופעלו");
+          await sendNotification("שעות האכלה", "התראות מופעלות, תקבל תזכורת בזמן.");
+        } else {
+          showToast("לא אושרו התראות");
+        }
+      });
+    }
+
+    function handleTestReminder() {
+      return requestNotifyPermission().then(async ok => {
+        showToast("בדיקה: תזכורת תופיע בעוד 10 שניות");
+        clearReminder();
+        setStatus("ok", "בדיקת תזכורת");
+
+        reminderTimeout = setTimeout(async () => {
+          vibrate();
+          showToast("בדיקה: תזכורת הופעלה");
+          if (ok) await sendNotification("בדיקה", "תזכורת בדיקה הופעלה");
+          refresh();
+        }, 10000);
+      });
+    }
+
+    function handleManualSave(dateValue) {
+      const ts = getManualTimestamp(dateValue);
+      if (!ts) {
+        showToast("בחר תאריך תקין");
+        return;
+      }
+      markFeed(ts, "manual");
+      closeSheets();
+    }
+
+    function handleClear() {
+      const snapshot = {
+        last: getLastTs(),
+        history: getHistory().slice()
+      };
+
+      localStorage.removeItem(KEY.last);
+      localStorage.removeItem(KEY.history);
+      clearReminder();
+      refresh();
+      closeSheets();
+
+      showToast("הכל אופס", "בטל", () => {
+        setLastTs(snapshot.last);
+        setHistory(snapshot.history);
+        if (snapshot.last) scheduleReminderFrom(snapshot.last);
+        else clearReminder();
+        refresh();
+      }, 3000);
     }
 
     el.themeAutoBtn.addEventListener("click", () => setThemeChoice("auto"));
     el.themeDarkBtn.addEventListener("click", () => setThemeChoice("dark"));
     el.themeLightBtn.addEventListener("click", () => setThemeChoice("light"));
+    el.themeAutoBtnSheet.addEventListener("click", () => setThemeChoice("auto"));
+    el.themeDarkBtnSheet.addEventListener("click", () => setThemeChoice("dark"));
+    el.themeLightBtnSheet.addEventListener("click", () => setThemeChoice("light"));
 
     el.presetButtons.forEach(btn => {
       btn.addEventListener("click", () => {
@@ -1788,8 +2277,12 @@
     });
 
     el.settingsToggleBtn.addEventListener("click", () => {
-      toggleSettings();
+      openSettingsUI();
     });
+
+    el.settingsSheetCloseBtn.addEventListener("click", closeSheets);
+    el.editSheetCloseBtn.addEventListener("click", closeSheets);
+    el.sheetBackdrop.addEventListener("click", closeSheets);
 
     el.feedBtn.addEventListener("click", (e) => {
       if (el.feedBtn.disabled) return;
@@ -1798,55 +2291,28 @@
     });
 
     el.setManualBtn.addEventListener("click", () => {
-      const ts = getManualTimestamp();
-      if (!ts) {
-        showToast("בחר תאריך תקין");
-        return;
-      }
-      markFeed(ts, "manual");
+      handleManualSave(el.manualDate.value);
     });
 
-    el.enableNotifBtn.addEventListener("click", async () => {
-      const ok = await requestNotifyPermission();
-      if (ok) {
-        showToast("התראות הופעלו");
-        await sendNotification("שעות האכלה", "התראות מופעלות, תקבל תזכורת בזמן.");
-      } else {
-        showToast("לא אושרו התראות");
-      }
+    el.setManualBtnSheet.addEventListener("click", () => {
+      el.manualDate.value = el.manualDateSheet.value;
+      handleManualSave(el.manualDateSheet.value);
     });
 
-    el.testReminderBtn.addEventListener("click", async () => {
-      const ok = await requestNotifyPermission();
-      showToast("בדיקה: תזכורת תופיע בעוד 10 שניות");
-      clearReminder();
-      setStatus("ok", "בדיקת תזכורת");
+    el.enableNotifBtn.addEventListener("click", handleEnableNotifications);
+    el.enableNotifBtnSheet.addEventListener("click", handleEnableNotifications);
 
-      reminderTimeout = setTimeout(async () => {
-        vibrate();
-        showToast("בדיקה: תזכורת הופעלה");
-        if (ok) await sendNotification("בדיקה", "תזכורת בדיקה הופעלה");
-        refresh();
-      }, 10000);
-    });
-
-    el.clearBtn.addEventListener("click", () => {
-      const snapshot = {
-        last: getLastTs(),
-        history: getHistory().slice()
-      };
-
-      localStorage.removeItem(KEY.last);
-      localStorage.removeItem(KEY.history);
-      clearReminder();
-      refresh();
-
-      showToast("הכל אופס", "בטל", () => applySnapshot(snapshot), 3000);
-    });
+    el.testReminderBtn.addEventListener("click", handleTestReminder);
+    el.testReminderBtnSheet.addEventListener("click", handleTestReminder);
 
     el.exportBtn.addEventListener("click", doExport);
+    el.exportBtnSheet.addEventListener("click", doExport);
 
     el.importBtn.addEventListener("click", () => {
+      el.importFile.value = "";
+      el.importFile.click();
+    });
+    el.importBtnSheet.addEventListener("click", () => {
       el.importFile.value = "";
       el.importFile.click();
     });
@@ -1857,6 +2323,57 @@
       doImportFile(file);
     });
 
+    el.clearBtn.addEventListener("click", handleClear);
+    el.clearBtnSheet.addEventListener("click", handleClear);
+
+    el.editSaveBtn.addEventListener("click", () => {
+      if (editingIndex === null) return;
+      const ts = getEditTimestamp();
+      if (!ts) {
+        showToast("בחר תאריך תקין");
+        return;
+      }
+
+      const current = getHistory();
+      if (editingIndex < 0 || editingIndex >= current.length) return;
+
+      const snapshot = {
+        last: getLastTs(),
+        history: current.slice()
+      };
+
+      current[editingIndex] = ts;
+      applyHistoryArray(current);
+
+      closeSheets();
+      showToast("הרשומה עודכנה", "בטל", () => {
+        setLastTs(snapshot.last);
+        setHistory(snapshot.history);
+        if (snapshot.last) scheduleReminderFrom(snapshot.last);
+        else clearReminder();
+        refresh();
+      }, 3200);
+    });
+
+    el.editDeleteBtn.addEventListener("click", () => {
+      if (editingIndex === null) return;
+      const idx = editingIndex;
+      closeSheets();
+      deleteHistoryItem(idx);
+    });
+
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        closeSheets();
+      }
+    });
+
+    window.addEventListener("resize", () => {
+      if (!isMobile()) {
+        closeSheets();
+      }
+    });
+
     (function init() {
       applyTheme(getThemeChoice());
 
@@ -1865,7 +2382,10 @@
       }
 
       const d = new Date();
-      el.manualDate.value = `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+      const defaultDate = `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+      el.manualDate.value = defaultDate;
+      el.manualDateSheet.value = defaultDate;
+
       manualHour = d.getHours();
       manualMin = d.getMinutes();
       renderManualTimeUI();
@@ -1878,7 +2398,7 @@
 
       setupPwaInstall();
       setRingProgress(0);
-      toggleSettings(false);
+      openDesktopSettings(false);
       refresh();
       startTicker();
     })();
