@@ -39,6 +39,8 @@
       --sheet-bg: rgba(8,17,31,.96);
       --sheet-overlay: rgba(0,0,0,.42);
       --banner-bg: rgba(255,255,255,.06);
+      --about-bg: rgba(255,255,255,.05);
+      --stat-bg: rgba(255,255,255,.05);
     }
 
     html[data-theme="light"]{
@@ -68,6 +70,8 @@
       --sheet-bg: rgba(255,255,255,.98);
       --sheet-overlay: rgba(18,28,46,.22);
       --banner-bg: rgba(255,255,255,.72);
+      --about-bg: rgba(255,255,255,.8);
+      --stat-bg: rgba(255,255,255,.7);
     }
 
     *{box-sizing:border-box}
@@ -502,6 +506,34 @@
       gap:12px;
     }
 
+    .stats-grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+    }
+
+    .stat-card{
+      border:1px solid var(--border);
+      background: var(--stat-bg);
+      border-radius:18px;
+      padding:14px;
+      display:grid;
+      gap:6px;
+      min-height:84px;
+      align-content:start;
+    }
+
+    .stat-value{
+      font-size:24px;
+      font-weight:900;
+      line-height:1;
+    }
+
+    .stat-label{
+      font-size:12px;
+      color:var(--muted);
+    }
+
     .preset-row{
       display:flex;
       gap:8px;
@@ -700,6 +732,10 @@
       .settings-grid{
         grid-template-columns:1fr;
       }
+
+      .stats-grid{
+        grid-template-columns:1fr;
+      }
     }
 
     .manual-date{
@@ -712,6 +748,21 @@
       outline:none;
       font-size:14px;
       margin-bottom:10px;
+    }
+
+    .about-box{
+      border:1px solid var(--border);
+      background: var(--about-bg);
+      border-radius:18px;
+      padding:14px;
+      display:grid;
+      gap:6px;
+      font-size:14px;
+    }
+
+    .about-sub{
+      font-size:12px;
+      color:var(--muted);
     }
 
     .history-list-wrap{
@@ -859,6 +910,7 @@
       transition: transform .22s ease;
       z-index:80;
       pointer-events:none;
+      touch-action:none;
     }
 
     .mobile-sheet.open{
@@ -883,6 +935,12 @@
       border-radius:999px;
       background: rgba(255,255,255,.18);
       margin:0 auto 12px;
+      cursor:grab;
+      touch-action:none;
+    }
+
+    .sheet-handle:active{
+      cursor:grabbing;
     }
 
     html[data-theme="light"] .sheet-handle{
@@ -1053,6 +1111,20 @@
 
             <div id="intervalTotalText" class="interval-summary">המרווח שנבחר: שעתיים</div>
           </div>
+
+          <div class="box">
+            <div class="label">סיכום היום</div>
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div id="todayCount" class="stat-value mono">0</div>
+                <div class="stat-label">האכלות היום</div>
+              </div>
+              <div class="stat-card">
+                <div id="todayAvg" class="stat-value">אין עדיין</div>
+                <div class="stat-label">ממוצע מרווח</div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div class="actions">
@@ -1114,6 +1186,15 @@
               </p>
             </div>
           </div>
+
+          <div class="settings-section">
+            <div class="settings-title">אודות</div>
+            <div class="about-box">
+              <div>נוצר ע"י קובי</div>
+              <div class="mono">גרסה <span id="appVersion">1.1</span></div>
+              <div class="about-sub">בכל שינוי הבא נעלה לגרסה הבאה.</div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -1144,7 +1225,7 @@
 
   <div id="settingsSheet" class="mobile-sheet" aria-hidden="true">
     <div class="mobile-sheet-card">
-      <div class="sheet-handle"></div>
+      <div id="settingsSheetHandle" class="sheet-handle"></div>
       <div class="sheet-header">
         <div class="sheet-title">הגדרות</div>
         <button id="settingsSheetCloseBtn" class="sheet-close" type="button">סגור</button>
@@ -1195,12 +1276,21 @@
           <button id="clearBtnSheet" class="btn danger" type="button">איפוס נתונים</button>
         </div>
       </div>
+
+      <div class="settings-section" style="margin-top:14px;">
+        <div class="settings-title">אודות</div>
+        <div class="about-box">
+          <div>נוצר ע"י קובי</div>
+          <div class="mono">גרסה <span id="appVersionSheet">1.1</span></div>
+          <div class="about-sub">בכל שינוי הבא נעלה לגרסה הבאה.</div>
+        </div>
+      </div>
     </div>
   </div>
 
   <div id="editSheet" class="mobile-sheet" aria-hidden="true">
     <div class="mobile-sheet-card">
-      <div class="sheet-handle"></div>
+      <div id="editSheetHandle" class="sheet-handle"></div>
       <div class="sheet-header">
         <div class="sheet-title">עריכת רשומה</div>
         <button id="editSheetCloseBtn" class="sheet-close" type="button">סגור</button>
@@ -1245,6 +1335,8 @@
   </div>
 
   <script>
+    const APP_VERSION = "1.1";
+
     const KEY = {
       last: "feed_last_ts",
       interval: "feed_interval_minutes",
@@ -1288,12 +1380,14 @@
       nextReminderDay: document.getElementById("nextReminderDay"),
       progressRing: document.getElementById("progressRing"),
       bottleWrap: document.getElementById("bottleWrap"),
-      bottleCheck: document.getElementById("bottleCheck"),
 
       statusBanner: document.getElementById("statusBanner"),
       statusBannerTitle: document.getElementById("statusBannerTitle"),
       statusBannerText: document.getElementById("statusBannerText"),
       statusBannerSub: document.getElementById("statusBannerSub"),
+
+      todayCount: document.getElementById("todayCount"),
+      todayAvg: document.getElementById("todayAvg"),
 
       settingsToggleBtn: document.getElementById("settingsToggleBtn"),
       settingsPanel: document.getElementById("settingsPanel"),
@@ -1304,7 +1398,6 @@
       exportBtn: document.getElementById("exportBtn"),
       importBtn: document.getElementById("importBtn"),
 
-      historyCard: document.getElementById("historyCard"),
       historyListWrap: document.getElementById("historyListWrap"),
       historyToggleBtn: document.getElementById("historyToggleBtn"),
       historyList: document.getElementById("historyList"),
@@ -1347,6 +1440,7 @@
 
       sheetBackdrop: document.getElementById("sheetBackdrop"),
       settingsSheet: document.getElementById("settingsSheet"),
+      settingsSheetHandle: document.getElementById("settingsSheetHandle"),
       settingsSheetCloseBtn: document.getElementById("settingsSheetCloseBtn"),
       manualDateSheet: document.getElementById("manualDateSheet"),
       setManualBtnSheet: document.getElementById("setManualBtnSheet"),
@@ -1363,6 +1457,7 @@
       clearBtnSheet: document.getElementById("clearBtnSheet"),
 
       editSheet: document.getElementById("editSheet"),
+      editSheetHandle: document.getElementById("editSheetHandle"),
       editSheetCloseBtn: document.getElementById("editSheetCloseBtn"),
       editDate: document.getElementById("editDate"),
       editHourValue: document.getElementById("editHourValue"),
@@ -1373,6 +1468,9 @@
       editDecMin: document.getElementById("editDecMin"),
       editSaveBtn: document.getElementById("editSaveBtn"),
       editDeleteBtn: document.getElementById("editDeleteBtn"),
+
+      appVersion: document.getElementById("appVersion"),
+      appVersionSheet: document.getElementById("appVersionSheet"),
     };
 
     function isMobile() {
@@ -1408,6 +1506,10 @@
       return da.getFullYear() === db.getFullYear()
         && da.getMonth() === db.getMonth()
         && da.getDate() === db.getDate();
+    }
+
+    function isTodayTs(ts) {
+      return sameDay(ts, Date.now());
     }
 
     function getRelativeDayLabel(ts) {
@@ -1609,7 +1711,7 @@
       if (remainMs <= 0) {
         el.statusBanner.classList.add("overdue");
         el.statusBannerTitle.textContent = "צריך להאכיל";
-        el.statusBannerText.textContent = `זמן האכלה הגיע`;
+        el.statusBannerText.textContent = "זמן האכלה הגיע";
         el.statusBannerSub.textContent = `האכלה אחרונה ב־${formatClock(lastTs)} · עברו ${formatDurationShort(Math.abs(remainMs), 2)} מהמועד`;
         return;
       }
@@ -1626,6 +1728,27 @@
       el.statusBannerTitle.textContent = "הכל תקין";
       el.statusBannerText.textContent = `האכלה אחרונה ב־${formatClock(lastTs)}`;
       el.statusBannerSub.textContent = `${formatRemainingHuman(remainMs)} · הבאה ב־${formatClock(dueTs)}`;
+    }
+
+    function updateTodayStats() {
+      const arr = getHistory().filter(isTodayTs);
+      el.todayCount.textContent = String(arr.length);
+
+      if (arr.length < 2) {
+        el.todayAvg.textContent = "אין עדיין";
+        return;
+      }
+
+      let total = 0;
+      let count = 0;
+
+      for (let i = 0; i < arr.length - 1; i++) {
+        total += (arr[i] - arr[i + 1]);
+        count += 1;
+      }
+
+      const avg = total / count;
+      el.todayAvg.textContent = formatDurationShort(avg, 2);
     }
 
     function getIntervalMinutes() {
@@ -2098,8 +2221,15 @@
       el.settingsToggleBtn.textContent = shouldOpen ? "סגור הגדרות" : "הגדרות";
     }
 
+    function resetSheetStyle(sheetEl) {
+      sheetEl.style.transform = "";
+      el.sheetBackdrop.style.opacity = "";
+      sheetEl.style.transition = "";
+    }
+
     function openSheet(sheetEl) {
       activeSheet = sheetEl;
+      resetSheetStyle(sheetEl);
       el.sheetBackdrop.classList.add("open");
       sheetEl.classList.add("open");
       sheetEl.setAttribute("aria-hidden", "false");
@@ -2111,6 +2241,67 @@
       [el.settingsSheet, el.editSheet].forEach(sheet => {
         sheet.classList.remove("open");
         sheet.setAttribute("aria-hidden", "true");
+        resetSheetStyle(sheet);
+      });
+    }
+
+    function attachSheetDrag(sheetEl, handleEl) {
+      let startY = 0;
+      let deltaY = 0;
+      let dragging = false;
+      let moved = false;
+
+      function onMove(e) {
+        if (!dragging) return;
+        deltaY = Math.max(0, e.clientY - startY);
+        if (deltaY > 4) moved = true;
+
+        sheetEl.style.transition = "none";
+        sheetEl.style.transform = `translateY(${deltaY}px)`;
+
+        const opacity = Math.max(0, 1 - (deltaY / 260));
+        el.sheetBackdrop.style.opacity = String(opacity);
+      }
+
+      function onEnd() {
+        if (!dragging) return;
+        dragging = false;
+
+        const shouldClose = deltaY > 110;
+
+        sheetEl.style.transition = "transform .22s ease";
+        if (shouldClose) {
+          closeSheets();
+        } else {
+          sheetEl.style.transform = "translateY(0px)";
+          el.sheetBackdrop.style.opacity = "";
+          setTimeout(() => resetSheetStyle(sheetEl), 240);
+        }
+
+        deltaY = 0;
+        setTimeout(() => { moved = false; }, 0);
+
+        window.removeEventListener("pointermove", onMove);
+        window.removeEventListener("pointerup", onEnd);
+        window.removeEventListener("pointercancel", onEnd);
+      }
+
+      handleEl.addEventListener("pointerdown", (e) => {
+        if (!isMobile()) return;
+        dragging = true;
+        moved = false;
+        startY = e.clientY;
+        deltaY = 0;
+
+        window.addEventListener("pointermove", onMove, { passive: true });
+        window.addEventListener("pointerup", onEnd, { passive: true });
+        window.addEventListener("pointercancel", onEnd, { passive: true });
+      });
+
+      handleEl.addEventListener("click", () => {
+        if (!isMobile()) return;
+        if (moved) return;
+        closeSheets();
       });
     }
 
@@ -2122,14 +2313,6 @@
       }
     }
 
-    function closeSettingsUI() {
-      if (isMobile()) {
-        closeSheets();
-      } else {
-        openDesktopSettings(false);
-      }
-    }
-
     function refresh() {
       const lastTs = getLastTs();
 
@@ -2137,6 +2320,7 @@
       updateNextCard(lastTs);
       updateFeedButton(lastTs);
       updateStatusBanner(lastTs);
+      updateTodayStats();
 
       if (!lastTs) {
         setStatus("", "ממתין ללחיצה");
@@ -2161,7 +2345,8 @@
         last: getLastTs(),
         interval: getIntervalMinutes(),
         history: getHistory(),
-        exported_at: new Date().toISOString()
+        exported_at: new Date().toISOString(),
+        version: APP_VERSION
       };
 
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
@@ -2527,6 +2712,9 @@
     });
 
     (function init() {
+      el.appVersion.textContent = APP_VERSION;
+      el.appVersionSheet.textContent = APP_VERSION;
+
       applyTheme(getThemeChoice());
 
       if (!localStorage.getItem(KEY.interval)) {
@@ -2544,6 +2732,9 @@
 
       loadInterval();
       initSteppers();
+
+      attachSheetDrag(el.settingsSheet, el.settingsSheetHandle);
+      attachSheetDrag(el.editSheet, el.editSheetHandle);
 
       const lastTs = getLastTs();
       if (lastTs) scheduleReminderFrom(lastTs);
