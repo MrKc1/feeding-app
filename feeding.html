@@ -41,6 +41,7 @@
       --banner-bg: rgba(255,255,255,.06);
       --about-bg: rgba(255,255,255,.05);
       --stat-bg: rgba(255,255,255,.05);
+      --smart-bg: rgba(255,255,255,.05);
     }
 
     html[data-theme="light"]{
@@ -72,6 +73,7 @@
       --banner-bg: rgba(255,255,255,.72);
       --about-bg: rgba(255,255,255,.8);
       --stat-bg: rgba(255,255,255,.7);
+      --smart-bg: rgba(255,255,255,.74);
     }
 
     *{box-sizing:border-box}
@@ -534,6 +536,60 @@
       color:var(--muted);
     }
 
+    .smart-grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+    }
+
+    .smart-card{
+      border:1px solid var(--border);
+      background: var(--smart-bg);
+      border-radius:18px;
+      padding:14px;
+      display:grid;
+      gap:8px;
+      min-height:120px;
+      align-content:start;
+    }
+
+    .smart-title{
+      font-size:12px;
+      color:var(--muted);
+      font-weight:800;
+    }
+
+    .smart-main{
+      font-size:24px;
+      font-weight:900;
+      line-height:1;
+    }
+
+    .smart-sub{
+      font-size:13px;
+      color:var(--text);
+      line-height:1.4;
+      opacity:.95;
+    }
+
+    .smart-note{
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.4;
+    }
+
+    .smart-state-ok{
+      border-color: rgba(42,233,139,.28);
+    }
+
+    .smart-state-warn{
+      border-color: rgba(255,209,102,.30);
+    }
+
+    .smart-state-danger{
+      border-color: rgba(255,77,109,.30);
+    }
+
     .preset-row{
       display:flex;
       gap:8px;
@@ -734,6 +790,10 @@
       }
 
       .stats-grid{
+        grid-template-columns:1fr;
+      }
+
+      .smart-grid{
         grid-template-columns:1fr;
       }
     }
@@ -1125,6 +1185,25 @@
               </div>
             </div>
           </div>
+
+          <div class="box">
+            <div class="label">תובנות חכמות</div>
+            <div class="smart-grid">
+              <div id="smartPredictionCard" class="smart-card">
+                <div class="smart-title">תחזית חכמה</div>
+                <div id="smartPredictionMain" class="smart-main mono">--:--</div>
+                <div id="smartPredictionSub" class="smart-sub">אין מספיק נתונים עדיין</div>
+                <div id="smartPredictionNote" class="smart-note">התחזית מתבססת על ההיסטוריה האחרונה.</div>
+              </div>
+
+              <div id="smartAnomalyCard" class="smart-card">
+                <div class="smart-title">זיהוי חריגות</div>
+                <div id="smartAnomalyMain" class="smart-main">אין עדיין</div>
+                <div id="smartAnomalySub" class="smart-sub">ככל שתצטבר היסטוריה, האפליקציה תזהה דפוסים וחריגות.</div>
+                <div id="smartAnomalyNote" class="smart-note">ההשוואה מבוססת על המרווחים האחרונים.</div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div class="actions">
@@ -1191,7 +1270,7 @@
             <div class="settings-title">אודות</div>
             <div class="about-box">
               <div>נוצר ע"י קובי</div>
-              <div class="mono">גרסה <span id="appVersion">1.1</span></div>
+              <div class="mono">גרסה <span id="appVersion">1.2</span></div>
               <div class="about-sub">בכל שינוי הבא נעלה לגרסה הבאה.</div>
             </div>
           </div>
@@ -1199,7 +1278,7 @@
       </div>
     </section>
 
-    <aside class="card" id="historyCard">
+    <aside class="card">
       <div class="header">
         <div>
           <h1>היסטוריה</h1>
@@ -1281,7 +1360,7 @@
         <div class="settings-title">אודות</div>
         <div class="about-box">
           <div>נוצר ע"י קובי</div>
-          <div class="mono">גרסה <span id="appVersionSheet">1.1</span></div>
+          <div class="mono">גרסה <span id="appVersionSheet">1.2</span></div>
           <div class="about-sub">בכל שינוי הבא נעלה לגרסה הבאה.</div>
         </div>
       </div>
@@ -1335,7 +1414,7 @@
   </div>
 
   <script>
-    const APP_VERSION = "1.1";
+    const APP_VERSION = "1.2";
 
     const KEY = {
       last: "feed_last_ts",
@@ -1388,6 +1467,16 @@
 
       todayCount: document.getElementById("todayCount"),
       todayAvg: document.getElementById("todayAvg"),
+
+      smartPredictionCard: document.getElementById("smartPredictionCard"),
+      smartPredictionMain: document.getElementById("smartPredictionMain"),
+      smartPredictionSub: document.getElementById("smartPredictionSub"),
+      smartPredictionNote: document.getElementById("smartPredictionNote"),
+
+      smartAnomalyCard: document.getElementById("smartAnomalyCard"),
+      smartAnomalyMain: document.getElementById("smartAnomalyMain"),
+      smartAnomalySub: document.getElementById("smartAnomalySub"),
+      smartAnomalyNote: document.getElementById("smartAnomalyNote"),
 
       settingsToggleBtn: document.getElementById("settingsToggleBtn"),
       settingsPanel: document.getElementById("settingsPanel"),
@@ -1803,6 +1892,172 @@
       const arr = getHistory();
       arr.unshift(ts);
       applyHistoryArray(arr.slice(0, 60));
+    }
+
+    function getHistoryIntervals() {
+      const arr = getHistory();
+      const intervals = [];
+      for (let i = 0; i < arr.length - 1; i++) {
+        const diff = arr[i] - arr[i + 1];
+        if (diff > 0) intervals.push(diff);
+      }
+      return intervals;
+    }
+
+    function weightedAverage(intervals) {
+      if (!intervals.length) return null;
+      let sum = 0;
+      let weights = 0;
+      const n = intervals.length;
+
+      for (let i = 0; i < n; i++) {
+        const weight = n - i;
+        sum += intervals[i] * weight;
+        weights += weight;
+      }
+      return sum / weights;
+    }
+
+    function meanAbsoluteDeviation(intervals, avg) {
+      if (!intervals.length || !avg) return 0;
+      let total = 0;
+      for (const v of intervals) total += Math.abs(v - avg);
+      return total / intervals.length;
+    }
+
+    function getSmartPredictionData() {
+      const lastTs = getLastTs();
+      const fixedInterval = getIntervalMinutes() * 60 * 1000;
+      const intervals = getHistoryIntervals().slice(0, 6);
+
+      if (!lastTs) {
+        return {
+          hasData: false,
+          targetTs: null,
+          lowerTs: null,
+          upperTs: null,
+          baseMs: fixedInterval,
+          sourceCount: 0
+        };
+      }
+
+      if (intervals.length < 2) {
+        return {
+          hasData: false,
+          targetTs: lastTs + fixedInterval,
+          lowerTs: lastTs + fixedInterval - 10 * 60 * 1000,
+          upperTs: lastTs + fixedInterval + 10 * 60 * 1000,
+          baseMs: fixedInterval,
+          sourceCount: intervals.length
+        };
+      }
+
+      const avg = weightedAverage(intervals);
+      const mad = meanAbsoluteDeviation(intervals, avg);
+
+      const smartMs = Math.max(30 * 60 * 1000, avg);
+      const spread = Math.max(10 * 60 * 1000, Math.min(45 * 60 * 1000, mad));
+
+      return {
+        hasData: true,
+        targetTs: lastTs + smartMs,
+        lowerTs: lastTs + Math.max(20 * 60 * 1000, smartMs - spread),
+        upperTs: lastTs + smartMs + spread,
+        baseMs: smartMs,
+        sourceCount: intervals.length
+      };
+    }
+
+    function updateSmartPrediction() {
+      const data = getSmartPredictionData();
+
+      el.smartPredictionCard.classList.remove("smart-state-ok", "smart-state-warn", "smart-state-danger");
+
+      if (!getLastTs()) {
+        el.smartPredictionMain.textContent = "--:--";
+        el.smartPredictionSub.textContent = "אין מספיק נתונים עדיין";
+        el.smartPredictionNote.textContent = "התחזית מתבססת על ההיסטוריה האחרונה.";
+        return;
+      }
+
+      const now = nowTs();
+      const remain = data.targetTs - now;
+
+      if (remain <= 0) {
+        el.smartPredictionCard.classList.add("smart-state-danger");
+      } else if (remain <= 15 * 60 * 1000) {
+        el.smartPredictionCard.classList.add("smart-state-warn");
+      } else {
+        el.smartPredictionCard.classList.add("smart-state-ok");
+      }
+
+      el.smartPredictionMain.textContent = formatClock(data.targetTs);
+
+      if (!data.hasData) {
+        el.smartPredictionSub.textContent = `כרגע משתמשים בעיקר במרווח הקבוע · סביב ${formatClock(data.lowerTs)} עד ${formatClock(data.upperTs)}`;
+        el.smartPredictionNote.textContent = "ככל שתצטבר היסטוריה, התחזית תהיה מדויקת יותר.";
+        return;
+      }
+
+      el.smartPredictionSub.textContent = `כנראה בין ${formatClock(data.lowerTs)} ל־${formatClock(data.upperTs)}`;
+      el.smartPredictionNote.textContent = `מבוסס על ${data.sourceCount} מרווחים אחרונים · ממוצע חכם ${formatDurationShort(data.baseMs, 2)}`;
+    }
+
+    function updateSmartAnomaly() {
+      const lastTs = getLastTs();
+      const intervals = getHistoryIntervals().slice(0, 6);
+
+      el.smartAnomalyCard.classList.remove("smart-state-ok", "smart-state-warn", "smart-state-danger");
+
+      if (!lastTs || intervals.length < 2) {
+        el.smartAnomalyMain.textContent = "אין עדיין";
+        el.smartAnomalySub.textContent = "ככל שתצטבר היסטוריה, האפליקציה תזהה דפוסים וחריגות.";
+        el.smartAnomalyNote.textContent = "ההשוואה מבוססת על המרווחים האחרונים.";
+        return;
+      }
+
+      const baseline = weightedAverage(intervals);
+      const currentElapsed = nowTs() - lastTs;
+      const latestInterval = intervals[0];
+      const shortRun = intervals.slice(0, 3);
+      const allShort = shortRun.length >= 3 && shortRun.every(v => v < baseline * 0.8);
+
+      if (currentElapsed > baseline * 1.9) {
+        el.smartAnomalyCard.classList.add("smart-state-danger");
+        el.smartAnomalyMain.textContent = "חריגה חזקה";
+        el.smartAnomalySub.textContent = "עבר הרבה יותר זמן מהרגיל מאז ההאכלה האחרונה.";
+        el.smartAnomalyNote.textContent = `הפער הנוכחי הוא ${formatDurationShort(currentElapsed, 2)} מול דפוס ממוצע של ${formatDurationShort(baseline, 2)}.`;
+        return;
+      }
+
+      if (currentElapsed > baseline * 1.25) {
+        el.smartAnomalyCard.classList.add("smart-state-warn");
+        el.smartAnomalyMain.textContent = "איחור מהרגיל";
+        el.smartAnomalySub.textContent = "עבר יותר זמן מהרגיל מאז ההאכלה האחרונה.";
+        el.smartAnomalyNote.textContent = `הפער הנוכחי הוא ${formatDurationShort(currentElapsed, 2)} מול דפוס ממוצע של ${formatDurationShort(baseline, 2)}.`;
+        return;
+      }
+
+      if (allShort) {
+        el.smartAnomalyCard.classList.add("smart-state-warn");
+        el.smartAnomalyMain.textContent = "רצף קצר";
+        el.smartAnomalySub.textContent = "שלוש האכלות אחרונות היו בפער קצר מהרגיל.";
+        el.smartAnomalyNote.textContent = `הממוצע הרגיל הוא ${formatDurationShort(baseline, 2)}.`;
+        return;
+      }
+
+      if (latestInterval > baseline * 1.35) {
+        el.smartAnomalyCard.classList.add("smart-state-warn");
+        el.smartAnomalyMain.textContent = "פער ארוך אחרון";
+        el.smartAnomalySub.textContent = "ההאכלה האחרונה הייתה אחרי פער ארוך מהרגיל.";
+        el.smartAnomalyNote.textContent = `הפער האחרון היה ${formatDurationShort(latestInterval, 2)} מול ממוצע של ${formatDurationShort(baseline, 2)}.`;
+        return;
+      }
+
+      el.smartAnomalyCard.classList.add("smart-state-ok");
+      el.smartAnomalyMain.textContent = "שגרה רגילה";
+      el.smartAnomalySub.textContent = "כרגע לא זוהתה חריגה חריגה מהדפוס האחרון.";
+      el.smartAnomalyNote.textContent = `המרווח הממוצע האחרון הוא ${formatDurationShort(baseline, 2)}.`;
     }
 
     function clearReminder() {
@@ -2321,6 +2576,8 @@
       updateFeedButton(lastTs);
       updateStatusBanner(lastTs);
       updateTodayStats();
+      updateSmartPrediction();
+      updateSmartAnomaly();
 
       if (!lastTs) {
         setStatus("", "ממתין ללחיצה");
