@@ -332,7 +332,7 @@
       margin-inline-start:auto;
     }
 
-    .progress-wrap svg{
+    .progress-wrap svg.progress-svg{
       width:118px;
       height:118px;
       transform:rotate(-90deg);
@@ -369,35 +369,41 @@
 
     .bottle-inner{
       position:relative;
-      width:60px;
-      height:60px;
+      width:68px;
+      height:68px;
       display:flex;
       align-items:center;
       justify-content:center;
     }
 
     .bottle-svg{
-      width:54px;
-      height:54px;
+      width:62px;
+      height:62px;
       display:block;
-      transform-origin: 50% 86%;
-      will-change: transform, filter;
+      overflow:visible;
     }
 
-    .bottle-wrap.feed-tilt .bottle-svg{
-      animation: bottleTilt .72s ease;
+    #bottleGroup,
+    #milkBody{
+      transform-box: view-box;
+      transform-origin: 50px 85px;
+      will-change: transform;
     }
 
-    .bottle-wrap.feed-tilt #milkFill{
-      animation: milkRise .72s ease;
+    .bottle-wrap.feed-tilt #bottleGroup{
+      animation: bottleTiltNew .95s cubic-bezier(.22,.8,.18,1);
+    }
+
+    .bottle-wrap.feed-tilt #milkBody{
+      animation: milkLiftNew .95s ease;
     }
 
     .bottle-wrap.saved-glow .bottle-svg{
       filter: drop-shadow(0 0 10px rgba(42,233,139,.40));
     }
 
-    .bottle-wrap.urgent .bottle-svg{
-      animation: bottlePulse 3s ease-in-out infinite;
+    .bottle-wrap.urgent #bottleGroup{
+      animation: bottlePulseNew 2.8s ease-in-out infinite;
     }
 
     .bottle-check{
@@ -425,24 +431,25 @@
       transform: scale(1);
     }
 
-    @keyframes bottleTilt{
-      0%{ transform: rotate(0deg) scale(1); }
-      22%{ transform: rotate(8deg) scale(1.03); }
-      44%{ transform: rotate(-6deg) scale(1.02); }
-      66%{ transform: rotate(3deg) scale(1.01); }
-      100%{ transform: rotate(0deg) scale(1); }
+    @keyframes bottleTiltNew{
+      0%   { transform: rotate(0deg) scale(1); }
+      22%  { transform: rotate(-18deg) scale(1.03); }
+      48%  { transform: rotate(12deg) scale(1.02); }
+      72%  { transform: rotate(-6deg) scale(1.01); }
+      100% { transform: rotate(0deg) scale(1); }
     }
 
-    @keyframes milkRise{
-      0%{ transform: translateY(0) scaleY(.58); }
-      32%{ transform: translateY(-2px) scaleY(.74); }
-      100%{ transform: translateY(0) scaleY(.62); }
+    @keyframes milkLiftNew{
+      0%   { transform: translateY(0) scaleY(1); }
+      30%  { transform: translateY(-3px) scaleY(1.04); }
+      60%  { transform: translateY(-1px) scaleY(1.02); }
+      100% { transform: translateY(0) scaleY(1); }
     }
 
-    @keyframes bottlePulse{
-      0%{ transform: scale(1); }
-      50%{ transform: scale(1.05); }
-      100%{ transform: scale(1); }
+    @keyframes bottlePulseNew{
+      0%   { transform: scale(1); }
+      50%  { transform: scale(1.05); }
+      100% { transform: scale(1); }
     }
 
     .controls-grid{
@@ -911,7 +918,7 @@
               </div>
 
               <div class="progress-wrap">
-                <svg viewBox="0 0 120 120" aria-hidden="true">
+                <svg class="progress-svg" viewBox="0 0 120 120" aria-hidden="true">
                   <defs>
                     <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                       <stop offset="0%" stop-color="#19d3ff"></stop>
@@ -924,28 +931,17 @@
 
                 <div id="bottleWrap" class="bottle-wrap" aria-hidden="true">
                   <div class="bottle-inner">
-                    <svg class="bottle-svg" viewBox="0 0 64 64">
-                      <defs>
-                        <clipPath id="milkClip">
-                          <path d="M25 18h14v8.5c0 1.5.6 2.7 1.6 3.8 3 3 4.4 7.1 4.4 12.1V49c0 4.8-3.3 8-8 8H27c-4.7 0-8-3.2-8-8v-6.6c0-5 1.4-9.1 4.4-12.1 1-1.1 1.6-2.3 1.6-3.8z"></path>
-                        </clipPath>
-                      </defs>
-
-                      <rect x="27" y="4" width="10" height="8" rx="3" fill="#ffd8c6"></rect>
-                      <rect x="25" y="10" width="14" height="8" rx="3.5" fill="#7fe18f"></rect>
-
-                      <path d="M25 18h14v8.5c0 1.5.6 2.7 1.6 3.8 3 3 4.4 7.1 4.4 12.1V49c0 4.8-3.3 8-8 8H27c-4.7 0-8-3.2-8-8v-6.6c0-5 1.4-9.1 4.4-12.1 1-1.1 1.6-2.3 1.6-3.8z"
-                            fill="#f8fbff"
-                            stroke="#d7dff7"
-                            stroke-width="1.2"></path>
-
-                      <g clip-path="url(#milkClip)">
-                        <rect id="milkFill" x="18" y="22" width="28" height="36" fill="#ffd66d" transform="translate(0 10) scale(1 .62)"></rect>
+                    <svg class="bottle-svg" viewBox="0 0 100 100" aria-hidden="true">
+                      <g id="bottleGroup">
+                        <path d="M40 30 C40 5, 60 5, 60 30 Z" fill="#FAD6A5" />
+                        <rect x="35" y="30" width="30" height="10" rx="3" fill="#81C784" />
+                        <path d="M35 40 L35 85 C35 95, 65 95, 65 85 L65 40 Z" fill="#E0F7FA" />
+                        <path d="M36 50 L36 85 C36 94, 64 94, 64 85 L64 50 Z" fill="#FFFFFF" />
+                        <path id="milkBody" d="M36 58 L36 85 C36 94, 64 94, 64 85 L64 58 Z" fill="#FFD66D" />
+                        <line x1="42" y1="55" x2="48" y2="55" stroke="#B2EBF2" stroke-width="2" stroke-linecap="round" />
+                        <line x1="42" y1="65" x2="52" y2="65" stroke="#B2EBF2" stroke-width="2" stroke-linecap="round" />
+                        <line x1="42" y1="75" x2="48" y2="75" stroke="#B2EBF2" stroke-width="2" stroke-linecap="round" />
                       </g>
-
-                      <line x1="28" y1="29" x2="32" y2="29" stroke="#2c3650" stroke-width="1.5" stroke-linecap="round"></line>
-                      <line x1="28" y1="36" x2="32" y2="36" stroke="#2c3650" stroke-width="1.5" stroke-linecap="round"></line>
-                      <line x1="28" y1="43" x2="32" y2="43" stroke="#2c3650" stroke-width="1.5" stroke-linecap="round"></line>
                     </svg>
 
                     <div id="bottleCheck" class="bottle-check">✓</div>
@@ -1634,11 +1630,11 @@
 
       setTimeout(() => {
         el.bottleWrap.classList.remove("feed-tilt");
-      }, 760);
+      }, 980);
 
       setTimeout(() => {
         el.bottleWrap.classList.remove("saved-glow");
-      }, 1400);
+      }, 1450);
     }
 
     function updateFeedButton(lastTs) {
