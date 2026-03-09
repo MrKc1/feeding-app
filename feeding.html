@@ -42,6 +42,7 @@
       --about-bg: rgba(255,255,255,.05);
       --stat-bg: rgba(255,255,255,.05);
       --smart-bg: rgba(255,255,255,.05);
+      --last-bg: rgba(255,255,255,.06);
     }
 
     html[data-theme="light"]{
@@ -74,6 +75,7 @@
       --about-bg: rgba(255,255,255,.8);
       --stat-bg: rgba(255,255,255,.7);
       --smart-bg: rgba(255,255,255,.74);
+      --last-bg: rgba(255,255,255,.8);
     }
 
     *{box-sizing:border-box}
@@ -230,6 +232,33 @@
         transform:scale(4.2);
         opacity:0;
       }
+    }
+
+    .last-feed-card{
+      padding:16px;
+      border-radius: var(--radius);
+      border:1px solid var(--border);
+      background: var(--last-bg);
+      display:grid;
+      gap:8px;
+    }
+
+    .last-feed-title{
+      font-size:13px;
+      font-weight:800;
+      color:var(--muted);
+    }
+
+    .last-feed-main{
+      font-size:36px;
+      font-weight:900;
+      line-height:1;
+    }
+
+    .last-feed-sub{
+      font-size:13px;
+      color:var(--muted);
+      line-height:1.4;
     }
 
     .status-banner{
@@ -506,6 +535,29 @@
       display:grid;
       grid-template-columns: 1fr;
       gap:12px;
+    }
+
+    .quick-row{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .quick-btn{
+      border:none;
+      border-radius:999px;
+      padding:10px 14px;
+      cursor:pointer;
+      font-weight:800;
+      font-size:13px;
+      background: var(--chip-bg);
+      color:var(--text);
+      border:1px solid var(--border);
+      transition: transform .08s ease, background .18s ease;
+    }
+
+    .quick-btn:active{
+      transform:scale(.97);
     }
 
     .stats-grid{
@@ -820,11 +872,6 @@
       font-size:14px;
     }
 
-    .about-sub{
-      font-size:12px;
-      color:var(--muted);
-    }
-
     .history-list-wrap{
       overflow:hidden;
       transition: max-height .22s ease, opacity .18s ease;
@@ -1086,6 +1133,12 @@
           🍼 סימנתי האכלה עכשיו
         </button>
 
+        <div id="lastFeedCard" class="last-feed-card">
+          <div class="last-feed-title">האכלה אחרונה</div>
+          <div id="lastFeedMain" class="last-feed-main mono">--:--</div>
+          <div id="lastFeedSub" class="last-feed-sub">עדיין אין האכלה שמורה</div>
+        </div>
+
         <div id="statusBanner" class="status-banner">
           <div id="statusBannerTitle" class="status-banner-title">מצב נוכחי</div>
           <div id="statusBannerText" class="status-banner-text">עדיין אין האכלה שמורה</div>
@@ -1144,6 +1197,15 @@
         </div>
 
         <div class="controls-grid">
+          <div class="box">
+            <div class="label">הוספה מהירה אם שכחת לסמן</div>
+            <div class="quick-row">
+              <button class="quick-btn" type="button" data-back-minutes="15">לפני 15 דק'</button>
+              <button class="quick-btn" type="button" data-back-minutes="30">לפני 30 דק'</button>
+              <button class="quick-btn" type="button" data-back-minutes="60">לפני שעה</button>
+            </div>
+          </div>
+
           <div class="box">
             <div class="label">המרווח בין האכלות</div>
 
@@ -1253,7 +1315,8 @@
               <div class="actions">
                 <button id="enableNotifBtn" class="btn" type="button">אפשר התראות</button>
                 <button id="testReminderBtn" class="btn" type="button">בדיקת תזכורת</button>
-                <button id="exportBtn" class="btn" type="button">גיבוי</button>
+                <button id="exportBtn" class="btn" type="button">גיבוי JSON</button>
+                <button id="exportCsvBtn" class="btn" type="button">ייצוא CSV</button>
                 <button id="importBtn" class="btn" type="button">שחזור</button>
                 <input type="file" id="importFile" style="display:none" accept=".json">
                 <button id="installPwaBtn" class="btn install" type="button">התקן אפליקציה</button>
@@ -1269,9 +1332,7 @@
           <div class="settings-section">
             <div class="settings-title">אודות</div>
             <div class="about-box">
-              <div>נוצר ע"י קובי</div>
-              <div class="mono">גרסה <span id="appVersion">1.2</span></div>
-              <div class="about-sub">בכל שינוי הבא נעלה לגרסה הבאה.</div>
+              <div class="mono">נוצר ע"י קובי | גרסה <span id="appVersion">1.3</span></div>
             </div>
           </div>
         </div>
@@ -1320,6 +1381,15 @@
       </div>
 
       <div class="settings-section" style="margin-top:14px;">
+        <div class="settings-title">הוספה מהירה אם שכחת לסמן</div>
+        <div class="quick-row">
+          <button class="quick-btn" type="button" data-back-minutes="15">לפני 15 דק'</button>
+          <button class="quick-btn" type="button" data-back-minutes="30">לפני 30 דק'</button>
+          <button class="quick-btn" type="button" data-back-minutes="60">לפני שעה</button>
+        </div>
+      </div>
+
+      <div class="settings-section" style="margin-top:14px;">
         <div class="settings-title">קביעת שעה ידנית</div>
 
         <input id="manualDateSheet" class="manual-date" type="date" />
@@ -1350,7 +1420,8 @@
         <div class="actions">
           <button id="enableNotifBtnSheet" class="btn" type="button">אפשר התראות</button>
           <button id="testReminderBtnSheet" class="btn" type="button">בדיקת תזכורת</button>
-          <button id="exportBtnSheet" class="btn" type="button">גיבוי</button>
+          <button id="exportBtnSheet" class="btn" type="button">גיבוי JSON</button>
+          <button id="exportCsvBtnSheet" class="btn" type="button">ייצוא CSV</button>
           <button id="importBtnSheet" class="btn" type="button">שחזור</button>
           <button id="clearBtnSheet" class="btn danger" type="button">איפוס נתונים</button>
         </div>
@@ -1359,9 +1430,7 @@
       <div class="settings-section" style="margin-top:14px;">
         <div class="settings-title">אודות</div>
         <div class="about-box">
-          <div>נוצר ע"י קובי</div>
-          <div class="mono">גרסה <span id="appVersionSheet">1.2</span></div>
-          <div class="about-sub">בכל שינוי הבא נעלה לגרסה הבאה.</div>
+          <div class="mono">נוצר ע"י קובי | גרסה <span id="appVersionSheet">1.3</span></div>
         </div>
       </div>
     </div>
@@ -1414,7 +1483,7 @@
   </div>
 
   <script>
-    const APP_VERSION = "1.2";
+    const APP_VERSION = "1.3";
 
     const KEY = {
       last: "feed_last_ts",
@@ -1451,6 +1520,8 @@
 
     const el = {
       feedBtn: document.getElementById("feedBtn"),
+      lastFeedMain: document.getElementById("lastFeedMain"),
+      lastFeedSub: document.getElementById("lastFeedSub"),
       elapsedMain: document.getElementById("elapsedMain"),
       elapsedDetail: document.getElementById("elapsedDetail"),
       nextCard: document.getElementById("nextCard"),
@@ -1485,6 +1556,7 @@
       testReminderBtn: document.getElementById("testReminderBtn"),
       clearBtn: document.getElementById("clearBtn"),
       exportBtn: document.getElementById("exportBtn"),
+      exportCsvBtn: document.getElementById("exportCsvBtn"),
       importBtn: document.getElementById("importBtn"),
 
       historyListWrap: document.getElementById("historyListWrap"),
@@ -1517,6 +1589,7 @@
       incMinutes: document.getElementById("incMinutes"),
       decMinutes: document.getElementById("decMinutes"),
       presetButtons: Array.from(document.querySelectorAll("[data-preset-minutes]")),
+      quickButtons: Array.from(document.querySelectorAll("[data-back-minutes]")),
 
       manualDate: document.getElementById("manualDate"),
       setManualBtn: document.getElementById("setManualBtn"),
@@ -1542,6 +1615,7 @@
       enableNotifBtnSheet: document.getElementById("enableNotifBtnSheet"),
       testReminderBtnSheet: document.getElementById("testReminderBtnSheet"),
       exportBtnSheet: document.getElementById("exportBtnSheet"),
+      exportCsvBtnSheet: document.getElementById("exportCsvBtnSheet"),
       importBtnSheet: document.getElementById("importBtnSheet"),
       clearBtnSheet: document.getElementById("clearBtnSheet"),
 
@@ -1587,6 +1661,11 @@
     function formatDateOnly(ts) {
       const d = new Date(ts);
       return `${pad2(d.getDate())}/${pad2(d.getMonth() + 1)}/${d.getFullYear()}`;
+    }
+
+    function formatDateInputValue(ts) {
+      const d = new Date(ts);
+      return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
     }
 
     function sameDay(a, b) {
@@ -1784,6 +1863,17 @@
       if (kind === "warn") el.statusDot.classList.add("warn");
     }
 
+    function updateLastFeedCard(lastTs) {
+      if (!lastTs) {
+        el.lastFeedMain.textContent = "--:--";
+        el.lastFeedSub.textContent = "עדיין אין האכלה שמורה";
+        return;
+      }
+
+      el.lastFeedMain.textContent = formatClock(lastTs);
+      el.lastFeedSub.textContent = `${formatDateOnly(lastTs)} · ${formatDurationShort(nowTs() - lastTs, 2)} מאז`;
+    }
+
     function updateStatusBanner(lastTs) {
       el.statusBanner.classList.remove("ok", "warn", "overdue");
 
@@ -1891,7 +1981,7 @@
     function pushHistory(ts) {
       const arr = getHistory();
       arr.unshift(ts);
-      applyHistoryArray(arr.slice(0, 60));
+      applyHistoryArray(arr.slice(0, 100));
     }
 
     function getHistoryIntervals() {
@@ -2254,7 +2344,7 @@
       editHour = d.getHours();
       editMin = d.getMinutes();
 
-      el.editDate.value = `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+      el.editDate.value = formatDateInputValue(ts);
       renderEditTimeUI();
       openSheet(el.editSheet);
     }
@@ -2467,6 +2557,13 @@
       showToast(`נשמר: ${formatClock(ts)}`, "בטל", () => applySnapshot(snapshot), 3000);
     }
 
+    function addBackdatedFeed(minutesBack) {
+      const ts = nowTs() - minutesBack * 60 * 1000;
+      markFeed(ts, "quick");
+      showToast(`נשמרה האכלה שלפני ${minutesBack} דקות`, "בטל", null, 2600);
+      closeSheets();
+    }
+
     function openDesktopSettings(forceValue = null) {
       const shouldOpen = forceValue === null
         ? !el.settingsPanel.classList.contains("open")
@@ -2571,6 +2668,7 @@
     function refresh() {
       const lastTs = getLastTs();
 
+      updateLastFeedCard(lastTs);
       updateElapsed(lastTs);
       updateNextCard(lastTs);
       updateFeedButton(lastTs);
@@ -2597,7 +2695,7 @@
       tickInterval = setInterval(refresh, 1000);
     }
 
-    function doExport() {
+    function doExportJson() {
       const data = {
         last: getLastTs(),
         interval: getIntervalMinutes(),
@@ -2615,7 +2713,36 @@
       a.click();
 
       URL.revokeObjectURL(url);
-      showToast("נוצר קובץ גיבוי");
+      showToast("נוצר קובץ גיבוי JSON");
+    }
+
+    function doExportCsv() {
+      const history = [...getHistory()].sort((a, b) => a - b);
+      const rows = [["תאריך","שעה","תאריך ושעה מלא","הפרש מהקודמת בדקות"]];
+
+      for (let i = 0; i < history.length; i++) {
+        const ts = history[i];
+        const d = new Date(ts);
+        const dateText = `${pad2(d.getDate())}/${pad2(d.getMonth() + 1)}/${d.getFullYear()}`;
+        const timeText = `${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+        const fullText = `${dateText} ${timeText}:${pad2(d.getSeconds())}`;
+        const gapMin = i === 0 ? "" : Math.round((ts - history[i - 1]) / 60000);
+        rows.push([dateText, timeText, fullText, String(gapMin)]);
+      }
+
+      const csv = "\uFEFF" + rows.map(row =>
+        row.map(value => `"${String(value).replace(/"/g, '""')}"`).join(",")
+      ).join("\n");
+
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "feeding-history.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+
+      showToast("נוצר קובץ CSV");
     }
 
     function doImportFile(file) {
@@ -2864,6 +2991,15 @@
       });
     });
 
+    el.quickButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const minutes = parseInt(btn.dataset.backMinutes, 10);
+        if (Number.isFinite(minutes) && minutes > 0) {
+          addBackdatedFeed(minutes);
+        }
+      });
+    });
+
     el.historyToggleBtn.addEventListener("click", () => {
       if (!isMobile()) return;
       setHistoryCollapsed(!getHistoryCollapsed());
@@ -2898,8 +3034,11 @@
     el.testReminderBtn.addEventListener("click", handleTestReminder);
     el.testReminderBtnSheet.addEventListener("click", handleTestReminder);
 
-    el.exportBtn.addEventListener("click", doExport);
-    el.exportBtnSheet.addEventListener("click", doExport);
+    el.exportBtn.addEventListener("click", doExportJson);
+    el.exportBtnSheet.addEventListener("click", doExportJson);
+
+    el.exportCsvBtn.addEventListener("click", doExportCsv);
+    el.exportCsvBtnSheet.addEventListener("click", doExportCsv);
 
     el.importBtn.addEventListener("click", () => {
       el.importFile.value = "";
@@ -2979,7 +3118,7 @@
       }
 
       const d = new Date();
-      const defaultDate = `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+      const defaultDate = formatDateInputValue(d.getTime());
       el.manualDate.value = defaultDate;
       el.manualDateSheet.value = defaultDate;
 
