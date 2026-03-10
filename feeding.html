@@ -43,6 +43,7 @@
       --stat-bg: rgba(255,255,255,.05);
       --smart-bg: rgba(255,255,255,.05);
       --last-bg: rgba(255,255,255,.06);
+      --switch-bg: rgba(255,255,255,.06);
     }
 
     html[data-theme="light"]{
@@ -76,6 +77,7 @@
       --stat-bg: rgba(255,255,255,.7);
       --smart-bg: rgba(255,255,255,.74);
       --last-bg: rgba(255,255,255,.8);
+      --switch-bg: rgba(255,255,255,.8);
     }
 
     *{box-sizing:border-box}
@@ -103,8 +105,21 @@
       gap:16px;
     }
 
+    body.mode-simple .app{
+      grid-template-columns:1fr;
+      width:min(760px, 100%);
+    }
+
     @media (max-width: 900px){
       .app{grid-template-columns:1fr}
+    }
+
+    body.mode-simple #historyCard{
+      display:none !important;
+    }
+
+    body.mode-simple .advanced-only{
+      display:none !important;
     }
 
     .card{
@@ -178,6 +193,37 @@
       padding:18px;
       display:grid;
       gap:14px;
+    }
+
+    .view-switch{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:8px;
+      padding:6px;
+      background: var(--switch-bg);
+      border:1px solid var(--border);
+      border-radius:999px;
+    }
+
+    .view-btn{
+      border:none;
+      border-radius:999px;
+      padding:11px 12px;
+      cursor:pointer;
+      font-weight:800;
+      font-size:14px;
+      background: transparent;
+      color:var(--text);
+      transition: transform .08s ease, background .18s ease, color .18s ease;
+    }
+
+    .view-btn:active{
+      transform:scale(.98);
+    }
+
+    .view-btn.active{
+      background: var(--chip-active-bg);
+      color: var(--chip-active-color);
     }
 
     .bigbtn{
@@ -301,16 +347,6 @@
     .status-banner.overdue{
       border-color: rgba(255,77,109,.30);
       box-shadow: 0 0 0 1px rgba(255,77,109,.08);
-    }
-
-    .row{
-      display:grid;
-      grid-template-columns: 1fr 1.2fr;
-      gap:12px;
-    }
-
-    @media (max-width: 760px){
-      .row{grid-template-columns:1fr}
     }
 
     .box{
@@ -533,7 +569,6 @@
 
     .controls-grid{
       display:grid;
-      grid-template-columns: 1fr;
       gap:12px;
     }
 
@@ -1113,7 +1148,7 @@
   </style>
 </head>
 
-<body>
+<body class="mode-simple">
   <div class="app">
     <section class="card">
       <div class="header">
@@ -1129,9 +1164,57 @@
       </div>
 
       <div class="main">
+        <div class="view-switch">
+          <button id="modeSimpleBtn" class="view-btn" type="button">מצב פשוט</button>
+          <button id="modeAdvancedBtn" class="view-btn" type="button">מצב מתקדם</button>
+        </div>
+
         <button id="feedBtn" class="bigbtn" aria-label="סמן האכלה עכשיו">
           🍼 סימנתי האכלה עכשיו
         </button>
+
+        <div id="nextCard" class="box next-card">
+          <div class="next-grid">
+            <div>
+              <div class="label">ההאכלה הבאה</div>
+              <div id="nextReminderMain" class="next-big mono">--:--</div>
+              <div id="nextReminderSub" class="next-sub">טרם נקבעה תזכורת</div>
+              <div id="nextReminderDay" class="next-day"></div>
+            </div>
+
+            <div class="progress-wrap">
+              <svg class="progress-svg" viewBox="0 0 120 120" aria-hidden="true">
+                <defs>
+                  <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#19d3ff"></stop>
+                    <stop offset="100%" stop-color="#7c5cff"></stop>
+                  </linearGradient>
+                </defs>
+                <circle class="progress-bg" cx="60" cy="60" r="48"></circle>
+                <circle id="progressRing" class="progress-ring" cx="60" cy="60" r="48"></circle>
+              </svg>
+
+              <div id="bottleWrap" class="bottle-wrap" aria-hidden="true">
+                <div class="bottle-inner">
+                  <svg class="bottle-svg" viewBox="0 0 100 100" aria-hidden="true">
+                    <g id="bottleGroup">
+                      <path d="M40 30 C40 5, 60 5, 60 30 Z" fill="#FAD6A5" />
+                      <rect x="35" y="30" width="30" height="10" rx="3" fill="#81C784" />
+                      <path d="M35 40 L35 85 C35 95, 65 95, 65 85 L65 40 Z" fill="#E0F7FA" />
+                      <path d="M36 50 L36 85 C36 94, 64 94, 64 85 L64 50 Z" fill="#FFFFFF" />
+                      <path id="milkBody" d="M36 58 L36 85 C36 94, 64 94, 64 85 L64 58 Z" fill="#FFD66D" />
+                      <line x1="42" y1="55" x2="48" y2="55" stroke="#B2EBF2" stroke-width="2" stroke-linecap="round" />
+                      <line x1="42" y1="65" x2="52" y2="65" stroke="#B2EBF2" stroke-width="2" stroke-linecap="round" />
+                      <line x1="42" y1="75" x2="48" y2="75" stroke="#B2EBF2" stroke-width="2" stroke-linecap="round" />
+                    </g>
+                  </svg>
+
+                  <div id="bottleCheck" class="bottle-check">✓</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <div id="lastFeedCard" class="last-feed-card">
           <div class="last-feed-title">האכלה אחרונה</div>
@@ -1139,64 +1222,19 @@
           <div id="lastFeedSub" class="last-feed-sub">עדיין אין האכלה שמורה</div>
         </div>
 
-        <div id="statusBanner" class="status-banner">
+        <div class="box">
+          <div class="label">עבר מאז</div>
+          <div id="elapsedMain" class="human-main">עדיין אין האכלה</div>
+          <div id="elapsedDetail" class="human-detail">ברגע שתלחץ, יוצג הזמן בצורה ברורה.</div>
+        </div>
+
+        <div id="statusBanner" class="status-banner advanced-only">
           <div id="statusBannerTitle" class="status-banner-title">מצב נוכחי</div>
           <div id="statusBannerText" class="status-banner-text">עדיין אין האכלה שמורה</div>
           <div id="statusBannerSub" class="status-banner-sub">כשתסמן האכלה, המידע יוצג כאן בצורה ברורה.</div>
         </div>
 
-        <div class="row">
-          <div class="box">
-            <div class="label">עבר מאז</div>
-            <div id="elapsedMain" class="human-main">עדיין אין האכלה</div>
-            <div id="elapsedDetail" class="human-detail">ברגע שתלחץ, יוצג הזמן בצורה ברורה.</div>
-          </div>
-
-          <div id="nextCard" class="box next-card">
-            <div class="next-grid">
-              <div>
-                <div class="label">ההאכלה הבאה</div>
-                <div id="nextReminderMain" class="next-big mono">--:--</div>
-                <div id="nextReminderSub" class="next-sub">טרם נקבעה תזכורת</div>
-                <div id="nextReminderDay" class="next-day"></div>
-              </div>
-
-              <div class="progress-wrap">
-                <svg class="progress-svg" viewBox="0 0 120 120" aria-hidden="true">
-                  <defs>
-                    <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stop-color="#19d3ff"></stop>
-                      <stop offset="100%" stop-color="#7c5cff"></stop>
-                    </linearGradient>
-                  </defs>
-                  <circle class="progress-bg" cx="60" cy="60" r="48"></circle>
-                  <circle id="progressRing" class="progress-ring" cx="60" cy="60" r="48"></circle>
-                </svg>
-
-                <div id="bottleWrap" class="bottle-wrap" aria-hidden="true">
-                  <div class="bottle-inner">
-                    <svg class="bottle-svg" viewBox="0 0 100 100" aria-hidden="true">
-                      <g id="bottleGroup">
-                        <path d="M40 30 C40 5, 60 5, 60 30 Z" fill="#FAD6A5" />
-                        <rect x="35" y="30" width="30" height="10" rx="3" fill="#81C784" />
-                        <path d="M35 40 L35 85 C35 95, 65 95, 65 85 L65 40 Z" fill="#E0F7FA" />
-                        <path d="M36 50 L36 85 C36 94, 64 94, 64 85 L64 50 Z" fill="#FFFFFF" />
-                        <path id="milkBody" d="M36 58 L36 85 C36 94, 64 94, 64 85 L64 58 Z" fill="#FFD66D" />
-                        <line x1="42" y1="55" x2="48" y2="55" stroke="#B2EBF2" stroke-width="2" stroke-linecap="round" />
-                        <line x1="42" y1="65" x2="52" y2="65" stroke="#B2EBF2" stroke-width="2" stroke-linecap="round" />
-                        <line x1="42" y1="75" x2="48" y2="75" stroke="#B2EBF2" stroke-width="2" stroke-linecap="round" />
-                      </g>
-                    </svg>
-
-                    <div id="bottleCheck" class="bottle-check">✓</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="controls-grid">
+        <div class="controls-grid advanced-only">
           <div class="box">
             <div class="label">הוספה מהירה אם שכחת לסמן</div>
             <div class="quick-row">
@@ -1332,14 +1370,14 @@
           <div class="settings-section">
             <div class="settings-title">אודות</div>
             <div class="about-box">
-              <div class="mono">נוצר ע"י קובי | גרסה <span id="appVersion">1.3</span></div>
+              <div class="mono">נוצר ע"י קובי | גרסה <span id="appVersion">1.4</span></div>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <aside class="card">
+    <aside id="historyCard" class="card advanced-only">
       <div class="header">
         <div>
           <h1>היסטוריה</h1>
@@ -1369,6 +1407,14 @@
       <div class="sheet-header">
         <div class="sheet-title">הגדרות</div>
         <button id="settingsSheetCloseBtn" class="sheet-close" type="button">סגור</button>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-title">מצב תצוגה</div>
+        <div class="view-switch">
+          <button id="modeSimpleBtnSheet" class="view-btn" type="button">מצב פשוט</button>
+          <button id="modeAdvancedBtnSheet" class="view-btn" type="button">מצב מתקדם</button>
+        </div>
       </div>
 
       <div class="settings-section">
@@ -1430,7 +1476,7 @@
       <div class="settings-section" style="margin-top:14px;">
         <div class="settings-title">אודות</div>
         <div class="about-box">
-          <div class="mono">נוצר ע"י קובי | גרסה <span id="appVersionSheet">1.3</span></div>
+          <div class="mono">נוצר ע"י קובי | גרסה <span id="appVersionSheet">1.4</span></div>
         </div>
       </div>
     </div>
@@ -1483,14 +1529,15 @@
   </div>
 
   <script>
-    const APP_VERSION = "1.3";
+    const APP_VERSION = "1.4";
 
     const KEY = {
       last: "feed_last_ts",
       interval: "feed_interval_minutes",
       history: "feed_history",
       theme: "feed_theme_mode",
-      historyCollapsed: "feed_history_collapsed"
+      historyCollapsed: "feed_history_collapsed",
+      viewMode: "feed_view_mode"
     };
 
     const RING_RADIUS = 48;
@@ -1520,6 +1567,12 @@
 
     const el = {
       feedBtn: document.getElementById("feedBtn"),
+
+      modeSimpleBtn: document.getElementById("modeSimpleBtn"),
+      modeAdvancedBtn: document.getElementById("modeAdvancedBtn"),
+      modeSimpleBtnSheet: document.getElementById("modeSimpleBtnSheet"),
+      modeAdvancedBtnSheet: document.getElementById("modeAdvancedBtnSheet"),
+
       lastFeedMain: document.getElementById("lastFeedMain"),
       lastFeedSub: document.getElementById("lastFeedSub"),
       elapsedMain: document.getElementById("elapsedMain"),
@@ -1559,6 +1612,7 @@
       exportCsvBtn: document.getElementById("exportCsvBtn"),
       importBtn: document.getElementById("importBtn"),
 
+      historyCard: document.getElementById("historyCard"),
       historyListWrap: document.getElementById("historyListWrap"),
       historyToggleBtn: document.getElementById("historyToggleBtn"),
       historyList: document.getElementById("historyList"),
@@ -1826,10 +1880,39 @@
     }
 
     mediaTheme.addEventListener?.("change", () => {
-      if (getThemeChoice() === "auto") {
-        applyTheme("auto");
-      }
+      if (getThemeChoice() === "auto") applyTheme("auto");
     });
+
+    function getViewMode() {
+      const saved = localStorage.getItem(KEY.viewMode);
+      if (saved === "advanced" || saved === "simple") return saved;
+      return isMobile() ? "simple" : "advanced";
+    }
+
+    function updateViewButtons(mode) {
+      const map = [
+        [el.modeSimpleBtn, mode === "simple"],
+        [el.modeAdvancedBtn, mode === "advanced"],
+        [el.modeSimpleBtnSheet, mode === "simple"],
+        [el.modeAdvancedBtnSheet, mode === "advanced"],
+      ];
+
+      map.forEach(([btn, active]) => {
+        btn.classList.toggle("active", active);
+      });
+    }
+
+    function applyViewMode(mode = getViewMode()) {
+      document.body.classList.toggle("mode-simple", mode === "simple");
+      document.body.classList.toggle("mode-advanced", mode === "advanced");
+      updateViewButtons(mode);
+    }
+
+    function setViewMode(mode) {
+      localStorage.setItem(KEY.viewMode, mode);
+      applyViewMode(mode);
+      applyHistoryCollapse();
+    }
 
     function getHistoryCollapsed() {
       const raw = localStorage.getItem(KEY.historyCollapsed);
@@ -1843,6 +1926,14 @@
     }
 
     function applyHistoryCollapse() {
+      if (getViewMode() === "simple") {
+        if (el.historyListWrap) {
+          el.historyListWrap.classList.remove("expanded");
+          el.historyListWrap.classList.add("collapsed");
+        }
+        return;
+      }
+
       if (!isMobile()) {
         el.historyListWrap.classList.remove("collapsed");
         el.historyListWrap.classList.add("expanded");
@@ -1926,8 +2017,7 @@
         count += 1;
       }
 
-      const avg = total / count;
-      el.todayAvg.textContent = formatDurationShort(avg, 2);
+      el.todayAvg.textContent = formatDurationShort(total / count, 2);
     }
 
     function getIntervalMinutes() {
@@ -2044,7 +2134,6 @@
 
       const avg = weightedAverage(intervals);
       const mad = meanAbsoluteDeviation(intervals, avg);
-
       const smartMs = Math.max(30 * 60 * 1000, avg);
       const spread = Math.max(10 * 60 * 1000, Math.min(45 * 60 * 1000, mad));
 
@@ -2060,7 +2149,6 @@
 
     function updateSmartPrediction() {
       const data = getSmartPredictionData();
-
       el.smartPredictionCard.classList.remove("smart-state-ok", "smart-state-warn", "smart-state-danger");
 
       if (!getLastTs()) {
@@ -2070,8 +2158,7 @@
         return;
       }
 
-      const now = nowTs();
-      const remain = data.targetTs - now;
+      const remain = data.targetTs - nowTs();
 
       if (remain <= 0) {
         el.smartPredictionCard.classList.add("smart-state-danger");
@@ -2096,7 +2183,6 @@
     function updateSmartAnomaly() {
       const lastTs = getLastTs();
       const intervals = getHistoryIntervals().slice(0, 6);
-
       el.smartAnomalyCard.classList.remove("smart-state-ok", "smart-state-warn", "smart-state-danger");
 
       if (!lastTs || intervals.length < 2) {
@@ -2146,7 +2232,7 @@
 
       el.smartAnomalyCard.classList.add("smart-state-ok");
       el.smartAnomalyMain.textContent = "שגרה רגילה";
-      el.smartAnomalySub.textContent = "כרגע לא זוהתה חריגה חריגה מהדפוס האחרון.";
+      el.smartAnomalySub.textContent = "כרגע לא זוהתה חריגה מהדפוס האחרון.";
       el.smartAnomalyNote.textContent = `המרווח הממוצע האחרון הוא ${formatDurationShort(baseline, 2)}.`;
     }
 
@@ -2240,17 +2326,9 @@
       void el.bottleWrap.offsetWidth;
       el.bottleWrap.classList.add("feed-tilt");
 
-      setTimeout(() => {
-        el.bottleWrap.classList.add("saved-glow");
-      }, 180);
-
-      setTimeout(() => {
-        el.bottleWrap.classList.remove("feed-tilt");
-      }, 980);
-
-      setTimeout(() => {
-        el.bottleWrap.classList.remove("saved-glow");
-      }, 1450);
+      setTimeout(() => el.bottleWrap.classList.add("saved-glow"), 180);
+      setTimeout(() => el.bottleWrap.classList.remove("feed-tilt"), 980);
+      setTimeout(() => el.bottleWrap.classList.remove("saved-glow"), 1450);
     }
 
     function updateFeedButton(lastTs) {
@@ -2260,11 +2338,9 @@
       }
 
       const dueTs = lastTs + getIntervalMinutes() * 60 * 1000;
-      if (dueTs <= nowTs()) {
-        el.feedBtn.textContent = "🍼 הגיע זמן האכלה - לחיצה לשמירה";
-      } else {
-        el.feedBtn.textContent = "🍼 סימנתי האכלה עכשיו";
-      }
+      el.feedBtn.textContent = dueTs <= nowTs()
+        ? "🍼 הגיע זמן האכלה - לחיצה לשמירה"
+        : "🍼 סימנתי האכלה עכשיו";
     }
 
     function updateNextCard(lastTs) {
@@ -2307,8 +2383,7 @@
         return;
       }
 
-      const elapsed = nowTs() - lastTs;
-      const human = formatElapsedHuman(elapsed);
+      const human = formatElapsedHuman(nowTs() - lastTs);
       el.elapsedMain.textContent = human.main;
       el.elapsedDetail.textContent = human.detail;
     }
@@ -2340,9 +2415,8 @@
       if (!Number.isFinite(ts)) return;
 
       editingIndex = index;
-      const d = new Date(ts);
-      editHour = d.getHours();
-      editMin = d.getMinutes();
+      editHour = new Date(ts).getHours();
+      editMin = new Date(ts).getMinutes();
 
       el.editDate.value = formatDateInputValue(ts);
       renderEditTimeUI();
@@ -2371,11 +2445,8 @@
       arr.forEach((ts, idx) => {
         const li = document.createElement("li");
         li.className = "history-item";
-
         const prev = arr[idx + 1];
-        const gapText = prev
-          ? `${formatDurationShort(ts - prev, 2)} מהקודמת`
-          : "האכלה ראשונה ברשומה";
+        const gapText = prev ? `${formatDurationShort(ts - prev, 2)} מהקודמת` : "האכלה ראשונה ברשומה";
 
         li.innerHTML = `
           <div>
@@ -2393,15 +2464,11 @@
       });
 
       el.historyList.querySelectorAll("[data-edit-index]").forEach(btn => {
-        btn.addEventListener("click", () => {
-          openEditSheet(parseInt(btn.dataset.editIndex, 10));
-        });
+        btn.addEventListener("click", () => openEditSheet(parseInt(btn.dataset.editIndex, 10)));
       });
 
       el.historyList.querySelectorAll("[data-delete-index]").forEach(btn => {
-        btn.addEventListener("click", () => {
-          deleteHistoryItem(parseInt(btn.dataset.deleteIndex, 10));
-        });
+        btn.addEventListener("click", () => deleteHistoryItem(parseInt(btn.dataset.deleteIndex, 10)));
       });
     }
 
@@ -2467,10 +2534,9 @@
     }
 
     function getManualTimestamp(dateValue) {
-      const dateStr = dateValue;
-      if (!dateStr) return null;
-      const [y, m, d] = dateStr.split("-").map(x => parseInt(x, 10));
-      if (!Number.isFinite(y) || !Number.isFinite(m) || !Number.isFinite(d)) return null;
+      if (!dateValue) return null;
+      const [y, m, d] = dateValue.split("-").map(x => parseInt(x, 10));
+      if (![y, m, d].every(Number.isFinite)) return null;
       const dt = new Date(y, m - 1, d, manualHour, manualMin, 0, 0);
       const ts = dt.getTime();
       return Number.isFinite(ts) ? ts : null;
@@ -2485,7 +2551,7 @@
       const dateStr = el.editDate.value;
       if (!dateStr) return null;
       const [y, m, d] = dateStr.split("-").map(x => parseInt(x, 10));
-      if (!Number.isFinite(y) || !Number.isFinite(m) || !Number.isFinite(d)) return null;
+      if (![y, m, d].every(Number.isFinite)) return null;
       const dt = new Date(y, m - 1, d, editHour, editMin, 0, 0);
       const ts = dt.getTime();
       return Number.isFinite(ts) ? ts : null;
@@ -2560,7 +2626,6 @@
     function addBackdatedFeed(minutesBack) {
       const ts = nowTs() - minutesBack * 60 * 1000;
       markFeed(ts, "quick");
-      showToast(`נשמרה האכלה שלפני ${minutesBack} דקות`, "בטל", null, 2600);
       closeSheets();
     }
 
@@ -2610,18 +2675,15 @@
 
         sheetEl.style.transition = "none";
         sheetEl.style.transform = `translateY(${deltaY}px)`;
-
-        const opacity = Math.max(0, 1 - (deltaY / 260));
-        el.sheetBackdrop.style.opacity = String(opacity);
+        el.sheetBackdrop.style.opacity = String(Math.max(0, 1 - (deltaY / 260)));
       }
 
       function onEnd() {
         if (!dragging) return;
         dragging = false;
-
         const shouldClose = deltaY > 110;
-
         sheetEl.style.transition = "transform .22s ease";
+
         if (shouldClose) {
           closeSheets();
         } else {
@@ -2651,8 +2713,7 @@
       });
 
       handleEl.addEventListener("click", () => {
-        if (!isMobile()) return;
-        if (moved) return;
+        if (!isMobile() || moved) return;
         closeSheets();
       });
     }
@@ -2688,6 +2749,7 @@
       renderHistory();
       refreshIntervalUI();
       applyHistoryCollapse();
+      applyViewMode();
     }
 
     function startTicker() {
@@ -2706,13 +2768,12 @@
 
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
       const url = URL.createObjectURL(blob);
-
       const a = document.createElement("a");
       a.href = url;
       a.download = "feeding-backup.json";
       a.click();
-
       URL.revokeObjectURL(url);
+
       showToast("נוצר קובץ גיבוי JSON");
     }
 
@@ -2975,6 +3036,11 @@
       }, 3000);
     }
 
+    el.modeSimpleBtn.addEventListener("click", () => setViewMode("simple"));
+    el.modeAdvancedBtn.addEventListener("click", () => setViewMode("advanced"));
+    el.modeSimpleBtnSheet.addEventListener("click", () => setViewMode("simple"));
+    el.modeAdvancedBtnSheet.addEventListener("click", () => setViewMode("advanced"));
+
     el.themeAutoBtn.addEventListener("click", () => setThemeChoice("auto"));
     el.themeDarkBtn.addEventListener("click", () => setThemeChoice("dark"));
     el.themeLightBtn.addEventListener("click", () => setThemeChoice("light"));
@@ -2985,30 +3051,23 @@
     el.presetButtons.forEach(btn => {
       btn.addEventListener("click", () => {
         const minutes = parseInt(btn.dataset.presetMinutes, 10);
-        if (Number.isFinite(minutes)) {
-          setIntervalFromPreset(minutes);
-        }
+        if (Number.isFinite(minutes)) setIntervalFromPreset(minutes);
       });
     });
 
     el.quickButtons.forEach(btn => {
       btn.addEventListener("click", () => {
         const minutes = parseInt(btn.dataset.backMinutes, 10);
-        if (Number.isFinite(minutes) && minutes > 0) {
-          addBackdatedFeed(minutes);
-        }
+        if (Number.isFinite(minutes) && minutes > 0) addBackdatedFeed(minutes);
       });
     });
 
     el.historyToggleBtn.addEventListener("click", () => {
-      if (!isMobile()) return;
+      if (!isMobile() || getViewMode() === "simple") return;
       setHistoryCollapsed(!getHistoryCollapsed());
     });
 
-    el.settingsToggleBtn.addEventListener("click", () => {
-      openSettingsUI();
-    });
-
+    el.settingsToggleBtn.addEventListener("click", openSettingsUI);
     el.settingsSheetCloseBtn.addEventListener("click", closeSheets);
     el.editSheetCloseBtn.addEventListener("click", closeSheets);
     el.sheetBackdrop.addEventListener("click", closeSheets);
@@ -3019,10 +3078,7 @@
       markFeed(nowTs(), "normal");
     });
 
-    el.setManualBtn.addEventListener("click", () => {
-      handleManualSave(el.manualDate.value);
-    });
-
+    el.setManualBtn.addEventListener("click", () => handleManualSave(el.manualDate.value));
     el.setManualBtnSheet.addEventListener("click", () => {
       el.manualDate.value = el.manualDateSheet.value;
       handleManualSave(el.manualDateSheet.value);
@@ -3051,8 +3107,7 @@
 
     el.importFile.addEventListener("change", (e) => {
       const file = e.target.files && e.target.files[0];
-      if (!file) return;
-      doImportFile(file);
+      if (file) doImportFile(file);
     });
 
     el.clearBtn.addEventListener("click", handleClear);
@@ -3095,16 +3150,13 @@
     });
 
     window.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") {
-        closeSheets();
-      }
+      if (e.key === "Escape") closeSheets();
     });
 
     window.addEventListener("resize", () => {
-      if (!isMobile()) {
-        closeSheets();
-      }
+      if (!isMobile()) closeSheets();
       applyHistoryCollapse();
+      applyViewMode();
     });
 
     (function init() {
@@ -3112,6 +3164,7 @@
       el.appVersionSheet.textContent = APP_VERSION;
 
       applyTheme(getThemeChoice());
+      applyViewMode(getViewMode());
 
       if (!localStorage.getItem(KEY.interval)) {
         setIntervalMinutes(120);
