@@ -952,6 +952,187 @@
       border-color: rgba(255,77,109,.24);
     }
 
+    .stats-main-grid{
+      display:grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap:12px;
+    }
+
+    .stats-mini-grid{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap:12px;
+    }
+
+    @media (max-width: 760px){
+      .stats-main-grid{
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .stats-mini-grid{
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 420px){
+      .stats-main-grid{
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .chart-card{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.05);
+      border-radius:22px;
+      padding:16px;
+      display:grid;
+      gap:14px;
+    }
+
+    html[data-theme="light"] .chart-card{
+      background: rgba(255,255,255,.70);
+    }
+
+    .chart-head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+    }
+
+    .chart-title{
+      font-size:15px;
+      font-weight:900;
+    }
+
+    .chart-sub{
+      font-size:12px;
+      color:var(--muted);
+      margin-top:4px;
+      line-height:1.5;
+    }
+
+    .chart-bars{
+      display:grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap:10px;
+      align-items:end;
+      min-height:188px;
+    }
+
+    .chart-bar-item{
+      display:grid;
+      gap:8px;
+      justify-items:center;
+      align-self:end;
+    }
+
+    .chart-value{
+      font-size:11px;
+      color:var(--muted);
+      font-weight:800;
+      min-height:14px;
+    }
+
+    .chart-bar-wrap{
+      width:100%;
+      height:128px;
+      display:flex;
+      align-items:flex-end;
+    }
+
+    .chart-bar{
+      width:100%;
+      min-height:10px;
+      border-radius:16px 16px 8px 8px;
+      background: linear-gradient(180deg, rgba(25,211,255,.96), rgba(124,92,255,.86));
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow: 0 10px 24px rgba(124,92,255,.16);
+      transition: height .25s ease;
+    }
+
+    .chart-bar.empty{
+      opacity:.35;
+      box-shadow:none;
+    }
+
+    .chart-label{
+      font-size:11px;
+      color:var(--muted);
+      text-align:center;
+      line-height:1.2;
+    }
+
+    .hourly-scroll{
+      overflow-x:auto;
+      padding-bottom:6px;
+    }
+
+    .hourly-chart{
+      display:grid;
+      grid-auto-flow:column;
+      grid-auto-columns:minmax(26px, 1fr);
+      gap:8px;
+      align-items:end;
+      min-width:760px;
+    }
+
+    .hourly-item{
+      display:grid;
+      gap:6px;
+      justify-items:center;
+      align-self:end;
+    }
+
+    .hourly-count{
+      font-size:10px;
+      color:var(--muted);
+      font-weight:800;
+      min-height:12px;
+    }
+
+    .hourly-wrap{
+      width:100%;
+      height:92px;
+      display:flex;
+      align-items:flex-end;
+    }
+
+    .hourly-bar{
+      width:100%;
+      min-height:8px;
+      border-radius:999px 999px 8px 8px;
+      background: linear-gradient(180deg, rgba(25,211,255,.88), rgba(124,92,255,.80));
+      border:1px solid rgba(255,255,255,.08);
+      transition: height .25s ease, opacity .2s ease;
+    }
+
+    .hourly-bar.empty{
+      opacity:.28;
+    }
+
+    .hourly-item.peak .hourly-bar{
+      box-shadow: 0 0 0 1px rgba(255,255,255,.10), 0 10px 24px rgba(124,92,255,.18);
+    }
+
+    .hourly-label{
+      font-size:10px;
+      color:var(--muted);
+    }
+
+    .empty-chart{
+      min-height:120px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border:1px dashed var(--border);
+      border-radius:18px;
+      color:var(--muted);
+      font-size:13px;
+      text-align:center;
+      padding:14px;
+    }
+
     .bottom-nav{
       position:fixed;
       left:50%;
@@ -963,7 +1144,7 @@
       border:1px solid var(--border);
       border-radius:24px;
       display:grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap:8px;
       padding:10px;
       z-index:60;
@@ -973,13 +1154,13 @@
     .nav-btn{
       border:none;
       border-radius:18px;
-      padding:12px 10px;
+      padding:12px 8px;
       cursor:pointer;
       background: var(--button-bg);
       border:1px solid var(--border);
       color:var(--button-text);
       font-weight:800;
-      font-size:14px;
+      font-size:13px;
       transition: transform .08s ease, background .18s ease, color .18s ease, box-shadow .18s ease;
     }
 
@@ -998,13 +1179,13 @@
       display:flex;
       align-items:center;
       justify-content:center;
-      gap:8px;
+      gap:6px;
       direction:rtl;
     }
 
     .nav-icon{
-      width:22px;
-      height:22px;
+      width:20px;
+      height:20px;
       display:inline-flex;
       align-items:center;
       justify-content:center;
@@ -1012,14 +1193,15 @@
     }
 
     .nav-icon svg{
-      width:22px;
-      height:22px;
+      width:20px;
+      height:20px;
       display:block;
       overflow:visible;
     }
 
     .nav-label{
       line-height:1;
+      white-space:nowrap;
     }
 
     @keyframes navHomeBounce{
@@ -1034,6 +1216,11 @@
 
     @keyframes navSettingsSpin{
       100% { transform: rotate(90deg); }
+    }
+
+    @keyframes navStatsLift{
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-2px); }
     }
 
     .nav-btn:hover .icon-home-group,
@@ -1054,6 +1241,12 @@
     .nav-btn:focus-visible .icon-settings-group{
       animation: navSettingsSpin .6s ease-in-out 1;
       transform-origin: 12px 12px;
+    }
+
+    .nav-btn:hover .icon-stats-group,
+    .nav-btn:active .icon-stats-group,
+    .nav-btn:focus-visible .icon-stats-group{
+      animation: navStatsLift .45s ease-in-out;
     }
 
     .toast{
@@ -1407,6 +1600,75 @@
           <ul id="historyList" class="history-list"></ul>
         </section>
 
+        <section id="screen-stats" class="screen">
+          <div class="screen-toolbar">
+            <div class="screen-title">סטטיסטיקה</div>
+            <button class="top-home-btn" type="button" data-go-home>⌂ חזור לבית</button>
+          </div>
+
+          <div class="stats-main-grid">
+            <div class="stat-card">
+              <div id="statsTotalCount" class="stat-value mono">0</div>
+              <div class="stat-label">סה"כ האכלות</div>
+            </div>
+            <div class="stat-card">
+              <div id="statsTodayFeeds" class="stat-value mono">0</div>
+              <div class="stat-label">האכלות היום</div>
+            </div>
+            <div class="stat-card">
+              <div id="statsAvgGap" class="stat-value">אין עדיין</div>
+              <div class="stat-label">ממוצע מרווח</div>
+            </div>
+            <div class="stat-card">
+              <div id="statsNextPrediction" class="stat-value mono">--:--</div>
+              <div class="stat-label">תחזית הבאה</div>
+            </div>
+          </div>
+
+          <div class="stats-mini-grid">
+            <div class="stat-card">
+              <div id="statsLastGap" class="stat-value">אין עדיין</div>
+              <div class="stat-label">המרווח האחרון</div>
+            </div>
+            <div class="stat-card">
+              <div id="statsShortestGap" class="stat-value">אין עדיין</div>
+              <div class="stat-label">המרווח הקצר ביותר</div>
+            </div>
+            <div class="stat-card">
+              <div id="statsLongestGap" class="stat-value">אין עדיין</div>
+              <div class="stat-label">המרווח הארוך ביותר</div>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-head">
+              <div>
+                <div class="chart-title">7 הימים האחרונים</div>
+                <div id="dailyChartSub" class="chart-sub">כמות האכלות בכל יום</div>
+              </div>
+            </div>
+            <div id="dailyChart" class="chart-bars"></div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-head">
+              <div>
+                <div class="chart-title">פיזור שעות ביממה</div>
+                <div id="hourlyChartSub" class="chart-sub">באילו שעות מתבצעות רוב ההאכלות</div>
+              </div>
+            </div>
+            <div class="hourly-scroll">
+              <div id="hourlyChart" class="hourly-chart"></div>
+            </div>
+          </div>
+
+          <div class="box">
+            <div class="label">תובנה</div>
+            <div id="statsInsightMain" class="human-main" style="font-size:24px;">אין עדיין מספיק נתונים</div>
+            <div id="statsInsightSub" class="human-detail">אחרי כמה האכלות תתחיל להופיע כאן תמונת מצב שימושית.</div>
+          </div>
+        </section>
+
         <section id="screen-settings" class="screen">
           <div class="screen-toolbar">
             <div class="screen-title">הגדרות וכלים</div>
@@ -1505,7 +1767,7 @@
           <div class="box">
             <div class="label">אודות</div>
             <div class="about-box">
-              <div class="mono">נוצר ע"י קובי | גרסה <span id="appVersion">1.8</span></div>
+              <div class="mono">נוצר ע"י קובי | גרסה <span id="appVersion">1.9</span></div>
             </div>
           </div>
         </section>
@@ -1540,6 +1802,22 @@
           </svg>
         </span>
         <span class="nav-label">היסטוריה</span>
+      </span>
+    </button>
+
+    <button id="navStatsBtn" class="nav-btn" type="button" aria-label="סטטיסטיקה">
+      <span class="nav-btn-content">
+        <span class="nav-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <g class="icon-stats-group">
+              <line x1="4" y1="20" x2="20" y2="20"></line>
+              <rect x="5" y="11" width="3" height="9" rx="1"></rect>
+              <rect x="10.5" y="7" width="3" height="13" rx="1"></rect>
+              <rect x="16" y="4" width="3" height="16" rx="1"></rect>
+            </g>
+          </svg>
+        </span>
+        <span class="nav-label">סטטיסטיקה</span>
       </span>
     </button>
 
@@ -1615,7 +1893,7 @@
         </li>
         <li class="onboarding-item">
           <span class="onboarding-badge">3</span>
-          <span>מומלץ לאפשר התראות ממסך ההגדרות כדי לקבל תזכורת בזמן.</span>
+          <span>במסך סטטיסטיקה תראה גרפים יפים שמסכמים את הנתונים שלך.</span>
         </li>
       </ul>
 
@@ -1635,7 +1913,7 @@
 
   <script>
     const CONFIG = {
-      appVersion: "1.8",
+      appVersion: "1.9",
       reminderTestDelayMs: 10000,
       feedButtonLockMs: 2000,
       toastDurationMs: 2600,
@@ -1644,6 +1922,7 @@
       bottleTiltMs: 980,
       urgentWindowMs: 15 * 60 * 1000,
       historyWeekDays: 7,
+      statsRecentDays: 30,
       ringRadius: 48,
       maxHistoryItems: 100
     };
@@ -1684,10 +1963,12 @@
     const el = {
       screenHome: $("screen-home"),
       screenHistory: $("screen-history"),
+      screenStats: $("screen-stats"),
       screenSettings: $("screen-settings"),
 
       navHomeBtn: $("navHomeBtn"),
       navHistoryBtn: $("navHistoryBtn"),
+      navStatsBtn: $("navStatsBtn"),
       navSettingsBtn: $("navSettingsBtn"),
 
       feedBtn: $("feedBtn"),
@@ -1732,6 +2013,20 @@
       historyDateInput: $("historyDateInput"),
       clearHistoryDateBtn: $("clearHistoryDateBtn"),
       historyList: $("historyList"),
+
+      statsTotalCount: $("statsTotalCount"),
+      statsTodayFeeds: $("statsTodayFeeds"),
+      statsAvgGap: $("statsAvgGap"),
+      statsNextPrediction: $("statsNextPrediction"),
+      statsLastGap: $("statsLastGap"),
+      statsShortestGap: $("statsShortestGap"),
+      statsLongestGap: $("statsLongestGap"),
+      dailyChart: $("dailyChart"),
+      dailyChartSub: $("dailyChartSub"),
+      hourlyChart: $("hourlyChart"),
+      hourlyChartSub: $("hourlyChartSub"),
+      statsInsightMain: $("statsInsightMain"),
+      statsInsightSub: $("statsInsightSub"),
 
       themeAutoBtn: $("themeAutoBtn"),
       themeDarkBtn: $("themeDarkBtn"),
@@ -1948,16 +2243,18 @@
 
     function getScreen() {
       const saved = localStorage.getItem(KEY.screen);
-      return ["home", "history", "settings"].includes(saved) ? saved : "home";
+      return ["home", "history", "stats", "settings"].includes(saved) ? saved : "home";
     }
 
     function applyScreen(screen = getScreen()) {
       [
         [el.screenHome, screen === "home"],
         [el.screenHistory, screen === "history"],
+        [el.screenStats, screen === "stats"],
         [el.screenSettings, screen === "settings"],
         [el.navHomeBtn, screen === "home"],
         [el.navHistoryBtn, screen === "history"],
+        [el.navStatsBtn, screen === "stats"],
         [el.navSettingsBtn, screen === "settings"]
       ].forEach(([node, active]) => node.classList.toggle("active", active));
     }
@@ -2613,7 +2910,7 @@
             <div class="history-time">אין נתונים מתאימים</div>
             <div class="history-gap">נסה לבחור פילטר אחר או תאריך אחר</div>
           </div>
-          <div class="history-right">—</div>
+          <div class="history-right">אין</div>
         `;
         el.historyList.appendChild(li);
         return;
@@ -2639,6 +2936,198 @@
         `;
         el.historyList.appendChild(li);
       });
+    }
+
+    function getStatsSummaryData() {
+      const history = getHistory();
+      const intervals = getHistoryIntervals();
+      const avgGap = intervals.length ? weightedAverage(intervals) : null;
+      const shortestGap = intervals.length ? Math.min(...intervals) : null;
+      const longestGap = intervals.length ? Math.max(...intervals) : null;
+      const lastGap = intervals.length ? intervals[0] : null;
+      const todayFeeds = history.filter(isTodayTs).length;
+      const smart = getSmartPredictionData();
+
+      return {
+        totalCount: history.length,
+        todayFeeds,
+        avgGap,
+        shortestGap,
+        longestGap,
+        lastGap,
+        predictionTs: smart.targetTs
+      };
+    }
+
+    function getDailyChartData(days = 7) {
+      const history = getHistory();
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const daysData = [];
+
+      for (let i = days - 1; i >= 0; i -= 1) {
+        const dayStart = new Date(today);
+        dayStart.setDate(today.getDate() - i);
+
+        const startTs = dayStart.getTime();
+        const endTs = startTs + (24 * 60 * 60 * 1000);
+        const count = history.filter((ts) => ts >= startTs && ts < endTs).length;
+
+        daysData.push({
+          label: `${pad2(dayStart.getDate())}/${pad2(dayStart.getMonth() + 1)}`,
+          count
+        });
+      }
+
+      return daysData;
+    }
+
+    function getHourlyChartData() {
+      const allHistory = getHistory();
+      const recentHistory = allHistory.filter((ts) => isWithinLastDays(ts, CONFIG.statsRecentDays));
+      const source = recentHistory.length ? recentHistory : allHistory;
+
+      const buckets = Array.from({ length: 24 }, (_, hour) => ({
+        hour,
+        count: 0
+      }));
+
+      source.forEach((ts) => {
+        const hour = new Date(ts).getHours();
+        buckets[hour].count += 1;
+      });
+
+      return {
+        buckets,
+        sourceCount: source.length
+      };
+    }
+
+    function setStatsValue(node, value) {
+      node.textContent = value;
+    }
+
+    function renderStatsSummary() {
+      const stats = getStatsSummaryData();
+
+      setStatsValue(el.statsTotalCount, String(stats.totalCount));
+      setStatsValue(el.statsTodayFeeds, String(stats.todayFeeds));
+      setStatsValue(el.statsAvgGap, stats.avgGap ? formatDurationShort(stats.avgGap, 2) : "אין עדיין");
+      setStatsValue(el.statsNextPrediction, stats.predictionTs ? formatClock(stats.predictionTs) : "--:--");
+      setStatsValue(el.statsLastGap, stats.lastGap ? formatDurationShort(stats.lastGap, 2) : "אין עדיין");
+      setStatsValue(el.statsShortestGap, stats.shortestGap ? formatDurationShort(stats.shortestGap, 2) : "אין עדיין");
+      setStatsValue(el.statsLongestGap, stats.longestGap ? formatDurationShort(stats.longestGap, 2) : "אין עדיין");
+    }
+
+    function renderDailyChart() {
+      const data = getDailyChartData(7);
+      const total = data.reduce((sum, item) => sum + item.count, 0);
+      const maxCount = Math.max(1, ...data.map((item) => item.count));
+
+      el.dailyChartSub.textContent = total
+        ? `סה"כ ${total} האכלות בשבעת הימים האחרונים`
+        : "עדיין אין מספיק נתונים להצגת פעילות שבועית";
+
+      el.dailyChart.innerHTML = "";
+
+      data.forEach((item) => {
+        const height = item.count === 0 ? 10 : Math.max(14, Math.round((item.count / maxCount) * 128));
+        const card = document.createElement("div");
+        card.className = "chart-bar-item";
+        card.title = `${item.label}: ${item.count} האכלות`;
+
+        card.innerHTML = `
+          <div class="chart-value">${item.count}</div>
+          <div class="chart-bar-wrap">
+            <div class="chart-bar ${item.count === 0 ? "empty" : ""}" style="height:${height}px;"></div>
+          </div>
+          <div class="chart-label">${item.label}</div>
+        `;
+
+        el.dailyChart.appendChild(card);
+      });
+    }
+
+    function renderHourlyChart() {
+      const { buckets, sourceCount } = getHourlyChartData();
+      const maxCount = Math.max(1, ...buckets.map((item) => item.count));
+      const peak = Math.max(...buckets.map((item) => item.count));
+
+      el.hourlyChartSub.textContent = sourceCount
+        ? `מבוסס על ${sourceCount} רשומות אחרונות`
+        : "עדיין אין מספיק נתונים לפיזור שעות";
+
+      el.hourlyChart.innerHTML = "";
+
+      buckets.forEach((item) => {
+        const height = item.count === 0 ? 8 : Math.max(12, Math.round((item.count / maxCount) * 92));
+        const node = document.createElement("div");
+        node.className = `hourly-item ${item.count === peak && peak > 0 ? "peak" : ""}`;
+        node.title = `${pad2(item.hour)}:00 · ${item.count} האכלות`;
+
+        node.innerHTML = `
+          <div class="hourly-count">${item.count}</div>
+          <div class="hourly-wrap">
+            <div class="hourly-bar ${item.count === 0 ? "empty" : ""}" style="height:${height}px;"></div>
+          </div>
+          <div class="hourly-label">${pad2(item.hour)}</div>
+        `;
+
+        el.hourlyChart.appendChild(node);
+      });
+    }
+
+    function renderStatsInsight() {
+      const history = getHistory();
+      const intervals = getHistoryIntervals();
+      const dailyData = getDailyChartData(7);
+      const hourlyData = getHourlyChartData().buckets;
+      const avgGap = intervals.length ? weightedAverage(intervals) : null;
+      const lastGap = intervals.length ? intervals[0] : null;
+      const todayCount = dailyData[dailyData.length - 1]?.count || 0;
+      const weeklyAvg = dailyData.reduce((sum, item) => sum + item.count, 0) / dailyData.length;
+      const busiest = hourlyData.reduce((best, current) => current.count > best.count ? current : best, { hour: 0, count: 0 });
+
+      if (!history.length) {
+        el.statsInsightMain.textContent = "אין עדיין מספיק נתונים";
+        el.statsInsightSub.textContent = "אחרי כמה האכלות תתחיל להופיע כאן תמונת מצב שימושית.";
+        return;
+      }
+
+      if (todayCount >= Math.ceil(weeklyAvg) + 1 && todayCount >= 2) {
+        el.statsInsightMain.textContent = "היום פעיל מהרגיל";
+        el.statsInsightSub.textContent = `נרשמו היום ${todayCount} האכלות, יותר מהממוצע השבועי שעומד על ${weeklyAvg.toFixed(1)}.`;
+        return;
+      }
+
+      if (lastGap && avgGap && lastGap < avgGap * 0.8) {
+        el.statsInsightMain.textContent = "המרווח האחרון קצר מהממוצע";
+        el.statsInsightSub.textContent = `המרווח האחרון היה ${formatDurationShort(lastGap, 2)} מול ממוצע של ${formatDurationShort(avgGap, 2)}.`;
+        return;
+      }
+
+      if (lastGap && avgGap && lastGap > avgGap * 1.2) {
+        el.statsInsightMain.textContent = "המרווח האחרון ארוך מהממוצע";
+        el.statsInsightSub.textContent = `המרווח האחרון היה ${formatDurationShort(lastGap, 2)} מול ממוצע של ${formatDurationShort(avgGap, 2)}.`;
+        return;
+      }
+
+      if (busiest.count > 0) {
+        el.statsInsightMain.textContent = `רוב ההאכלות סביב ${pad2(busiest.hour)}:00`;
+        el.statsInsightSub.textContent = `בשעה הזאת נרשמו הכי הרבה האכלות ביחס לשאר היממה.`;
+        return;
+      }
+
+      el.statsInsightMain.textContent = "השגרה מתחילה להתייצב";
+      el.statsInsightSub.textContent = "ככל שתוסיף עוד נתונים, התובנות כאן יהפכו מדויקות יותר.";
+    }
+
+    function renderStatsScreen() {
+      renderStatsSummary();
+      renderDailyChart();
+      renderHourlyChart();
+      renderStatsInsight();
     }
 
     function updateHistoryFilter(mode, dateValue = "") {
@@ -2926,6 +3415,7 @@
       updateSmartAnomaly();
       updateFilterButtons();
       renderHistory();
+      renderStatsScreen();
       refreshIntervalUI();
       applyScreen();
 
@@ -3016,6 +3506,7 @@
 
       el.navHomeBtn.addEventListener("click", () => setScreen("home"));
       el.navHistoryBtn.addEventListener("click", () => setScreen("history"));
+      el.navStatsBtn.addEventListener("click", () => setScreen("stats"));
       el.navSettingsBtn.addEventListener("click", () => setScreen("settings"));
 
       el.goHomeButtons.forEach((btn) => {
@@ -3222,13 +3713,6 @@
           closeOnboarding();
         }
       });
-    }
-
-    function updateHistoryFilter(mode, dateValue = "") {
-      AppState.historyFilter = mode;
-      AppState.historyDateValue = dateValue;
-      updateFilterButtons();
-      renderHistory();
     }
 
     function initDefaultValues() {
