@@ -80,7 +80,10 @@
       --focus-ring: 0 0 0 2px rgba(0,159,209,.22);
     }
 
-    *{box-sizing:border-box}
+    *{
+      box-sizing:border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
 
     html, body{
       min-height:100%;
@@ -97,12 +100,15 @@
       display:flex;
       align-items:flex-start;
       justify-content:center;
-      padding:14px 14px 110px;
+      padding:14px 14px 84px;
       transition: background .25s ease, color .2s ease;
+      overscroll-behavior-y: contain;
+      overflow-x:hidden;
     }
 
     button, input{
       font:inherit;
+      -webkit-tap-highlight-color: transparent;
     }
 
     button:focus-visible,
@@ -113,7 +119,7 @@
 
     .app-shell{
       width:min(760px, 100%);
-      padding-bottom:110px;
+      padding-bottom:70px;
     }
 
     .app-card{
@@ -195,11 +201,12 @@
 
     .screen{
       display:none;
-      padding:14px 16px 120px;
+      padding:14px 16px 82px;
       gap:12px;
       overflow:auto;
       height:100%;
       -webkit-overflow-scrolling: touch;
+      overscroll-behavior-y: contain;
     }
 
     .screen.active{
@@ -239,6 +246,11 @@
       display:inline-flex;
       align-items:center;
       gap:6px;
+      user-select:none;
+      background-clip:padding-box;
+      overflow:hidden;
+      position:relative;
+      isolation:isolate;
     }
 
     .bigbtn{
@@ -263,6 +275,9 @@
       gap:10px;
       min-height:74px;
       text-align:center;
+      user-select:none;
+      background-clip:padding-box;
+      isolation:isolate;
     }
 
     .bigbtn:active{
@@ -694,6 +709,21 @@
 
     .filter-btn,
     .quick-btn,
+    .preset-btn,
+    .theme-btn,
+    .btn,
+    .mini-btn,
+    .stepper-btn{
+      -webkit-tap-highlight-color: transparent;
+      user-select:none;
+      background-clip:padding-box;
+      overflow:hidden;
+      position:relative;
+      isolation:isolate;
+    }
+
+    .filter-btn,
+    .quick-btn,
     .preset-btn{
       border:none;
       border-radius:999px;
@@ -1120,48 +1150,43 @@
       color:var(--muted);
     }
 
-    .empty-chart{
-      min-height:120px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      border:1px dashed var(--border);
-      border-radius:18px;
-      color:var(--muted);
-      font-size:13px;
-      text-align:center;
-      padding:14px;
-    }
-
     .bottom-nav{
       position:fixed;
       left:50%;
       transform:translateX(-50%);
-      bottom:max(10px, calc(env(safe-area-inset-bottom) + 10px));
-      width:min(732px, calc(100vw - 20px));
+      bottom:max(8px, calc(env(safe-area-inset-bottom) + 8px));
+      width:min(700px, calc(100vw - 14px));
       background: var(--nav-bg);
       backdrop-filter: blur(18px);
       border:1px solid var(--border);
-      border-radius:24px;
+      border-radius:22px;
       display:grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap:8px;
-      padding:10px;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap:6px;
+      padding:8px;
       z-index:60;
-      box-shadow: 0 18px 40px rgba(0,0,0,.22);
+      box-shadow: 0 14px 34px rgba(0,0,0,.20);
+      overflow:hidden;
     }
 
     .nav-btn{
       border:none;
-      border-radius:18px;
-      padding:12px 8px;
+      border-radius:16px;
+      padding:11px 6px;
       cursor:pointer;
       background: var(--button-bg);
       border:1px solid var(--border);
       color:var(--button-text);
       font-weight:800;
-      font-size:13px;
+      font-size:12px;
+      min-width:0;
       transition: transform .08s ease, background .18s ease, color .18s ease, box-shadow .18s ease;
+      -webkit-tap-highlight-color: transparent;
+      user-select:none;
+      background-clip:padding-box;
+      overflow:hidden;
+      position:relative;
+      isolation:isolate;
     }
 
     .nav-btn:active{
@@ -1179,13 +1204,14 @@
       display:flex;
       align-items:center;
       justify-content:center;
-      gap:6px;
+      gap:5px;
       direction:rtl;
+      min-width:0;
     }
 
     .nav-icon{
-      width:20px;
-      height:20px;
+      width:18px;
+      height:18px;
       display:inline-flex;
       align-items:center;
       justify-content:center;
@@ -1193,8 +1219,8 @@
     }
 
     .nav-icon svg{
-      width:20px;
-      height:20px;
+      width:18px;
+      height:18px;
       display:block;
       overflow:visible;
     }
@@ -1202,6 +1228,33 @@
     .nav-label{
       line-height:1;
       white-space:nowrap;
+    }
+
+    @media (max-width: 520px){
+      .bottom-nav{
+        width:calc(100vw - 10px);
+        gap:5px;
+        padding:7px;
+      }
+
+      .nav-btn{
+        padding:10px 4px;
+        font-size:11px;
+      }
+
+      .nav-btn-content{
+        gap:4px;
+      }
+
+      .nav-icon{
+        width:17px;
+        height:17px;
+      }
+
+      .nav-icon svg{
+        width:17px;
+        height:17px;
+      }
     }
 
     @keyframes navHomeBounce{
@@ -1767,7 +1820,7 @@
           <div class="box">
             <div class="label">אודות</div>
             <div class="about-box">
-              <div class="mono">נוצר ע"י קובי | גרסה <span id="appVersion">1.9</span></div>
+              <div class="mono">נוצר ע"י קובי | גרסה <span id="appVersion">1.10</span></div>
             </div>
           </div>
         </section>
@@ -1913,7 +1966,7 @@
 
   <script>
     const CONFIG = {
-      appVersion: "1.9",
+      appVersion: "1.10",
       reminderTestDelayMs: 10000,
       feedButtonLockMs: 2000,
       toastDurationMs: 2600,
