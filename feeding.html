@@ -25,8 +25,6 @@
       --warn:#ffd166;
       --danger:#ff4d6d;
       --shadow: 0 18px 50px rgba(0,0,0,.30);
-      --radius: 22px;
-      --radius2: 30px;
       --chip-bg: rgba(255,255,255,.08);
       --chip-active-bg: linear-gradient(135deg, rgba(124,92,255,.95), rgba(25,211,255,.70));
       --chip-active-color: #ffffff;
@@ -35,7 +33,6 @@
       --ring-shadow: rgba(124,92,255,.12);
       --toast-bg: rgba(7,13,24,.92);
       --button-text:#eef3ff;
-      --panel-bg: rgba(255,255,255,.05);
       --sheet-bg: rgba(8,17,31,.96);
       --sheet-overlay: rgba(0,0,0,.42);
       --banner-bg: rgba(255,255,255,.06);
@@ -43,7 +40,7 @@
       --stat-bg: rgba(255,255,255,.05);
       --smart-bg: rgba(255,255,255,.05);
       --last-bg: rgba(255,255,255,.06);
-      --nav-bg: rgba(255,255,255,.05);
+      --nav-bg: rgba(18,27,45,.78);
     }
 
     html[data-theme="light"]{
@@ -69,7 +66,6 @@
       --ring-shadow: rgba(107,82,255,.10);
       --toast-bg: rgba(255,255,255,.96);
       --button-text:#162033;
-      --panel-bg: rgba(255,255,255,.72);
       --sheet-bg: rgba(255,255,255,.98);
       --sheet-overlay: rgba(18,28,46,.22);
       --banner-bg: rgba(255,255,255,.76);
@@ -77,7 +73,7 @@
       --stat-bg: rgba(255,255,255,.78);
       --smart-bg: rgba(255,255,255,.78);
       --last-bg: rgba(255,255,255,.84);
-      --nav-bg: rgba(255,255,255,.84);
+      --nav-bg: rgba(255,255,255,.88);
     }
 
     *{box-sizing:border-box}
@@ -97,12 +93,13 @@
       display:flex;
       align-items:flex-start;
       justify-content:center;
-      padding:14px;
+      padding:14px 14px 110px;
       transition: background .25s ease, color .2s ease;
     }
 
     .app-shell{
       width:min(760px, 100%);
+      padding-bottom:110px;
     }
 
     .app-card{
@@ -184,10 +181,11 @@
 
     .screen{
       display:none;
-      padding:14px 16px 8px;
+      padding:14px 16px 120px;
       gap:12px;
       overflow:auto;
       height:100%;
+      -webkit-overflow-scrolling: touch;
     }
 
     .screen.active{
@@ -534,18 +532,6 @@
       font-size:13px;
       color:var(--muted);
       line-height:1.4;
-    }
-
-    .row2{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:12px;
-    }
-
-    @media (max-width: 620px){
-      .row2{
-        grid-template-columns:1fr;
-      }
     }
 
     .stats-grid{
@@ -899,17 +885,21 @@
     }
 
     .bottom-nav{
-      position:sticky;
-      bottom:0;
-      inset-inline:0;
-      background: linear-gradient(180deg, rgba(0,0,0,0), var(--nav-bg) 20%);
-      backdrop-filter: blur(12px);
-      border-top:1px solid var(--border);
+      position:fixed;
+      left:50%;
+      transform:translateX(-50%);
+      bottom:max(10px, calc(env(safe-area-inset-bottom) + 10px));
+      width:min(732px, calc(100vw - 20px));
+      background: var(--nav-bg);
+      backdrop-filter: blur(18px);
+      border:1px solid var(--border);
+      border-radius:24px;
       display:grid;
       grid-template-columns: repeat(3, 1fr);
       gap:8px;
-      padding:12px 14px max(12px, env(safe-area-inset-bottom));
-      flex:0 0 auto;
+      padding:10px;
+      z-index:60;
+      box-shadow: 0 18px 40px rgba(0,0,0,.22);
     }
 
     .nav-btn{
@@ -942,7 +932,7 @@
       display:flex;
       justify-content:center;
       pointer-events:none;
-      z-index:50;
+      z-index:70;
     }
 
     .toast-inner{
@@ -1290,19 +1280,19 @@
           <div class="box">
             <div class="label">אודות</div>
             <div class="about-box">
-              <div class="mono">נוצר ע"י קובי | גרסה <span id="appVersion">1.5</span></div>
+              <div class="mono">נוצר ע"י קובי | גרסה <span id="appVersion">1.6</span></div>
             </div>
           </div>
         </section>
       </div>
-
-      <nav class="bottom-nav">
-        <button id="navHomeBtn" class="nav-btn active" type="button">בית</button>
-        <button id="navHistoryBtn" class="nav-btn" type="button">היסטוריה</button>
-        <button id="navSettingsBtn" class="nav-btn" type="button">הגדרות</button>
-      </nav>
     </div>
   </div>
+
+  <nav class="bottom-nav">
+    <button id="navHomeBtn" class="nav-btn active" type="button">בית</button>
+    <button id="navHistoryBtn" class="nav-btn" type="button">היסטוריה</button>
+    <button id="navSettingsBtn" class="nav-btn" type="button">הגדרות</button>
+  </nav>
 
   <div id="sheetBackdrop" class="sheet-backdrop"></div>
 
@@ -1353,7 +1343,7 @@
   </div>
 
   <script>
-    const APP_VERSION = "1.5";
+    const APP_VERSION = "1.6";
 
     const KEY = {
       last: "feed_last_ts",
