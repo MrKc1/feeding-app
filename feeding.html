@@ -41,6 +41,8 @@
       --smart-bg: rgba(255,255,255,.05);
       --last-bg: rgba(255,255,255,.06);
       --nav-bg: rgba(18,27,45,.78);
+      --toolbar-bg: rgba(9,17,31,.72);
+      --focus-ring: 0 0 0 2px rgba(25,211,255,.28);
     }
 
     html[data-theme="light"]{
@@ -74,6 +76,8 @@
       --smart-bg: rgba(255,255,255,.78);
       --last-bg: rgba(255,255,255,.84);
       --nav-bg: rgba(255,255,255,.88);
+      --toolbar-bg: rgba(255,255,255,.78);
+      --focus-ring: 0 0 0 2px rgba(0,159,209,.22);
     }
 
     *{box-sizing:border-box}
@@ -95,6 +99,16 @@
       justify-content:center;
       padding:14px 14px 110px;
       transition: background .25s ease, color .2s ease;
+    }
+
+    button, input{
+      font:inherit;
+    }
+
+    button:focus-visible,
+    input:focus-visible{
+      outline:none;
+      box-shadow:var(--focus-ring);
     }
 
     .app-shell{
@@ -191,6 +205,40 @@
     .screen.active{
       display:grid;
       align-content:start;
+    }
+
+    .screen-toolbar{
+      position:sticky;
+      top:0;
+      z-index:3;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:8px 2px 10px;
+      background: linear-gradient(180deg, var(--toolbar-bg), rgba(0,0,0,0));
+      backdrop-filter: blur(8px);
+    }
+
+    .screen-title{
+      font-size:15px;
+      font-weight:900;
+      color:var(--muted);
+    }
+
+    .top-home-btn{
+      border:none;
+      border-radius:999px;
+      padding:8px 12px;
+      background: var(--button-bg);
+      border:1px solid var(--border);
+      color:var(--button-text);
+      font-size:12px;
+      font-weight:800;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
     }
 
     .bigbtn{
@@ -636,6 +684,14 @@
       flex-wrap:wrap;
     }
 
+    .history-search-row{
+      display:grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap:8px;
+      align-items:center;
+      margin-top:10px;
+    }
+
     .filter-btn,
     .quick-btn,
     .preset-btn{
@@ -662,6 +718,10 @@
       background: var(--chip-active-bg);
       color: var(--chip-active-color);
       border-color: transparent;
+    }
+
+    .filter-btn.secondary{
+      background: var(--button-bg);
     }
 
     .stepper-row{
@@ -793,6 +853,10 @@
       display:none;
     }
 
+    .btn.secondary{
+      background: var(--button-bg);
+    }
+
     .manual-date{
       width:100%;
       background: var(--input-bg);
@@ -803,6 +867,10 @@
       outline:none;
       font-size:14px;
       margin-bottom:10px;
+    }
+
+    .history-date-input{
+      margin-bottom:0;
     }
 
     .about-box{
@@ -912,7 +980,7 @@
       color:var(--button-text);
       font-weight:800;
       font-size:14px;
-      transition: transform .08s ease, background .18s ease, color .18s ease;
+      transition: transform .08s ease, background .18s ease, color .18s ease, box-shadow .18s ease;
     }
 
     .nav-btn:active{
@@ -923,6 +991,7 @@
       background: var(--chip-active-bg);
       color: var(--chip-active-color);
       border-color: transparent;
+      box-shadow: 0 0 0 1px rgba(255,255,255,.08);
     }
 
     .nav-btn-content{
@@ -1120,9 +1189,87 @@
     .mono{
       font-variant-numeric: tabular-nums;
     }
+
+    .onboarding-backdrop{
+      position:fixed;
+      inset:0;
+      background: rgba(0,0,0,.42);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+      z-index:90;
+      backdrop-filter: blur(8px);
+    }
+
+    .onboarding-backdrop.open{
+      display:flex;
+    }
+
+    .onboarding-card{
+      width:min(520px, 100%);
+      background: linear-gradient(180deg, var(--card), var(--card2));
+      border:1px solid var(--border);
+      border-radius:28px;
+      box-shadow: var(--shadow);
+      padding:20px;
+      display:grid;
+      gap:14px;
+    }
+
+    .onboarding-title{
+      font-size:24px;
+      font-weight:900;
+    }
+
+    .onboarding-text{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.6;
+    }
+
+    .onboarding-list{
+      display:grid;
+      gap:10px;
+      padding:0;
+      margin:0;
+      list-style:none;
+    }
+
+    .onboarding-item{
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      padding:12px 14px;
+      border-radius:18px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.05);
+      line-height:1.5;
+      font-size:14px;
+    }
+
+    .onboarding-badge{
+      width:24px;
+      height:24px;
+      border-radius:999px;
+      background: linear-gradient(135deg, rgba(124,92,255,.95), rgba(25,211,255,.72));
+      color:#fff;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:900;
+      flex:0 0 auto;
+    }
+
+    .onboarding-actions{
+      display:flex;
+      justify-content:flex-start;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:4px;
+    }
   </style>
 </head>
-
 <body>
   <div class="app-shell">
     <div class="app-card">
@@ -1207,6 +1354,11 @@
         </section>
 
         <section id="screen-history" class="screen">
+          <div class="screen-toolbar">
+            <div class="screen-title">היסטוריה וסינון</div>
+            <button class="top-home-btn" type="button" data-go-home>⌂ חזור לבית</button>
+          </div>
+
           <div class="stats-grid">
             <div class="stat-card">
               <div id="historyTotalCount" class="stat-value mono">0</div>
@@ -1243,6 +1395,12 @@
             <div class="filter-row">
               <button id="filterAllBtn" class="filter-btn active" type="button">הכל</button>
               <button id="filterTodayBtn" class="filter-btn" type="button">היום</button>
+              <button id="filterWeekBtn" class="filter-btn" type="button">השבוע</button>
+            </div>
+
+            <div class="history-search-row">
+              <input id="historyDateInput" class="manual-date history-date-input" type="date" />
+              <button id="clearHistoryDateBtn" class="filter-btn secondary" type="button">נקה</button>
             </div>
           </div>
 
@@ -1250,6 +1408,11 @@
         </section>
 
         <section id="screen-settings" class="screen">
+          <div class="screen-toolbar">
+            <div class="screen-title">הגדרות וכלים</div>
+            <button class="top-home-btn" type="button" data-go-home>⌂ חזור לבית</button>
+          </div>
+
           <div class="box">
             <div class="label">מצב תצוגה</div>
             <div class="theme-row">
@@ -1342,7 +1505,7 @@
           <div class="box">
             <div class="label">אודות</div>
             <div class="about-box">
-              <div class="mono">נוצר ע"י קובי | גרסה <span id="appVersion">1.7</span></div>
+              <div class="mono">נוצר ע"י קובי | גרסה <span id="appVersion">1.8</span></div>
             </div>
           </div>
         </section>
@@ -1436,6 +1599,33 @@
     </div>
   </div>
 
+  <div id="onboardingBackdrop" class="onboarding-backdrop" aria-hidden="true">
+    <div class="onboarding-card">
+      <div class="onboarding-title">ברוך הבא לשעות האכלה</div>
+      <div class="onboarding-text">מסך קצר להתחלה. אחר כך זה נעלם ולא חוזר, אלא אם תאפס נתונים מהדפדפן.</div>
+
+      <ul class="onboarding-list">
+        <li class="onboarding-item">
+          <span class="onboarding-badge">1</span>
+          <span>בלחיצה אחת נשמרת האכלה חדשה ומיד מחושבת התזכורת הבאה.</span>
+        </li>
+        <li class="onboarding-item">
+          <span class="onboarding-badge">2</span>
+          <span>בהיסטוריה אפשר לסנן לפי היום, השבוע או תאריך ספציפי.</span>
+        </li>
+        <li class="onboarding-item">
+          <span class="onboarding-badge">3</span>
+          <span>מומלץ לאפשר התראות ממסך ההגדרות כדי לקבל תזכורת בזמן.</span>
+        </li>
+      </ul>
+
+      <div class="onboarding-actions">
+        <button id="onboardingStartBtn" class="btn primary" type="button">הבנתי, נתחיל</button>
+        <button id="onboardingSkipToSettingsBtn" class="btn secondary" type="button">פתח הגדרות</button>
+      </div>
+    </div>
+  </div>
+
   <div class="toast" aria-live="polite">
     <div id="toastInner" class="toast-inner">
       <span id="toastText" class="toast-text"></span>
@@ -1444,142 +1634,162 @@
   </div>
 
   <script>
-    const APP_VERSION = "1.7";
+    const CONFIG = {
+      appVersion: "1.8",
+      reminderTestDelayMs: 10000,
+      feedButtonLockMs: 2000,
+      toastDurationMs: 2600,
+      undoToastDurationMs: 3200,
+      bottleGlowMs: 1450,
+      bottleTiltMs: 980,
+      urgentWindowMs: 15 * 60 * 1000,
+      historyWeekDays: 7,
+      ringRadius: 48,
+      maxHistoryItems: 100
+    };
 
     const KEY = {
       last: "feed_last_ts",
       interval: "feed_interval_minutes",
       history: "feed_history",
       theme: "feed_theme_mode",
-      screen: "feed_active_screen"
+      screen: "feed_active_screen",
+      onboardingDone: "feed_onboarding_done",
+      appVersionSeen: "feed_app_version_seen"
     };
 
-    const RING_RADIUS = 48;
-    const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
+    const RING_CIRCUMFERENCE = 2 * Math.PI * CONFIG.ringRadius;
 
-    let reminderTimeout = null;
-    let tickInterval = null;
-    let deferredInstallPrompt = null;
-    let feedLockTimer = null;
-
-    let intervalHours = 2;
-    let intervalMinutesExtra = 0;
-
-    let manualHour = 0;
-    let manualMin = 0;
-
-    let editHour = 0;
-    let editMin = 0;
-    let editingIndex = null;
-
-    let toastTimer = null;
-    let toastActionHandler = null;
-
-    let historyFilter = "all";
+    const AppState = {
+      reminderTimeout: null,
+      tickInterval: null,
+      deferredInstallPrompt: null,
+      feedLockTimer: null,
+      intervalHours: 2,
+      intervalMinutesExtra: 0,
+      manualHour: 0,
+      manualMin: 0,
+      editHour: 0,
+      editMin: 0,
+      editingIndex: null,
+      toastTimer: null,
+      toastActionHandler: null,
+      historyFilter: "all",
+      historyDateValue: ""
+    };
 
     const mediaTheme = window.matchMedia("(prefers-color-scheme: dark)");
+    const $ = (id) => document.getElementById(id);
 
     const el = {
-      screenHome: document.getElementById("screen-home"),
-      screenHistory: document.getElementById("screen-history"),
-      screenSettings: document.getElementById("screen-settings"),
+      screenHome: $("screen-home"),
+      screenHistory: $("screen-history"),
+      screenSettings: $("screen-settings"),
 
-      navHomeBtn: document.getElementById("navHomeBtn"),
-      navHistoryBtn: document.getElementById("navHistoryBtn"),
-      navSettingsBtn: document.getElementById("navSettingsBtn"),
+      navHomeBtn: $("navHomeBtn"),
+      navHistoryBtn: $("navHistoryBtn"),
+      navSettingsBtn: $("navSettingsBtn"),
 
-      feedBtn: document.getElementById("feedBtn"),
+      feedBtn: $("feedBtn"),
 
-      statusDot: document.getElementById("statusDot"),
-      statusText: document.getElementById("statusText"),
+      statusDot: $("statusDot"),
+      statusText: $("statusText"),
 
-      nextCard: document.getElementById("nextCard"),
-      nextReminderMain: document.getElementById("nextReminderMain"),
-      nextReminderSub: document.getElementById("nextReminderSub"),
-      nextReminderDay: document.getElementById("nextReminderDay"),
-      progressRing: document.getElementById("progressRing"),
-      bottleWrap: document.getElementById("bottleWrap"),
+      nextCard: $("nextCard"),
+      nextReminderMain: $("nextReminderMain"),
+      nextReminderSub: $("nextReminderSub"),
+      nextReminderDay: $("nextReminderDay"),
+      progressRing: $("progressRing"),
+      bottleWrap: $("bottleWrap"),
 
-      lastFeedMain: document.getElementById("lastFeedMain"),
-      lastFeedSub: document.getElementById("lastFeedSub"),
-      elapsedMain: document.getElementById("elapsedMain"),
-      elapsedDetail: document.getElementById("elapsedDetail"),
+      lastFeedMain: $("lastFeedMain"),
+      lastFeedSub: $("lastFeedSub"),
+      elapsedMain: $("elapsedMain"),
+      elapsedDetail: $("elapsedDetail"),
 
-      statusBanner: document.getElementById("statusBanner"),
-      statusBannerTitle: document.getElementById("statusBannerTitle"),
-      statusBannerText: document.getElementById("statusBannerText"),
-      statusBannerSub: document.getElementById("statusBannerSub"),
+      statusBanner: $("statusBanner"),
+      statusBannerTitle: $("statusBannerTitle"),
+      statusBannerText: $("statusBannerText"),
+      statusBannerSub: $("statusBannerSub"),
 
-      historyTotalCount: document.getElementById("historyTotalCount"),
-      todayCount: document.getElementById("todayCount"),
-      todayAvg: document.getElementById("todayAvg"),
+      historyTotalCount: $("historyTotalCount"),
+      todayCount: $("todayCount"),
+      todayAvg: $("todayAvg"),
 
-      smartPredictionCard: document.getElementById("smartPredictionCard"),
-      smartPredictionMain: document.getElementById("smartPredictionMain"),
-      smartPredictionSub: document.getElementById("smartPredictionSub"),
-      smartPredictionNote: document.getElementById("smartPredictionNote"),
+      smartPredictionCard: $("smartPredictionCard"),
+      smartPredictionMain: $("smartPredictionMain"),
+      smartPredictionSub: $("smartPredictionSub"),
+      smartPredictionNote: $("smartPredictionNote"),
 
-      smartAnomalyCard: document.getElementById("smartAnomalyCard"),
-      smartAnomalyMain: document.getElementById("smartAnomalyMain"),
-      smartAnomalySub: document.getElementById("smartAnomalySub"),
-      smartAnomalyNote: document.getElementById("smartAnomalyNote"),
+      smartAnomalyCard: $("smartAnomalyCard"),
+      smartAnomalyMain: $("smartAnomalyMain"),
+      smartAnomalySub: $("smartAnomalySub"),
+      smartAnomalyNote: $("smartAnomalyNote"),
 
-      filterAllBtn: document.getElementById("filterAllBtn"),
-      filterTodayBtn: document.getElementById("filterTodayBtn"),
-      historyList: document.getElementById("historyList"),
+      filterAllBtn: $("filterAllBtn"),
+      filterTodayBtn: $("filterTodayBtn"),
+      filterWeekBtn: $("filterWeekBtn"),
+      historyDateInput: $("historyDateInput"),
+      clearHistoryDateBtn: $("clearHistoryDateBtn"),
+      historyList: $("historyList"),
 
-      themeAutoBtn: document.getElementById("themeAutoBtn"),
-      themeDarkBtn: document.getElementById("themeDarkBtn"),
-      themeLightBtn: document.getElementById("themeLightBtn"),
+      themeAutoBtn: $("themeAutoBtn"),
+      themeDarkBtn: $("themeDarkBtn"),
+      themeLightBtn: $("themeLightBtn"),
 
       quickButtons: Array.from(document.querySelectorAll("[data-back-minutes]")),
       presetButtons: Array.from(document.querySelectorAll("[data-preset-minutes]")),
+      goHomeButtons: Array.from(document.querySelectorAll("[data-go-home]")),
 
-      hoursValue: document.getElementById("hoursValue"),
-      minutesValue: document.getElementById("minutesValue"),
-      intervalTotalText: document.getElementById("intervalTotalText"),
-      incHours: document.getElementById("incHours"),
-      decHours: document.getElementById("decHours"),
-      incMinutes: document.getElementById("incMinutes"),
-      decMinutes: document.getElementById("decMinutes"),
+      hoursValue: $("hoursValue"),
+      minutesValue: $("minutesValue"),
+      intervalTotalText: $("intervalTotalText"),
+      incHours: $("incHours"),
+      decHours: $("decHours"),
+      incMinutes: $("incMinutes"),
+      decMinutes: $("decMinutes"),
 
-      manualDate: document.getElementById("manualDate"),
-      manualHourValue: document.getElementById("manualHourValue"),
-      manualMinValue: document.getElementById("manualMinValue"),
-      incManualHour: document.getElementById("incManualHour"),
-      decManualHour: document.getElementById("decManualHour"),
-      incManualMin: document.getElementById("incManualMin"),
-      decManualMin: document.getElementById("decManualMin"),
-      setManualBtn: document.getElementById("setManualBtn"),
+      manualDate: $("manualDate"),
+      manualHourValue: $("manualHourValue"),
+      manualMinValue: $("manualMinValue"),
+      incManualHour: $("incManualHour"),
+      decManualHour: $("decManualHour"),
+      incManualMin: $("incManualMin"),
+      decManualMin: $("decManualMin"),
+      setManualBtn: $("setManualBtn"),
 
-      enableNotifBtn: document.getElementById("enableNotifBtn"),
-      testReminderBtn: document.getElementById("testReminderBtn"),
-      exportBtn: document.getElementById("exportBtn"),
-      exportCsvBtn: document.getElementById("exportCsvBtn"),
-      importBtn: document.getElementById("importBtn"),
-      importFile: document.getElementById("importFile"),
-      installPwaBtn: document.getElementById("installPwaBtn"),
-      clearBtn: document.getElementById("clearBtn"),
+      enableNotifBtn: $("enableNotifBtn"),
+      testReminderBtn: $("testReminderBtn"),
+      exportBtn: $("exportBtn"),
+      exportCsvBtn: $("exportCsvBtn"),
+      importBtn: $("importBtn"),
+      importFile: $("importFile"),
+      installPwaBtn: $("installPwaBtn"),
+      clearBtn: $("clearBtn"),
 
-      appVersion: document.getElementById("appVersion"),
+      appVersion: $("appVersion"),
 
-      sheetBackdrop: document.getElementById("sheetBackdrop"),
-      editSheet: document.getElementById("editSheet"),
-      editSheetHandle: document.getElementById("editSheetHandle"),
-      editSheetCloseBtn: document.getElementById("editSheetCloseBtn"),
-      editDate: document.getElementById("editDate"),
-      editHourValue: document.getElementById("editHourValue"),
-      editMinValue: document.getElementById("editMinValue"),
-      editIncHour: document.getElementById("editIncHour"),
-      editDecHour: document.getElementById("editDecHour"),
-      editIncMin: document.getElementById("editIncMin"),
-      editDecMin: document.getElementById("editDecMin"),
-      editSaveBtn: document.getElementById("editSaveBtn"),
-      editDeleteBtn: document.getElementById("editDeleteBtn"),
+      sheetBackdrop: $("sheetBackdrop"),
+      editSheet: $("editSheet"),
+      editSheetHandle: $("editSheetHandle"),
+      editSheetCloseBtn: $("editSheetCloseBtn"),
+      editDate: $("editDate"),
+      editHourValue: $("editHourValue"),
+      editMinValue: $("editMinValue"),
+      editIncHour: $("editIncHour"),
+      editDecHour: $("editDecHour"),
+      editIncMin: $("editIncMin"),
+      editDecMin: $("editDecMin"),
+      editSaveBtn: $("editSaveBtn"),
+      editDeleteBtn: $("editDeleteBtn"),
 
-      toastInner: document.getElementById("toastInner"),
-      toastText: document.getElementById("toastText"),
-      toastAction: document.getElementById("toastAction")
+      onboardingBackdrop: $("onboardingBackdrop"),
+      onboardingStartBtn: $("onboardingStartBtn"),
+      onboardingSkipToSettingsBtn: $("onboardingSkipToSettingsBtn"),
+
+      toastInner: $("toastInner"),
+      toastText: $("toastText"),
+      toastAction: $("toastAction")
     };
 
     function nowTs() {
@@ -1620,6 +1830,11 @@
 
     function isTodayTs(ts) {
       return sameDay(ts, Date.now());
+    }
+
+    function isWithinLastDays(ts, days) {
+      const edge = nowTs() - (days * 24 * 60 * 60 * 1000);
+      return ts >= edge;
     }
 
     function getRelativeDayLabel(ts) {
@@ -1699,36 +1914,6 @@
       return `נותרו עוד ${formatDurationShort(ms, 2)}`;
     }
 
-    function showToast(message, actionLabel = "", actionHandler = null, duration = 2600) {
-      clearTimeout(toastTimer);
-      toastActionHandler = actionHandler || null;
-      el.toastText.textContent = message;
-      el.toastInner.style.display = "inline-flex";
-
-      if (actionLabel && actionHandler) {
-        el.toastAction.textContent = actionLabel;
-        el.toastAction.style.display = "inline-flex";
-      } else {
-        el.toastAction.style.display = "none";
-      }
-
-      toastTimer = setTimeout(hideToast, duration);
-    }
-
-    function hideToast() {
-      clearTimeout(toastTimer);
-      toastTimer = null;
-      toastActionHandler = null;
-      el.toastInner.style.display = "none";
-      el.toastAction.style.display = "none";
-    }
-
-    el.toastAction.addEventListener("click", () => {
-      const fn = toastActionHandler;
-      hideToast();
-      if (typeof fn === "function") fn();
-    });
-
     function getThemeChoice() {
       return localStorage.getItem(KEY.theme) || "auto";
     }
@@ -1744,14 +1929,11 @@
         [el.themeAutoBtn, choice === "auto"],
         [el.themeDarkBtn, choice === "dark"],
         [el.themeLightBtn, choice === "light"]
-      ].forEach(([btn, active]) => {
-        btn.classList.toggle("active", active);
-      });
+      ].forEach(([btn, active]) => btn.classList.toggle("active", active));
     }
 
     function applyTheme(choice = getThemeChoice()) {
-      const resolved = getResolvedTheme(choice);
-      document.documentElement.setAttribute("data-theme", resolved);
+      document.documentElement.setAttribute("data-theme", getResolvedTheme(choice));
       updateThemeButtons(choice);
     }
 
@@ -1769,36 +1951,36 @@
       return ["home", "history", "settings"].includes(saved) ? saved : "home";
     }
 
+    function applyScreen(screen = getScreen()) {
+      [
+        [el.screenHome, screen === "home"],
+        [el.screenHistory, screen === "history"],
+        [el.screenSettings, screen === "settings"],
+        [el.navHomeBtn, screen === "home"],
+        [el.navHistoryBtn, screen === "history"],
+        [el.navSettingsBtn, screen === "settings"]
+      ].forEach(([node, active]) => node.classList.toggle("active", active));
+    }
+
     function setScreen(screen) {
       localStorage.setItem(KEY.screen, screen);
       applyScreen(screen);
     }
 
-    function applyScreen(screen = getScreen()) {
-      el.screenHome.classList.toggle("active", screen === "home");
-      el.screenHistory.classList.toggle("active", screen === "history");
-      el.screenSettings.classList.toggle("active", screen === "settings");
-
-      el.navHomeBtn.classList.toggle("active", screen === "home");
-      el.navHistoryBtn.classList.toggle("active", screen === "history");
-      el.navSettingsBtn.classList.toggle("active", screen === "settings");
-    }
-
     function getIntervalMinutes() {
       const raw = localStorage.getItem(KEY.interval);
-      const v = raw ? parseInt(raw, 10) : 120;
-      return Number.isFinite(v) && v > 0 ? v : 120;
+      const value = raw ? parseInt(raw, 10) : 120;
+      return Number.isFinite(value) && value > 0 ? value : 120;
     }
 
-    function setIntervalMinutes(v) {
-      const safe = Math.max(1, Math.floor(v));
-      localStorage.setItem(KEY.interval, String(safe));
+    function setIntervalMinutes(value) {
+      localStorage.setItem(KEY.interval, String(Math.max(1, Math.floor(value))));
     }
 
     function getLastTs() {
       const raw = localStorage.getItem(KEY.last);
-      const v = raw ? parseInt(raw, 10) : NaN;
-      return Number.isFinite(v) ? v : null;
+      const value = raw ? parseInt(raw, 10) : NaN;
+      return Number.isFinite(value) ? value : null;
     }
 
     function setLastTs(ts) {
@@ -1808,112 +1990,21 @@
     function getHistory() {
       try {
         const raw = localStorage.getItem(KEY.history);
-        const arr = raw ? JSON.parse(raw) : [];
-        return Array.isArray(arr) ? arr : [];
+        const items = raw ? JSON.parse(raw) : [];
+        return Array.isArray(items) ? items : [];
       } catch {
         return [];
       }
     }
 
-    function setHistory(arr) {
-      localStorage.setItem(KEY.history, JSON.stringify(arr));
-    }
-
-    function applyHistoryArray(arr) {
-      const sorted = [...arr].sort((a, b) => b - a);
-      setHistory(sorted);
-      if (sorted.length > 0) {
-        setLastTs(sorted[0]);
-        scheduleReminderFrom(sorted[0]);
-      } else {
-        localStorage.removeItem(KEY.last);
-        clearReminder();
-      }
-      refresh();
-    }
-
-    function pushHistory(ts) {
-      const arr = getHistory();
-      arr.unshift(ts);
-      applyHistoryArray(arr.slice(0, 100));
-    }
-
-    function getHistoryIntervals() {
-      const arr = getHistory();
-      const intervals = [];
-      for (let i = 0; i < arr.length - 1; i++) {
-        const diff = arr[i] - arr[i + 1];
-        if (diff > 0) intervals.push(diff);
-      }
-      return intervals;
-    }
-
-    function weightedAverage(intervals) {
-      if (!intervals.length) return null;
-      let sum = 0;
-      let weights = 0;
-      const n = intervals.length;
-      for (let i = 0; i < n; i++) {
-        const weight = n - i;
-        sum += intervals[i] * weight;
-        weights += weight;
-      }
-      return sum / weights;
-    }
-
-    function meanAbsoluteDeviation(intervals, avg) {
-      if (!intervals.length || !avg) return 0;
-      let total = 0;
-      for (const v of intervals) total += Math.abs(v - avg);
-      return total / intervals.length;
-    }
-
-    function getSmartPredictionData() {
-      const lastTs = getLastTs();
-      const fixedInterval = getIntervalMinutes() * 60 * 1000;
-      const intervals = getHistoryIntervals().slice(0, 6);
-
-      if (!lastTs) {
-        return {
-          hasData: false,
-          targetTs: null,
-          lowerTs: null,
-          upperTs: null,
-          baseMs: fixedInterval,
-          sourceCount: 0
-        };
-      }
-
-      if (intervals.length < 2) {
-        return {
-          hasData: false,
-          targetTs: lastTs + fixedInterval,
-          lowerTs: lastTs + fixedInterval - 10 * 60 * 1000,
-          upperTs: lastTs + fixedInterval + 10 * 60 * 1000,
-          baseMs: fixedInterval,
-          sourceCount: intervals.length
-        };
-      }
-
-      const avg = weightedAverage(intervals);
-      const mad = meanAbsoluteDeviation(intervals, avg);
-      const smartMs = Math.max(30 * 60 * 1000, avg);
-      const spread = Math.max(10 * 60 * 1000, Math.min(45 * 60 * 1000, mad));
-
-      return {
-        hasData: true,
-        targetTs: lastTs + smartMs,
-        lowerTs: lastTs + Math.max(20 * 60 * 1000, smartMs - spread),
-        upperTs: lastTs + smartMs + spread,
-        baseMs: smartMs,
-        sourceCount: intervals.length
-      };
+    function setHistory(history) {
+      localStorage.setItem(KEY.history, JSON.stringify(history));
     }
 
     function clearReminder() {
-      if (reminderTimeout) {
-        clearTimeout(reminderTimeout);
-        reminderTimeout = null;
+      if (AppState.reminderTimeout) {
+        clearTimeout(AppState.reminderTimeout);
+        AppState.reminderTimeout = null;
       }
     }
 
@@ -1935,13 +2026,11 @@
         showToast("התראות חסומות בדפדפן");
         return false;
       }
-      const p = await Notification.requestPermission();
-      return p === "granted";
+      return (await Notification.requestPermission()) === "granted";
     }
 
     async function sendNotification(title, body) {
-      if (!canNotify()) return;
-      if (Notification.permission !== "granted") return;
+      if (!canNotify() || Notification.permission !== "granted") return;
 
       try {
         if ("serviceWorker" in navigator) {
@@ -1963,12 +2052,25 @@
       } catch {}
     }
 
+    function setStatus(kind, text) {
+      el.statusText.textContent = text;
+      el.statusDot.classList.remove("ok", "warn");
+      if (kind === "ok") el.statusDot.classList.add("ok");
+      if (kind === "warn") el.statusDot.classList.add("warn");
+    }
+
+    function setRingProgress(ratio) {
+      const safeRatio = Math.max(0, Math.min(1, ratio));
+      const offset = RING_CIRCUMFERENCE * (1 - safeRatio);
+      el.progressRing.style.strokeDasharray = `${RING_CIRCUMFERENCE}`;
+      el.progressRing.style.strokeDashoffset = `${offset}`;
+    }
+
     function scheduleReminderFrom(lastTs) {
       clearReminder();
       if (!lastTs) return;
 
-      const intervalMs = getIntervalMinutes() * 60 * 1000;
-      const dueTs = lastTs + intervalMs;
+      const dueTs = lastTs + (getIntervalMinutes() * 60 * 1000);
       const delay = dueTs - nowTs();
 
       if (delay <= 0) {
@@ -1978,42 +2080,120 @@
 
       setStatus("ok", "תזכורת פעילה");
 
-      reminderTimeout = setTimeout(async () => {
+      AppState.reminderTimeout = setTimeout(async () => {
         const msg = "הגיע הזמן להאכלה הבאה";
         vibrate();
-        showToast("תזכורת: " + msg, "", null, 2800);
+        showToast(`תזכורת: ${msg}`);
         await sendNotification("תזכורת האכלה", msg);
         setStatus("warn", "זמן האכלה הגיע");
         refresh();
       }, delay);
     }
 
-    function setRingProgress(progressRatio) {
-      const ratio = Math.max(0, Math.min(1, progressRatio));
-      const offset = RING_CIRCUMFERENCE * (1 - ratio);
-      el.progressRing.style.strokeDasharray = `${RING_CIRCUMFERENCE}`;
-      el.progressRing.style.strokeDashoffset = `${offset}`;
-    }
-
-    function triggerBottleFeedback() {
-      el.bottleWrap.classList.remove("feed-tilt", "saved-glow");
-      void el.bottleWrap.offsetWidth;
-      el.bottleWrap.classList.add("feed-tilt");
-
-      setTimeout(() => el.bottleWrap.classList.add("saved-glow"), 180);
-      setTimeout(() => el.bottleWrap.classList.remove("feed-tilt"), 980);
-      setTimeout(() => el.bottleWrap.classList.remove("saved-glow"), 1450);
-    }
-
-    function updateFeedButton(lastTs) {
-      if (!lastTs) {
-        el.feedBtn.textContent = "🍼 סימנתי האכלה עכשיו";
-        return;
+    function getHistoryIntervals() {
+      const items = getHistory();
+      const intervals = [];
+      for (let i = 0; i < items.length - 1; i += 1) {
+        const diff = items[i] - items[i + 1];
+        if (diff > 0) intervals.push(diff);
       }
-      const dueTs = lastTs + getIntervalMinutes() * 60 * 1000;
-      el.feedBtn.textContent = dueTs <= nowTs()
-        ? "🍼 הגיע זמן האכלה - לחיצה לשמירה"
-        : "🍼 סימנתי האכלה עכשיו";
+      return intervals;
+    }
+
+    function weightedAverage(intervals) {
+      if (!intervals.length) return null;
+      let sum = 0;
+      let weightSum = 0;
+      const total = intervals.length;
+
+      intervals.forEach((value, index) => {
+        const weight = total - index;
+        sum += value * weight;
+        weightSum += weight;
+      });
+
+      return sum / weightSum;
+    }
+
+    function meanAbsoluteDeviation(intervals, avg) {
+      if (!intervals.length || !avg) return 0;
+      return intervals.reduce((sum, value) => sum + Math.abs(value - avg), 0) / intervals.length;
+    }
+
+    function getSmartPredictionData() {
+      const lastTs = getLastTs();
+      const fixedInterval = getIntervalMinutes() * 60 * 1000;
+      const intervals = getHistoryIntervals().slice(0, 6);
+
+      if (!lastTs) {
+        return { hasData: false, targetTs: null, lowerTs: null, upperTs: null, baseMs: fixedInterval, sourceCount: 0 };
+      }
+
+      if (intervals.length < 2) {
+        return {
+          hasData: false,
+          targetTs: lastTs + fixedInterval,
+          lowerTs: lastTs + fixedInterval - (10 * 60 * 1000),
+          upperTs: lastTs + fixedInterval + (10 * 60 * 1000),
+          baseMs: fixedInterval,
+          sourceCount: intervals.length
+        };
+      }
+
+      const avg = weightedAverage(intervals);
+      const spread = Math.max(10 * 60 * 1000, Math.min(45 * 60 * 1000, meanAbsoluteDeviation(intervals, avg)));
+      const smartMs = Math.max(30 * 60 * 1000, avg);
+
+      return {
+        hasData: true,
+        targetTs: lastTs + smartMs,
+        lowerTs: lastTs + Math.max(20 * 60 * 1000, smartMs - spread),
+        upperTs: lastTs + smartMs + spread,
+        baseMs: smartMs,
+        sourceCount: intervals.length
+      };
+    }
+
+    function getFilteredHistory() {
+      const all = getHistory();
+
+      if (AppState.historyFilter === "today") {
+        return all.filter(isTodayTs);
+      }
+
+      if (AppState.historyFilter === "week") {
+        return all.filter((ts) => isWithinLastDays(ts, CONFIG.historyWeekDays));
+      }
+
+      if (AppState.historyFilter === "date" && AppState.historyDateValue) {
+        return all.filter((ts) => formatDateInputValue(ts) === AppState.historyDateValue);
+      }
+
+      return all;
+    }
+
+    function applyHistoryArray(items) {
+      const sorted = [...items]
+        .filter((value) => Number.isFinite(value))
+        .sort((a, b) => b - a);
+
+      setHistory(sorted);
+
+      if (sorted.length > 0) {
+        setLastTs(sorted[0]);
+        scheduleReminderFrom(sorted[0]);
+      } else {
+        localStorage.removeItem(KEY.last);
+        clearReminder();
+      }
+
+      refresh();
+    }
+
+    function pushHistory(ts) {
+      const history = getHistory();
+      history.unshift(ts);
+      applyHistoryArray(history.slice(0, CONFIG.maxHistoryItems));
     }
 
     function updateLastFeedCard(lastTs) {
@@ -2039,6 +2219,18 @@
       el.elapsedDetail.textContent = human.detail;
     }
 
+    function updateFeedButton(lastTs) {
+      if (!lastTs) {
+        el.feedBtn.textContent = "🍼 סימנתי האכלה עכשיו";
+        return;
+      }
+
+      const dueTs = lastTs + (getIntervalMinutes() * 60 * 1000);
+      el.feedBtn.textContent = dueTs <= nowTs()
+        ? "🍼 הגיע זמן האכלה - לחיצה לשמירה"
+        : "🍼 סימנתי האכלה עכשיו";
+    }
+
     function updateNextCard(lastTs) {
       el.nextCard.classList.remove("urgent", "overdue");
       el.bottleWrap.classList.remove("urgent");
@@ -2061,22 +2253,14 @@
         ? `זמן האכלה הגיע · ${formatRemainingHuman(remainMs)}`
         : formatRemainingHuman(remainMs);
 
-      const progress = remainMs <= 0 ? 0 : remainMs / intervalMs;
-      setRingProgress(progress);
+      setRingProgress(remainMs <= 0 ? 0 : (remainMs / intervalMs));
 
       if (remainMs <= 0) {
         el.nextCard.classList.add("overdue");
-      } else if (remainMs <= 15 * 60 * 1000) {
+      } else if (remainMs <= CONFIG.urgentWindowMs) {
         el.nextCard.classList.add("urgent");
         el.bottleWrap.classList.add("urgent");
       }
-    }
-
-    function setStatus(kind, text) {
-      el.statusText.textContent = text;
-      el.statusDot.classList.remove("ok", "warn");
-      if (kind === "ok") el.statusDot.classList.add("ok");
-      if (kind === "warn") el.statusDot.classList.add("warn");
     }
 
     function updateStatusBanner(lastTs) {
@@ -2089,7 +2273,7 @@
         return;
       }
 
-      const dueTs = lastTs + getIntervalMinutes() * 60 * 1000;
+      const dueTs = lastTs + (getIntervalMinutes() * 60 * 1000);
       const remainMs = dueTs - nowTs();
 
       if (remainMs <= 0) {
@@ -2100,7 +2284,7 @@
         return;
       }
 
-      if (remainMs <= 15 * 60 * 1000) {
+      if (remainMs <= CONFIG.urgentWindowMs) {
         el.statusBanner.classList.add("warn");
         el.statusBannerTitle.textContent = "מתקרבים לזמן האכלה";
         el.statusBannerText.textContent = `האכלה אחרונה ב־${formatClock(lastTs)}`;
@@ -2117,6 +2301,7 @@
     function updateHistorySummary() {
       const all = getHistory();
       const today = all.filter(isTodayTs);
+
       el.historyTotalCount.textContent = String(all.length);
       el.todayCount.textContent = String(today.length);
 
@@ -2127,10 +2312,12 @@
 
       let total = 0;
       let count = 0;
-      for (let i = 0; i < today.length - 1; i++) {
+
+      for (let i = 0; i < today.length - 1; i += 1) {
         total += (today[i] - today[i + 1]);
         count += 1;
       }
+
       el.todayAvg.textContent = formatDurationShort(total / count, 2);
     }
 
@@ -2149,7 +2336,7 @@
 
       if (remain <= 0) {
         el.smartPredictionCard.classList.add("smart-state-danger");
-      } else if (remain <= 15 * 60 * 1000) {
+      } else if (remain <= CONFIG.urgentWindowMs) {
         el.smartPredictionCard.classList.add("smart-state-warn");
       } else {
         el.smartPredictionCard.classList.add("smart-state-ok");
@@ -2183,7 +2370,7 @@
       const currentElapsed = nowTs() - lastTs;
       const latestInterval = intervals[0];
       const shortRun = intervals.slice(0, 3);
-      const allShort = shortRun.length >= 3 && shortRun.every(v => v < baseline * 0.8);
+      const allShort = shortRun.length >= 3 && shortRun.every((value) => value < baseline * 0.8);
 
       if (currentElapsed > baseline * 1.9) {
         el.smartAnomalyCard.classList.add("smart-state-danger");
@@ -2223,178 +2410,110 @@
       el.smartAnomalyNote.textContent = `המרווח הממוצע האחרון הוא ${formatDurationShort(baseline, 2)}.`;
     }
 
-    function renderHistory() {
-      const all = getHistory();
-      const arr = historyFilter === "today" ? all.filter(isTodayTs) : all;
-      el.historyList.innerHTML = "";
-
-      if (arr.length === 0) {
-        const li = document.createElement("li");
-        li.className = "history-item";
-        li.innerHTML = `
-          <div>
-            <div class="history-time">אין נתונים עדיין</div>
-            <div class="history-gap">לחץ על הכפתור בזמן האכלה</div>
-          </div>
-          <div class="history-right">—</div>
-        `;
-        el.historyList.appendChild(li);
-        return;
-      }
-
-      arr.forEach((ts) => {
-        const actualIndex = all.indexOf(ts);
-        const prev = all[actualIndex + 1];
-        const gapText = prev
-          ? `${formatDurationShort(ts - prev, 2)} מהקודמת`
-          : "האכלה ראשונה ברשומה";
-
-        const li = document.createElement("li");
-        li.className = "history-item";
-        li.innerHTML = `
-          <div>
-            <div class="history-time mono">${formatClock(ts)}</div>
-            <div class="history-date mono">${formatDateTime(ts)}</div>
-            <div class="history-gap">${gapText}</div>
-          </div>
-          <div class="history-right">
-            <button class="mini-btn" type="button" data-edit-index="${actualIndex}">ערוך</button>
-            <button class="mini-btn delete" type="button" data-delete-index="${actualIndex}">מחק</button>
-          </div>
-        `;
-        el.historyList.appendChild(li);
-      });
-
-      el.historyList.querySelectorAll("[data-edit-index]").forEach(btn => {
-        btn.addEventListener("click", () => openEditSheet(parseInt(btn.dataset.editIndex, 10)));
-      });
-
-      el.historyList.querySelectorAll("[data-delete-index]").forEach(btn => {
-        btn.addEventListener("click", () => deleteHistoryItem(parseInt(btn.dataset.deleteIndex, 10)));
-      });
-    }
-
-    function updateFilterButtons() {
-      el.filterAllBtn.classList.toggle("active", historyFilter === "all");
-      el.filterTodayBtn.classList.toggle("active", historyFilter === "today");
-    }
-
-    function deleteHistoryItem(index) {
-      const current = getHistory();
-      if (index < 0 || index >= current.length) return;
-
-      const snapshot = {
-        last: getLastTs(),
-        history: current.slice()
-      };
-
-      current.splice(index, 1);
-      applyHistoryArray(current);
-
-      showToast("הרשומה נמחקה", "בטל", () => {
-        setLastTs(snapshot.last);
-        setHistory(snapshot.history);
-        if (snapshot.last) scheduleReminderFrom(snapshot.last);
-        else clearReminder();
-        refresh();
-      }, 3200);
-    }
-
-    function openEditSheet(index) {
-      const history = getHistory();
-      const ts = history[index];
-      if (!Number.isFinite(ts)) return;
-
-      editingIndex = index;
-      const d = new Date(ts);
-      editHour = d.getHours();
-      editMin = d.getMinutes();
-
-      el.editDate.value = formatDateInputValue(ts);
-      renderEditTimeUI();
-      openSheet(el.editSheet);
-    }
-
     function updatePresetButtons(totalMinutes) {
-      el.presetButtons.forEach(btn => {
+      el.presetButtons.forEach((btn) => {
         const preset = parseInt(btn.dataset.presetMinutes, 10);
         btn.classList.toggle("active", preset === totalMinutes);
       });
     }
 
     function refreshIntervalUI() {
-      el.hoursValue.textContent = String(intervalHours);
-      el.minutesValue.textContent = String(intervalMinutesExtra);
-      const total = intervalHours * 60 + intervalMinutesExtra;
+      el.hoursValue.textContent = String(AppState.intervalHours);
+      el.minutesValue.textContent = String(AppState.intervalMinutesExtra);
+
+      const total = (AppState.intervalHours * 60) + AppState.intervalMinutesExtra;
       el.intervalTotalText.textContent = `המרווח שנבחר: ${formatDurationShort(total * 60 * 1000, 2)}`;
       updatePresetButtons(total);
     }
 
     function loadInterval() {
       const total = getIntervalMinutes();
-      intervalHours = Math.floor(total / 60);
-      intervalMinutesExtra = total % 60;
+      AppState.intervalHours = Math.floor(total / 60);
+      AppState.intervalMinutesExtra = total % 60;
       refreshIntervalUI();
     }
 
+    function normalizeInterval() {
+      if (AppState.intervalHours < 0) AppState.intervalHours = 0;
+      if (AppState.intervalMinutesExtra < 0) AppState.intervalMinutesExtra = 0;
+
+      if (AppState.intervalMinutesExtra >= 60) {
+        AppState.intervalHours += Math.floor(AppState.intervalMinutesExtra / 60);
+        AppState.intervalMinutesExtra %= 60;
+      }
+
+      if ((AppState.intervalHours * 60) + AppState.intervalMinutesExtra < 1) {
+        AppState.intervalHours = 0;
+        AppState.intervalMinutesExtra = 1;
+      }
+    }
+
     function saveIntervalFromUI() {
-      const total = intervalHours * 60 + intervalMinutesExtra;
+      const total = (AppState.intervalHours * 60) + AppState.intervalMinutesExtra;
       setIntervalMinutes(total);
+
       const lastTs = getLastTs();
       if (lastTs) scheduleReminderFrom(lastTs);
+
       refresh();
     }
 
     function setIntervalFromPreset(minutes) {
-      intervalHours = Math.floor(minutes / 60);
-      intervalMinutesExtra = minutes % 60;
+      AppState.intervalHours = Math.floor(minutes / 60);
+      AppState.intervalMinutesExtra = minutes % 60;
       saveIntervalFromUI();
       showToast(`המרווח עודכן ל־${formatDurationShort(minutes * 60 * 1000, 2)}`);
     }
 
-    function normalizeInterval() {
-      if (intervalHours < 0) intervalHours = 0;
-      if (intervalMinutesExtra < 0) intervalMinutesExtra = 0;
-
-      if (intervalMinutesExtra >= 60) {
-        intervalHours += Math.floor(intervalMinutesExtra / 60);
-        intervalMinutesExtra = intervalMinutesExtra % 60;
-      }
-
-      const total = intervalHours * 60 + intervalMinutesExtra;
-      if (total < 1) {
-        intervalHours = 0;
-        intervalMinutesExtra = 1;
-      }
+    function renderManualTimeUI() {
+      el.manualHourValue.textContent = pad2(AppState.manualHour);
+      el.manualMinValue.textContent = pad2(AppState.manualMin);
     }
 
-    function renderManualTimeUI() {
-      el.manualHourValue.textContent = pad2(manualHour);
-      el.manualMinValue.textContent = pad2(manualMin);
+    function renderEditTimeUI() {
+      el.editHourValue.textContent = pad2(AppState.editHour);
+      el.editMinValue.textContent = pad2(AppState.editMin);
     }
 
     function getManualTimestamp(dateValue) {
       if (!dateValue) return null;
-      const [y, m, d] = dateValue.split("-").map(x => parseInt(x, 10));
+      const [y, m, d] = dateValue.split("-").map((value) => parseInt(value, 10));
       if (![y, m, d].every(Number.isFinite)) return null;
-      const dt = new Date(y, m - 1, d, manualHour, manualMin, 0, 0);
-      const ts = dt.getTime();
+      const ts = new Date(y, m - 1, d, AppState.manualHour, AppState.manualMin, 0, 0).getTime();
       return Number.isFinite(ts) ? ts : null;
-    }
-
-    function renderEditTimeUI() {
-      el.editHourValue.textContent = pad2(editHour);
-      el.editMinValue.textContent = pad2(editMin);
     }
 
     function getEditTimestamp() {
       const dateStr = el.editDate.value;
       if (!dateStr) return null;
-      const [y, m, d] = dateStr.split("-").map(x => parseInt(x, 10));
+      const [y, m, d] = dateStr.split("-").map((value) => parseInt(value, 10));
       if (![y, m, d].every(Number.isFinite)) return null;
-      const dt = new Date(y, m - 1, d, editHour, editMin, 0, 0);
-      const ts = dt.getTime();
+      const ts = new Date(y, m - 1, d, AppState.editHour, AppState.editMin, 0, 0).getTime();
       return Number.isFinite(ts) ? ts : null;
+    }
+
+    function showToast(message, actionLabel = "", actionHandler = null, duration = CONFIG.toastDurationMs) {
+      clearTimeout(AppState.toastTimer);
+      AppState.toastActionHandler = actionHandler || null;
+      el.toastText.textContent = message;
+      el.toastInner.style.display = "inline-flex";
+
+      if (actionLabel && actionHandler) {
+        el.toastAction.textContent = actionLabel;
+        el.toastAction.style.display = "inline-flex";
+      } else {
+        el.toastAction.style.display = "none";
+      }
+
+      AppState.toastTimer = setTimeout(hideToast, duration);
+    }
+
+    function hideToast() {
+      clearTimeout(AppState.toastTimer);
+      AppState.toastTimer = null;
+      AppState.toastActionHandler = null;
+      el.toastInner.style.display = "none";
+      el.toastAction.style.display = "none";
     }
 
     function createRipple(button, event) {
@@ -2403,25 +2522,30 @@
       const ripple = document.createElement("span");
       ripple.className = "ripple";
       ripple.style.width = ripple.style.height = `${size}px`;
-
-      const x = (event.clientX || rect.left + rect.width / 2) - rect.left - size / 2;
-      const y = (event.clientY || rect.top + rect.height / 2) - rect.top - size / 2;
-
-      ripple.style.left = `${x}px`;
-      ripple.style.top = `${y}px`;
-
+      ripple.style.left = `${(event.clientX || rect.left + rect.width / 2) - rect.left - (size / 2)}px`;
+      ripple.style.top = `${(event.clientY || rect.top + rect.height / 2) - rect.top - (size / 2)}px`;
       button.appendChild(ripple);
       setTimeout(() => ripple.remove(), 700);
     }
 
-    function lockFeedButton(ms = 2000) {
-      clearTimeout(feedLockTimer);
+    function lockFeedButton(ms = CONFIG.feedButtonLockMs) {
+      clearTimeout(AppState.feedLockTimer);
       el.feedBtn.disabled = true;
       el.feedBtn.classList.add("locked");
-      feedLockTimer = setTimeout(() => {
+      AppState.feedLockTimer = setTimeout(() => {
         el.feedBtn.disabled = false;
         el.feedBtn.classList.remove("locked");
       }, ms);
+    }
+
+    function triggerBottleFeedback() {
+      el.bottleWrap.classList.remove("feed-tilt", "saved-glow");
+      void el.bottleWrap.offsetWidth;
+      el.bottleWrap.classList.add("feed-tilt");
+
+      setTimeout(() => el.bottleWrap.classList.add("saved-glow"), 180);
+      setTimeout(() => el.bottleWrap.classList.remove("feed-tilt"), CONFIG.bottleTiltMs);
+      setTimeout(() => el.bottleWrap.classList.remove("saved-glow"), CONFIG.bottleGlowMs);
     }
 
     function applySnapshot(snapshot) {
@@ -2434,6 +2558,7 @@
       }
 
       setHistory(snapshot.history || []);
+
       const restoredLast = getLastTs();
       if (restoredLast) scheduleReminderFrom(restoredLast);
       else clearReminder();
@@ -2456,16 +2581,107 @@
       refresh();
       triggerBottleFeedback();
 
-      lockFeedButton(2000);
+      lockFeedButton();
       el.feedBtn.classList.add("saved");
       setTimeout(() => el.feedBtn.classList.remove("saved"), 800);
 
-      showToast(`נשמר: ${formatClock(ts)}`, "בטל", () => applySnapshot(snapshot), 3000);
+      showToast(`נשמר: ${formatClock(ts)}`, "בטל", () => applySnapshot(snapshot), CONFIG.undoToastDurationMs);
     }
 
     function addBackdatedFeed(minutesBack) {
-      const ts = nowTs() - minutesBack * 60 * 1000;
-      markFeed(ts, "quick");
+      markFeed(nowTs() - (minutesBack * 60 * 1000), "quick");
+    }
+
+    function updateFilterButtons() {
+      el.filterAllBtn.classList.toggle("active", AppState.historyFilter === "all");
+      el.filterTodayBtn.classList.toggle("active", AppState.historyFilter === "today");
+      el.filterWeekBtn.classList.toggle("active", AppState.historyFilter === "week");
+      el.historyDateInput.value = AppState.historyDateValue;
+    }
+
+    function renderHistory() {
+      const all = getHistory();
+      const filtered = getFilteredHistory();
+
+      el.historyList.innerHTML = "";
+
+      if (!filtered.length) {
+        const li = document.createElement("li");
+        li.className = "history-item";
+        li.innerHTML = `
+          <div>
+            <div class="history-time">אין נתונים מתאימים</div>
+            <div class="history-gap">נסה לבחור פילטר אחר או תאריך אחר</div>
+          </div>
+          <div class="history-right">—</div>
+        `;
+        el.historyList.appendChild(li);
+        return;
+      }
+
+      filtered.forEach((ts) => {
+        const actualIndex = all.indexOf(ts);
+        const prev = all[actualIndex + 1];
+        const gapText = prev ? `${formatDurationShort(ts - prev, 2)} מהקודמת` : "האכלה ראשונה ברשומה";
+
+        const li = document.createElement("li");
+        li.className = "history-item";
+        li.innerHTML = `
+          <div>
+            <div class="history-time mono">${formatClock(ts)}</div>
+            <div class="history-date mono">${formatDateTime(ts)}</div>
+            <div class="history-gap">${gapText}</div>
+          </div>
+          <div class="history-right">
+            <button class="mini-btn" type="button" data-edit-index="${actualIndex}">ערוך</button>
+            <button class="mini-btn delete" type="button" data-delete-index="${actualIndex}">מחק</button>
+          </div>
+        `;
+        el.historyList.appendChild(li);
+      });
+    }
+
+    function updateHistoryFilter(mode, dateValue = "") {
+      AppState.historyFilter = mode;
+      AppState.historyDateValue = dateValue;
+      updateFilterButtons();
+      renderHistory();
+    }
+
+    function deleteHistoryItem(index) {
+      const current = getHistory();
+      if (index < 0 || index >= current.length) return;
+
+      const snapshot = {
+        last: getLastTs(),
+        history: current.slice()
+      };
+
+      current.splice(index, 1);
+      applyHistoryArray(current);
+
+      showToast("הרשומה נמחקה", "בטל", () => {
+        setLastTs(snapshot.last);
+        setHistory(snapshot.history);
+        if (snapshot.last) scheduleReminderFrom(snapshot.last);
+        else clearReminder();
+        refresh();
+      }, CONFIG.undoToastDurationMs);
+    }
+
+    function openEditSheet(index) {
+      const history = getHistory();
+      const ts = history[index];
+      if (!Number.isFinite(ts)) return;
+
+      AppState.editingIndex = index;
+      const d = new Date(ts);
+      AppState.editHour = d.getHours();
+      AppState.editMin = d.getMinutes();
+
+      el.editDate.value = formatDateInputValue(ts);
+      renderEditTimeUI();
+      openSheet(el.editSheet);
     }
 
     function doExportJson() {
@@ -2474,15 +2690,15 @@
         interval: getIntervalMinutes(),
         history: getHistory(),
         exported_at: new Date().toISOString(),
-        version: APP_VERSION
+        version: CONFIG.appVersion
       };
 
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
       const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "feeding-backup.json";
-      a.click();
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "feeding-backup.json";
+      link.click();
       URL.revokeObjectURL(url);
 
       showToast("נוצר קובץ גיבוי JSON");
@@ -2492,7 +2708,7 @@
       const history = [...getHistory()].sort((a, b) => a - b);
       const rows = [["תאריך","שעה","תאריך ושעה מלא","הפרש מהקודמת בדקות"]];
 
-      for (let i = 0; i < history.length; i++) {
+      for (let i = 0; i < history.length; i += 1) {
         const ts = history[i];
         const d = new Date(ts);
         const dateText = `${pad2(d.getDate())}/${pad2(d.getMonth() + 1)}/${d.getFullYear()}`;
@@ -2502,16 +2718,16 @@
         rows.push([dateText, timeText, fullText, String(gapMin)]);
       }
 
-      const csv = "\uFEFF" + rows.map(row =>
-        row.map(value => `"${String(value).replace(/"/g, '""')}"`).join(",")
+      const csv = "\uFEFF" + rows.map((row) =>
+        row.map((value) => `"${String(value).replace(/"/g, '""')}"`).join(",")
       ).join("\n");
 
       const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
       const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "feeding-history.csv";
-      a.click();
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "feeding-history.csv";
+      link.click();
       URL.revokeObjectURL(url);
 
       showToast("נוצר קובץ CSV");
@@ -2519,6 +2735,7 @@
 
     function doImportFile(file) {
       const reader = new FileReader();
+
       reader.onload = (event) => {
         try {
           const data = JSON.parse(event.target.result);
@@ -2528,6 +2745,7 @@
           if (Array.isArray(data.history)) setHistory(data.history);
 
           loadInterval();
+
           const lastTs = getLastTs();
           if (lastTs) scheduleReminderFrom(lastTs);
           else clearReminder();
@@ -2538,41 +2756,8 @@
           showToast("קובץ לא תקין");
         }
       };
+
       reader.readAsText(file);
-    }
-
-    function setupPwaInstall() {
-      if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register("./sw.js").catch(() => {});
-      }
-
-      window.addEventListener("beforeinstallprompt", (e) => {
-        e.preventDefault();
-        deferredInstallPrompt = e;
-        el.installPwaBtn.style.display = "inline-flex";
-      });
-
-      window.addEventListener("appinstalled", () => {
-        el.installPwaBtn.style.display = "none";
-        deferredInstallPrompt = null;
-        showToast("האפליקציה הותקנה");
-      });
-
-      el.installPwaBtn.addEventListener("click", async () => {
-        if (!deferredInstallPrompt) {
-          showToast("כרגע אין אפשרות התקנה. פתח דרך Chrome בכתובת https");
-          return;
-        }
-
-        el.installPwaBtn.style.display = "none";
-        deferredInstallPrompt.prompt();
-
-        try {
-          await deferredInstallPrompt.userChoice;
-        } catch {}
-
-        deferredInstallPrompt = null;
-      });
     }
 
     function openSheet(sheetEl) {
@@ -2653,134 +2838,79 @@
         }, 360);
       });
 
-      ["pointerup", "pointerleave", "pointercancel", "lostpointercapture"].forEach(evt => {
-        button.addEventListener(evt, stop);
+      ["pointerup", "pointerleave", "pointercancel", "lostpointercapture"].forEach((eventName) => {
+        button.addEventListener(eventName, stop);
       });
     }
 
     function initSteppers() {
       attachRepeatPress(el.incHours, () => {
-        intervalHours += 1;
+        AppState.intervalHours += 1;
         normalizeInterval();
         saveIntervalFromUI();
       });
 
       attachRepeatPress(el.decHours, () => {
-        intervalHours -= 1;
+        AppState.intervalHours -= 1;
         normalizeInterval();
         saveIntervalFromUI();
       });
 
       attachRepeatPress(el.incMinutes, () => {
-        intervalMinutesExtra += 1;
+        AppState.intervalMinutesExtra += 1;
         normalizeInterval();
         saveIntervalFromUI();
       });
 
       attachRepeatPress(el.decMinutes, () => {
-        intervalMinutesExtra -= 1;
-        if (intervalMinutesExtra < 0 && intervalHours > 0) {
-          intervalHours -= 1;
-          intervalMinutesExtra = 59;
+        AppState.intervalMinutesExtra -= 1;
+        if (AppState.intervalMinutesExtra < 0 && AppState.intervalHours > 0) {
+          AppState.intervalHours -= 1;
+          AppState.intervalMinutesExtra = 59;
         }
         normalizeInterval();
         saveIntervalFromUI();
       });
 
       attachRepeatPress(el.incManualHour, () => {
-        manualHour = (manualHour + 1) % 24;
+        AppState.manualHour = (AppState.manualHour + 1) % 24;
         renderManualTimeUI();
       });
 
       attachRepeatPress(el.decManualHour, () => {
-        manualHour = (manualHour + 23) % 24;
+        AppState.manualHour = (AppState.manualHour + 23) % 24;
         renderManualTimeUI();
       });
 
       attachRepeatPress(el.incManualMin, () => {
-        manualMin = (manualMin + 1) % 60;
+        AppState.manualMin = (AppState.manualMin + 1) % 60;
         renderManualTimeUI();
       });
 
       attachRepeatPress(el.decManualMin, () => {
-        manualMin = (manualMin + 59) % 60;
+        AppState.manualMin = (AppState.manualMin + 59) % 60;
         renderManualTimeUI();
       });
 
       attachRepeatPress(el.editIncHour, () => {
-        editHour = (editHour + 1) % 24;
+        AppState.editHour = (AppState.editHour + 1) % 24;
         renderEditTimeUI();
       });
 
       attachRepeatPress(el.editDecHour, () => {
-        editHour = (editHour + 23) % 24;
+        AppState.editHour = (AppState.editHour + 23) % 24;
         renderEditTimeUI();
       });
 
       attachRepeatPress(el.editIncMin, () => {
-        editMin = (editMin + 1) % 60;
+        AppState.editMin = (AppState.editMin + 1) % 60;
         renderEditTimeUI();
       });
 
       attachRepeatPress(el.editDecMin, () => {
-        editMin = (editMin + 59) % 60;
+        AppState.editMin = (AppState.editMin + 59) % 60;
         renderEditTimeUI();
       });
-    }
-
-    function handleEnableNotifications() {
-      return requestNotifyPermission().then(async ok => {
-        if (ok) {
-          showToast("התראות הופעלו");
-          await sendNotification("שעות האכלה", "התראות מופעלות, תקבל תזכורת בזמן.");
-        } else {
-          showToast("לא אושרו התראות");
-        }
-      });
-    }
-
-    function handleTestReminder() {
-      return requestNotifyPermission().then(async ok => {
-        showToast("בדיקה: תזכורת תופיע בעוד 10 שניות");
-        clearReminder();
-        setStatus("ok", "בדיקת תזכורת");
-
-        reminderTimeout = setTimeout(async () => {
-          vibrate();
-          showToast("בדיקה: תזכורת הופעלה");
-          if (ok) await sendNotification("בדיקה", "תזכורת בדיקה הופעלה");
-          refresh();
-        }, 10000);
-      });
-    }
-
-    function handleManualSave() {
-      const ts = getManualTimestamp(el.manualDate.value);
-      if (!ts) {
-        showToast("בחר תאריך תקין");
-        return;
-      }
-      markFeed(ts, "manual");
-    }
-
-    function handleClear() {
-      const snapshot = {
-        last: getLastTs(),
-        history: getHistory().slice()
-      };
-
-      localStorage.removeItem(KEY.last);
-      localStorage.removeItem(KEY.history);
-      clearReminder();
-      refresh();
-
-      showToast("הכל אופס", "בטל", () => {
-        setLastTs(snapshot.last);
-        setHistory(snapshot.history);
-        if (snapshot.last) scheduleReminderFrom(snapshot.last);
-        else clearReminder();
-        refresh();
-      }, 3000);
     }
 
     function refresh() {
@@ -2794,152 +2924,347 @@
       updateHistorySummary();
       updateSmartPrediction();
       updateSmartAnomaly();
-      renderHistory();
       updateFilterButtons();
+      renderHistory();
       refreshIntervalUI();
       applyScreen();
 
       if (!lastTs) {
         setStatus("", "ממתין ללחיצה");
       } else {
-        const dueTs = lastTs + getIntervalMinutes() * 60 * 1000;
+        const dueTs = lastTs + (getIntervalMinutes() * 60 * 1000);
         if (dueTs <= nowTs()) setStatus("warn", "זמן האכלה הגיע");
         else setStatus("ok", "תזכורת פעילה");
       }
     }
 
     function startTicker() {
-      if (tickInterval) clearInterval(tickInterval);
-      tickInterval = setInterval(refresh, 1000);
+      if (AppState.tickInterval) clearInterval(AppState.tickInterval);
+      AppState.tickInterval = setInterval(refresh, 1000);
     }
 
-    el.navHomeBtn.addEventListener("click", () => setScreen("home"));
-    el.navHistoryBtn.addEventListener("click", () => setScreen("history"));
-    el.navSettingsBtn.addEventListener("click", () => setScreen("settings"));
+    function maybeShowOnboarding() {
+      if (localStorage.getItem(KEY.onboardingDone) === "1") return;
+      el.onboardingBackdrop.classList.add("open");
+      el.onboardingBackdrop.setAttribute("aria-hidden", "false");
+    }
 
-    el.filterAllBtn.addEventListener("click", () => {
-      historyFilter = "all";
-      refresh();
-    });
+    function closeOnboarding() {
+      el.onboardingBackdrop.classList.remove("open");
+      el.onboardingBackdrop.setAttribute("aria-hidden", "true");
+      localStorage.setItem(KEY.onboardingDone, "1");
+    }
 
-    el.filterTodayBtn.addEventListener("click", () => {
-      historyFilter = "today";
-      refresh();
-    });
-
-    el.themeAutoBtn.addEventListener("click", () => setThemeChoice("auto"));
-    el.themeDarkBtn.addEventListener("click", () => setThemeChoice("dark"));
-    el.themeLightBtn.addEventListener("click", () => setThemeChoice("light"));
-
-    el.presetButtons.forEach(btn => {
-      btn.addEventListener("click", () => {
-        const minutes = parseInt(btn.dataset.presetMinutes, 10);
-        if (Number.isFinite(minutes)) setIntervalFromPreset(minutes);
-      });
-    });
-
-    el.quickButtons.forEach(btn => {
-      btn.addEventListener("click", () => {
-        const minutes = parseInt(btn.dataset.backMinutes, 10);
-        if (Number.isFinite(minutes) && minutes > 0) addBackdatedFeed(minutes);
-      });
-    });
-
-    el.feedBtn.addEventListener("click", (e) => {
-      if (el.feedBtn.disabled) return;
-      createRipple(el.feedBtn, e);
-      markFeed(nowTs(), "normal");
-    });
-
-    el.setManualBtn.addEventListener("click", handleManualSave);
-
-    el.enableNotifBtn.addEventListener("click", handleEnableNotifications);
-    el.testReminderBtn.addEventListener("click", handleTestReminder);
-    el.exportBtn.addEventListener("click", doExportJson);
-    el.exportCsvBtn.addEventListener("click", doExportCsv);
-    el.clearBtn.addEventListener("click", handleClear);
-
-    el.importBtn.addEventListener("click", () => {
-      el.importFile.value = "";
-      el.importFile.click();
-    });
-
-    el.importFile.addEventListener("change", (e) => {
-      const file = e.target.files && e.target.files[0];
-      if (file) doImportFile(file);
-    });
-
-    el.sheetBackdrop.addEventListener("click", closeSheets);
-    el.editSheetCloseBtn.addEventListener("click", closeSheets);
-
-    el.editSaveBtn.addEventListener("click", () => {
-      if (editingIndex === null) return;
-      const ts = getEditTimestamp();
-      if (!ts) {
-        showToast("בחר תאריך תקין");
-        return;
+    function handleNewVersionNotice() {
+      const seenVersion = localStorage.getItem(KEY.appVersionSeen);
+      if (seenVersion && seenVersion !== CONFIG.appVersion) {
+        showToast(`עודכנה גרסה ${CONFIG.appVersion}`);
       }
+      localStorage.setItem(KEY.appVersionSeen, CONFIG.appVersion);
+    }
 
-      const current = getHistory();
-      if (editingIndex < 0 || editingIndex >= current.length) return;
+    async function setupPwaInstall() {
+      if (!("serviceWorker" in navigator)) return;
 
-      const snapshot = {
-        last: getLastTs(),
-        history: current.slice()
-      };
+      try {
+        const registration = await navigator.serviceWorker.register("./sw.js");
+        await registration.update();
 
-      current[editingIndex] = ts;
-      applyHistoryArray(current);
-      closeSheets();
+        const reloadKey = `feed_sw_reloaded_${CONFIG.appVersion}`;
 
-      showToast("הרשומה עודכנה", "בטל", () => {
-        setLastTs(snapshot.last);
-        setHistory(snapshot.history);
-        if (snapshot.last) scheduleReminderFrom(snapshot.last);
-        else clearReminder();
+        navigator.serviceWorker.addEventListener("controllerchange", () => {
+          if (sessionStorage.getItem(reloadKey) === "1") return;
+          sessionStorage.setItem(reloadKey, "1");
+          window.location.reload();
+        });
+
+        window.addEventListener("beforeinstallprompt", (e) => {
+          e.preventDefault();
+          AppState.deferredInstallPrompt = e;
+          el.installPwaBtn.style.display = "inline-flex";
+        });
+
+        window.addEventListener("appinstalled", () => {
+          el.installPwaBtn.style.display = "none";
+          AppState.deferredInstallPrompt = null;
+          showToast("האפליקציה הותקנה");
+        });
+
+        if (registration.waiting) {
+          registration.waiting.postMessage({ type: "SKIP_WAITING" });
+        }
+
+        registration.addEventListener("updatefound", () => {
+          const newWorker = registration.installing;
+          if (!newWorker) return;
+
+          newWorker.addEventListener("statechange", () => {
+            if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
+              newWorker.postMessage({ type: "SKIP_WAITING" });
+            }
+          });
+        });
+      } catch {}
+    }
+
+    function bindEvents() {
+      el.toastAction.addEventListener("click", () => {
+        const fn = AppState.toastActionHandler;
+        hideToast();
+        if (typeof fn === "function") fn();
+      });
+
+      el.navHomeBtn.addEventListener("click", () => setScreen("home"));
+      el.navHistoryBtn.addEventListener("click", () => setScreen("history"));
+      el.navSettingsBtn.addEventListener("click", () => setScreen("settings"));
+
+      el.goHomeButtons.forEach((btn) => {
+        btn.addEventListener("click", () => setScreen("home"));
+      });
+
+      el.filterAllBtn.addEventListener("click", () => {
+        updateHistoryFilter("all");
+      });
+
+      el.filterTodayBtn.addEventListener("click", () => {
+        updateHistoryFilter("today");
+      });
+
+      el.filterWeekBtn.addEventListener("click", () => {
+        updateHistoryFilter("week");
+      });
+
+      el.historyDateInput.addEventListener("change", (e) => {
+        const value = e.target.value || "";
+        if (!value) {
+          updateHistoryFilter("all", "");
+          return;
+        }
+        updateHistoryFilter("date", value);
+      });
+
+      el.clearHistoryDateBtn.addEventListener("click", () => {
+        updateHistoryFilter("all", "");
+      });
+
+      el.themeAutoBtn.addEventListener("click", () => setThemeChoice("auto"));
+      el.themeDarkBtn.addEventListener("click", () => setThemeChoice("dark"));
+      el.themeLightBtn.addEventListener("click", () => setThemeChoice("light"));
+
+      el.presetButtons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const minutes = parseInt(btn.dataset.presetMinutes, 10);
+          if (Number.isFinite(minutes)) setIntervalFromPreset(minutes);
+        });
+      });
+
+      el.quickButtons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const minutes = parseInt(btn.dataset.backMinutes, 10);
+          if (Number.isFinite(minutes) && minutes > 0) addBackdatedFeed(minutes);
+        });
+      });
+
+      el.feedBtn.addEventListener("click", (e) => {
+        if (el.feedBtn.disabled) return;
+        createRipple(el.feedBtn, e);
+        markFeed(nowTs(), "normal");
+      });
+
+      el.setManualBtn.addEventListener("click", () => {
+        const ts = getManualTimestamp(el.manualDate.value);
+        if (!ts) {
+          showToast("בחר תאריך תקין");
+          return;
+        }
+        markFeed(ts, "manual");
+      });
+
+      el.enableNotifBtn.addEventListener("click", async () => {
+        const ok = await requestNotifyPermission();
+        if (ok) {
+          showToast("התראות הופעלו");
+          await sendNotification("שעות האכלה", "התראות מופעלות, תקבל תזכורת בזמן.");
+        } else {
+          showToast("לא אושרו התראות");
+        }
+      });
+
+      el.testReminderBtn.addEventListener("click", async () => {
+        const ok = await requestNotifyPermission();
+        showToast("בדיקה: תזכורת תופיע בעוד 10 שניות");
+        clearReminder();
+        setStatus("ok", "בדיקת תזכורת");
+
+        AppState.reminderTimeout = setTimeout(async () => {
+          vibrate();
+          showToast("בדיקה: תזכורת הופעלה");
+          if (ok) await sendNotification("בדיקה", "תזכורת בדיקה הופעלה");
+          refresh();
+        }, CONFIG.reminderTestDelayMs);
+      });
+
+      el.exportBtn.addEventListener("click", doExportJson);
+      el.exportCsvBtn.addEventListener("click", doExportCsv);
+
+      el.clearBtn.addEventListener("click", () => {
+        const snapshot = {
+          last: getLastTs(),
+          history: getHistory().slice()
+        };
+
+        localStorage.removeItem(KEY.last);
+        localStorage.removeItem(KEY.history);
+        clearReminder();
         refresh();
-      }, 3200);
-    });
 
-    el.editDeleteBtn.addEventListener("click", () => {
-      if (editingIndex === null) return;
-      const idx = editingIndex;
-      closeSheets();
-      deleteHistoryItem(idx);
-    });
+        showToast("הכל אופס", "בטל", () => {
+          setLastTs(snapshot.last);
+          setHistory(snapshot.history);
+          if (snapshot.last) scheduleReminderFrom(snapshot.last);
+          else clearReminder();
+          refresh();
+        }, 3000);
+      });
 
-    window.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") closeSheets();
-    });
+      el.importBtn.addEventListener("click", () => {
+        el.importFile.value = "";
+        el.importFile.click();
+      });
 
-    (function init() {
-      el.appVersion.textContent = APP_VERSION;
+      el.importFile.addEventListener("change", (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (file) doImportFile(file);
+      });
 
-      applyTheme(getThemeChoice());
-      applyScreen(getScreen());
+      el.installPwaBtn.addEventListener("click", async () => {
+        if (!AppState.deferredInstallPrompt) {
+          showToast("כרגע אין אפשרות התקנה. פתח דרך Chrome בכתובת https");
+          return;
+        }
 
+        el.installPwaBtn.style.display = "none";
+        AppState.deferredInstallPrompt.prompt();
+
+        try {
+          await AppState.deferredInstallPrompt.userChoice;
+        } catch {}
+
+        AppState.deferredInstallPrompt = null;
+      });
+
+      el.historyList.addEventListener("click", (e) => {
+        const editBtn = e.target.closest("[data-edit-index]");
+        if (editBtn) {
+          openEditSheet(parseInt(editBtn.dataset.editIndex, 10));
+          return;
+        }
+
+        const deleteBtn = e.target.closest("[data-delete-index]");
+        if (deleteBtn) {
+          deleteHistoryItem(parseInt(deleteBtn.dataset.deleteIndex, 10));
+        }
+      });
+
+      el.sheetBackdrop.addEventListener("click", closeSheets);
+      el.editSheetCloseBtn.addEventListener("click", closeSheets);
+
+      el.editSaveBtn.addEventListener("click", () => {
+        if (AppState.editingIndex === null) return;
+        const ts = getEditTimestamp();
+        if (!ts) {
+          showToast("בחר תאריך תקין");
+          return;
+        }
+
+        const current = getHistory();
+        if (AppState.editingIndex < 0 || AppState.editingIndex >= current.length) return;
+
+        const snapshot = {
+          last: getLastTs(),
+          history: current.slice()
+        };
+
+        current[AppState.editingIndex] = ts;
+        applyHistoryArray(current);
+        closeSheets();
+
+        showToast("הרשומה עודכנה", "בטל", () => {
+          setLastTs(snapshot.last);
+          setHistory(snapshot.history);
+          if (snapshot.last) scheduleReminderFrom(snapshot.last);
+          else clearReminder();
+          refresh();
+        }, CONFIG.undoToastDurationMs);
+      });
+
+      el.editDeleteBtn.addEventListener("click", () => {
+        if (AppState.editingIndex === null) return;
+        const index = AppState.editingIndex;
+        closeSheets();
+        deleteHistoryItem(index);
+      });
+
+      el.onboardingStartBtn.addEventListener("click", closeOnboarding);
+
+      el.onboardingSkipToSettingsBtn.addEventListener("click", () => {
+        closeOnboarding();
+        setScreen("settings");
+      });
+
+      el.onboardingBackdrop.addEventListener("click", (e) => {
+        if (e.target === el.onboardingBackdrop) closeOnboarding();
+      });
+
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          closeSheets();
+          closeOnboarding();
+        }
+      });
+    }
+
+    function updateHistoryFilter(mode, dateValue = "") {
+      AppState.historyFilter = mode;
+      AppState.historyDateValue = dateValue;
+      updateFilterButtons();
+      renderHistory();
+    }
+
+    function initDefaultValues() {
       if (!localStorage.getItem(KEY.interval)) {
         setIntervalMinutes(120);
       }
 
-      const d = new Date();
-      el.manualDate.value = formatDateInputValue(d.getTime());
-      manualHour = d.getHours();
-      manualMin = d.getMinutes();
-
+      const now = new Date();
+      el.manualDate.value = formatDateInputValue(now.getTime());
+      AppState.manualHour = now.getHours();
+      AppState.manualMin = now.getMinutes();
       renderManualTimeUI();
       loadInterval();
+      el.appVersion.textContent = CONFIG.appVersion;
+    }
+
+    function init() {
+      bindEvents();
+      initDefaultValues();
       initSteppers();
       attachSheetDrag(el.editSheet, el.editSheetHandle);
+      applyTheme(getThemeChoice());
+      applyScreen(getScreen());
 
       const lastTs = getLastTs();
       if (lastTs) scheduleReminderFrom(lastTs);
 
+      handleNewVersionNotice();
+      maybeShowOnboarding();
       setupPwaInstall();
       setRingProgress(0);
       refresh();
       startTicker();
-    })();
+    }
+
+    init();
   </script>
 </body>
 </html>
