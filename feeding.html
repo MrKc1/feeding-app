@@ -925,6 +925,68 @@
       border-color: transparent;
     }
 
+    .nav-btn-content{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      direction:rtl;
+    }
+
+    .nav-icon{
+      width:22px;
+      height:22px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      flex:0 0 auto;
+    }
+
+    .nav-icon svg{
+      width:22px;
+      height:22px;
+      display:block;
+      overflow:visible;
+    }
+
+    .nav-label{
+      line-height:1;
+    }
+
+    @keyframes navHomeBounce{
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
+    }
+
+    @keyframes navHistorySpinBack{
+      from { transform: rotate(0deg); }
+      to { transform: rotate(-360deg); }
+    }
+
+    @keyframes navSettingsSpin{
+      100% { transform: rotate(90deg); }
+    }
+
+    .nav-btn:hover .icon-home-group,
+    .nav-btn:active .icon-home-group,
+    .nav-btn:focus-visible .icon-home-group{
+      animation: navHomeBounce .4s ease-in-out;
+    }
+
+    .nav-btn:hover .icon-history-hand,
+    .nav-btn:active .icon-history-hand,
+    .nav-btn:focus-visible .icon-history-hand{
+      animation: navHistorySpinBack .9s ease-in-out 1;
+      transform-origin: 12px 12px;
+    }
+
+    .nav-btn:hover .icon-settings-group,
+    .nav-btn:active .icon-settings-group,
+    .nav-btn:focus-visible .icon-settings-group{
+      animation: navSettingsSpin .6s ease-in-out 1;
+      transform-origin: 12px 12px;
+    }
+
     .toast{
       position:fixed;
       inset-inline:16px;
@@ -1280,7 +1342,7 @@
           <div class="box">
             <div class="label">אודות</div>
             <div class="about-box">
-              <div class="mono">נוצר ע"י קובי | גרסה <span id="appVersion">1.6</span></div>
+              <div class="mono">נוצר ע"י קובי | גרסה <span id="appVersion">1.7</span></div>
             </div>
           </div>
         </section>
@@ -1289,9 +1351,48 @@
   </div>
 
   <nav class="bottom-nav">
-    <button id="navHomeBtn" class="nav-btn active" type="button">בית</button>
-    <button id="navHistoryBtn" class="nav-btn" type="button">היסטוריה</button>
-    <button id="navSettingsBtn" class="nav-btn" type="button">הגדרות</button>
+    <button id="navHomeBtn" class="nav-btn active" type="button" aria-label="בית">
+      <span class="nav-btn-content">
+        <span class="nav-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <g class="icon-home-group">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+              <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </g>
+          </svg>
+        </span>
+        <span class="nav-label">בית</span>
+      </span>
+    </button>
+
+    <button id="navHistoryBtn" class="nav-btn" type="button" aria-label="היסטוריה">
+      <span class="nav-btn-content">
+        <span class="nav-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <g class="icon-history-group">
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+              <path d="M3 3v5h5"></path>
+              <path class="icon-history-hand" d="M12 7v5l3 3"></path>
+            </g>
+          </svg>
+        </span>
+        <span class="nav-label">היסטוריה</span>
+      </span>
+    </button>
+
+    <button id="navSettingsBtn" class="nav-btn" type="button" aria-label="הגדרות">
+      <span class="nav-btn-content">
+        <span class="nav-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <g class="icon-settings-group">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </g>
+          </svg>
+        </span>
+        <span class="nav-label">הגדרות</span>
+      </span>
+    </button>
   </nav>
 
   <div id="sheetBackdrop" class="sheet-backdrop"></div>
@@ -1343,7 +1444,7 @@
   </div>
 
   <script>
-    const APP_VERSION = "1.6";
+    const APP_VERSION = "1.7";
 
     const KEY = {
       last: "feed_last_ts",
