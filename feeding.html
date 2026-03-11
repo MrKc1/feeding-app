@@ -43,15 +43,15 @@
       --stat-bg: rgba(255,255,255,.05);
       --smart-bg: rgba(255,255,255,.05);
       --last-bg: rgba(255,255,255,.06);
-      --switch-bg: rgba(255,255,255,.06);
+      --nav-bg: rgba(255,255,255,.05);
     }
 
     html[data-theme="light"]{
       --bg1:#f4f7ff;
       --bg2:#eaf0ff;
       --bg3:rgba(124,92,255,.10);
-      --card: rgba(255,255,255,.70);
-      --card2: rgba(255,255,255,.92);
+      --card: rgba(255,255,255,.72);
+      --card2: rgba(255,255,255,.94);
       --text:#162033;
       --muted:#63718b;
       --border: rgba(22,32,51,.10);
@@ -69,18 +69,22 @@
       --ring-shadow: rgba(107,82,255,.10);
       --toast-bg: rgba(255,255,255,.96);
       --button-text:#162033;
-      --panel-bg: rgba(255,255,255,.62);
+      --panel-bg: rgba(255,255,255,.72);
       --sheet-bg: rgba(255,255,255,.98);
       --sheet-overlay: rgba(18,28,46,.22);
-      --banner-bg: rgba(255,255,255,.72);
-      --about-bg: rgba(255,255,255,.8);
-      --stat-bg: rgba(255,255,255,.7);
-      --smart-bg: rgba(255,255,255,.74);
-      --last-bg: rgba(255,255,255,.8);
-      --switch-bg: rgba(255,255,255,.8);
+      --banner-bg: rgba(255,255,255,.76);
+      --about-bg: rgba(255,255,255,.84);
+      --stat-bg: rgba(255,255,255,.78);
+      --smart-bg: rgba(255,255,255,.78);
+      --last-bg: rgba(255,255,255,.84);
+      --nav-bg: rgba(255,255,255,.84);
     }
 
     *{box-sizing:border-box}
+
+    html, body{
+      min-height:100%;
+    }
 
     body{
       margin:0;
@@ -90,59 +94,41 @@
         radial-gradient(1100px 700px at 90% 10%, var(--bg3), transparent 60%),
         radial-gradient(900px 600px at 20% 20%, rgba(25,211,255,.10), transparent 55%),
         linear-gradient(180deg, var(--bg1), var(--bg2));
-      min-height:100vh;
       display:flex;
-      align-items:center;
+      align-items:flex-start;
       justify-content:center;
-      padding:16px;
+      padding:14px;
       transition: background .25s ease, color .2s ease;
     }
 
-    .app{
-      width:min(1080px, 100%);
-      display:grid;
-      grid-template-columns: 1.15fr .85fr;
-      gap:16px;
-    }
-
-    body.mode-simple .app{
-      grid-template-columns:1fr;
+    .app-shell{
       width:min(760px, 100%);
     }
 
-    @media (max-width: 900px){
-      .app{grid-template-columns:1fr}
-    }
-
-    body.mode-simple #historyCard{
-      display:none !important;
-    }
-
-    body.mode-simple .advanced-only{
-      display:none !important;
-    }
-
-    .card{
+    .app-card{
       background: linear-gradient(180deg, var(--card), var(--card2));
       border:1px solid var(--border);
       box-shadow: var(--shadow);
-      border-radius: var(--radius2);
+      border-radius: 32px;
       overflow:hidden;
-      backdrop-filter: blur(8px);
-      transition: background .25s ease, border-color .2s ease, box-shadow .2s ease;
+      backdrop-filter: blur(10px);
+      min-height: calc(100vh - 28px);
+      display:flex;
+      flex-direction:column;
     }
 
     .header{
-      padding:18px 18px 0 18px;
+      padding:18px 18px 10px 18px;
       display:flex;
       align-items:flex-start;
       justify-content:space-between;
       gap:12px;
+      flex:0 0 auto;
     }
 
     h1{
       margin:0;
-      font-size:22px;
+      font-size:24px;
       letter-spacing:.2px;
     }
 
@@ -164,6 +150,7 @@
       color:var(--text);
       font-size:12px;
       white-space:nowrap;
+      flex:0 0 auto;
     }
 
     html[data-theme="light"] .pill{
@@ -189,47 +176,29 @@
       box-shadow: 0 0 0 6px rgba(255,209,102,.10);
     }
 
-    .main{
-      padding:18px;
+    .screens{
+      flex:1 1 auto;
+      position:relative;
+      min-height:0;
+    }
+
+    .screen{
+      display:none;
+      padding:14px 16px 8px;
+      gap:12px;
+      overflow:auto;
+      height:100%;
+    }
+
+    .screen.active{
       display:grid;
-      gap:14px;
-    }
-
-    .view-switch{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:8px;
-      padding:6px;
-      background: var(--switch-bg);
-      border:1px solid var(--border);
-      border-radius:999px;
-    }
-
-    .view-btn{
-      border:none;
-      border-radius:999px;
-      padding:11px 12px;
-      cursor:pointer;
-      font-weight:800;
-      font-size:14px;
-      background: transparent;
-      color:var(--text);
-      transition: transform .08s ease, background .18s ease, color .18s ease;
-    }
-
-    .view-btn:active{
-      transform:scale(.98);
-    }
-
-    .view-btn.active{
-      background: var(--chip-active-bg);
-      color: var(--chip-active-color);
+      align-content:start;
     }
 
     .bigbtn{
       width:100%;
       border:none;
-      border-radius: calc(var(--radius2) + 8px);
+      border-radius: 28px;
       padding:20px 18px;
       background:
         radial-gradient(1200px 300px at 50% 0%, rgba(255,255,255,.18), transparent 55%),
@@ -280,85 +249,16 @@
       }
     }
 
-    .last-feed-card{
-      padding:16px;
-      border-radius: var(--radius);
-      border:1px solid var(--border);
-      background: var(--last-bg);
-      display:grid;
-      gap:8px;
-    }
-
-    .last-feed-title{
-      font-size:13px;
-      font-weight:800;
-      color:var(--muted);
-    }
-
-    .last-feed-main{
-      font-size:36px;
-      font-weight:900;
-      line-height:1;
-    }
-
-    .last-feed-sub{
-      font-size:13px;
-      color:var(--muted);
-      line-height:1.4;
-    }
-
-    .status-banner{
-      padding:14px 16px;
-      border-radius: var(--radius);
-      border:1px solid var(--border);
-      background: var(--banner-bg);
-      display:grid;
-      gap:4px;
-      transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
-    }
-
-    .status-banner-title{
-      font-size:13px;
-      font-weight:800;
-      color:var(--muted);
-    }
-
-    .status-banner-text{
-      font-size:15px;
-      font-weight:800;
-      line-height:1.35;
-    }
-
-    .status-banner-sub{
-      font-size:12px;
-      color:var(--muted);
-    }
-
-    .status-banner.ok{
-      border-color: rgba(42,233,139,.28);
-      box-shadow: 0 0 0 1px rgba(42,233,139,.08);
-    }
-
-    .status-banner.warn{
-      border-color: rgba(255,209,102,.30);
-      box-shadow: 0 0 0 1px rgba(255,209,102,.08);
-    }
-
-    .status-banner.overdue{
-      border-color: rgba(255,77,109,.30);
-      box-shadow: 0 0 0 1px rgba(255,77,109,.08);
-    }
-
     .box{
       padding:16px;
-      border-radius: var(--radius);
+      border-radius: 22px;
       background: rgba(255,255,255,.05);
       border:1px solid var(--border);
       transition: background .22s ease, border-color .2s ease;
     }
 
     html[data-theme="light"] .box{
-      background: rgba(255,255,255,.58);
+      background: rgba(255,255,255,.62);
     }
 
     .label{
@@ -368,7 +268,7 @@
     }
 
     .human-main{
-      font-size:26px;
+      font-size:28px;
       font-weight:800;
       line-height:1.15;
       margin-bottom:6px;
@@ -391,7 +291,7 @@
     html[data-theme="light"] .next-card{
       background:
         radial-gradient(700px 200px at 10% 0%, rgba(107,82,255,.12), transparent 55%),
-        linear-gradient(180deg, rgba(255,255,255,.78), rgba(255,255,255,.94));
+        linear-gradient(180deg, rgba(255,255,255,.80), rgba(255,255,255,.96));
     }
 
     .next-card.urgent{
@@ -418,7 +318,7 @@
     }
 
     .next-big{
-      font-size:42px;
+      font-size:46px;
       font-weight:900;
       line-height:1;
       letter-spacing:.5px;
@@ -567,38 +467,97 @@
       100% { transform: scale(1); }
     }
 
-    .controls-grid{
+    .status-banner{
+      padding:14px 16px;
+      border-radius: 22px;
+      border:1px solid var(--border);
+      background: var(--banner-bg);
       display:grid;
+      gap:4px;
+      transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+    }
+
+    .status-banner-title{
+      font-size:13px;
+      font-weight:800;
+      color:var(--muted);
+    }
+
+    .status-banner-text{
+      font-size:15px;
+      font-weight:800;
+      line-height:1.35;
+    }
+
+    .status-banner-sub{
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    .status-banner.ok{
+      border-color: rgba(42,233,139,.28);
+      box-shadow: 0 0 0 1px rgba(42,233,139,.08);
+    }
+
+    .status-banner.warn{
+      border-color: rgba(255,209,102,.30);
+      box-shadow: 0 0 0 1px rgba(255,209,102,.08);
+    }
+
+    .status-banner.overdue{
+      border-color: rgba(255,77,109,.30);
+      box-shadow: 0 0 0 1px rgba(255,77,109,.08);
+    }
+
+    .last-feed-card{
+      padding:16px;
+      border-radius: 22px;
+      border:1px solid var(--border);
+      background: var(--last-bg);
+      display:grid;
+      gap:8px;
+    }
+
+    .last-feed-title{
+      font-size:13px;
+      font-weight:800;
+      color:var(--muted);
+    }
+
+    .last-feed-main{
+      font-size:38px;
+      font-weight:900;
+      line-height:1;
+    }
+
+    .last-feed-sub{
+      font-size:13px;
+      color:var(--muted);
+      line-height:1.4;
+    }
+
+    .row2{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
       gap:12px;
     }
 
-    .quick-row{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-    }
-
-    .quick-btn{
-      border:none;
-      border-radius:999px;
-      padding:10px 14px;
-      cursor:pointer;
-      font-weight:800;
-      font-size:13px;
-      background: var(--chip-bg);
-      color:var(--text);
-      border:1px solid var(--border);
-      transition: transform .08s ease, background .18s ease;
-    }
-
-    .quick-btn:active{
-      transform:scale(.97);
+    @media (max-width: 620px){
+      .row2{
+        grid-template-columns:1fr;
+      }
     }
 
     .stats-grid{
       display:grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr;
       gap:12px;
+    }
+
+    @media (max-width: 620px){
+      .stats-grid{
+        grid-template-columns:1fr;
+      }
     }
 
     .stat-card{
@@ -627,6 +586,12 @@
       display:grid;
       grid-template-columns: 1fr 1fr;
       gap:12px;
+    }
+
+    @media (max-width: 620px){
+      .smart-grid{
+        grid-template-columns:1fr;
+      }
     }
 
     .smart-card{
@@ -677,17 +642,20 @@
       border-color: rgba(255,77,109,.30);
     }
 
+    .filter-row,
+    .quick-row,
     .preset-row{
       display:flex;
       gap:8px;
       flex-wrap:wrap;
-      margin-bottom:12px;
     }
 
+    .filter-btn,
+    .quick-btn,
     .preset-btn{
       border:none;
       border-radius:999px;
-      padding:9px 12px;
+      padding:10px 14px;
       cursor:pointer;
       font-weight:800;
       font-size:13px;
@@ -697,10 +665,13 @@
       transition: transform .08s ease, background .18s ease, color .18s ease;
     }
 
+    .filter-btn:active,
+    .quick-btn:active,
     .preset-btn:active{
       transform:scale(.97);
     }
 
+    .filter-btn.active,
     .preset-btn.active{
       background: var(--chip-active-bg);
       color: var(--chip-active-color);
@@ -748,7 +719,7 @@
       display:flex;
       align-items:center;
       justify-content:center;
-      transition: transform .08s ease, background .16s ease, border-color .16s ease;
+      transition: transform .08s ease, background .16s ease;
       touch-action: manipulation;
     }
 
@@ -761,15 +732,40 @@
       background: rgba(22,32,51,.09);
     }
 
-    .stepper-btn:disabled{
-      opacity:.45;
-      cursor:not-allowed;
-    }
-
     .interval-summary{
       font-size:13px;
       color:var(--muted);
       margin-top:8px;
+    }
+
+    .theme-row{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap:8px;
+    }
+
+    .theme-btn{
+      border:none;
+      border-radius:14px;
+      padding:11px 10px;
+      cursor:pointer;
+      font-weight:800;
+      font-size:13px;
+      background: var(--chip-bg);
+      color:var(--text);
+      border:1px solid var(--border);
+      transition: transform .08s ease, background .18s ease, color .18s ease;
+      text-align:center;
+    }
+
+    .theme-btn:active{
+      transform:scale(.97);
+    }
+
+    .theme-btn.active{
+      background: var(--chip-active-bg);
+      color: var(--chip-active-color);
+      border-color: transparent;
     }
 
     .actions{
@@ -811,80 +807,6 @@
       display:none;
     }
 
-    .settings-panel{
-      display:none;
-      padding:16px;
-      border-radius: var(--radius);
-      border:1px solid var(--border);
-      background: var(--panel-bg);
-      gap:14px;
-    }
-
-    .settings-panel.open{
-      display:grid;
-    }
-
-    .settings-section{
-      display:grid;
-      gap:10px;
-    }
-
-    .settings-title{
-      font-size:13px;
-      color:var(--muted);
-      font-weight:700;
-    }
-
-    .theme-row{
-      display:grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap:8px;
-    }
-
-    .theme-btn{
-      border:none;
-      border-radius:14px;
-      padding:11px 10px;
-      cursor:pointer;
-      font-weight:800;
-      font-size:13px;
-      background: var(--chip-bg);
-      color:var(--text);
-      border:1px solid var(--border);
-      transition: transform .08s ease, background .18s ease, color .18s ease;
-      text-align:center;
-    }
-
-    .theme-btn:active{
-      transform:scale(.97);
-    }
-
-    .theme-btn.active{
-      background: var(--chip-active-bg);
-      color: var(--chip-active-color);
-      border-color: transparent;
-    }
-
-    .settings-grid{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:12px;
-    }
-
-    @media (max-width: 760px){
-      .settings-grid{
-        grid-template-columns:1fr;
-      }
-
-      .stats-grid{
-        grid-template-columns:1fr;
-      }
-
-      .smart-grid{
-        grid-template-columns:1fr;
-      }
-    }
-
     .manual-date{
       width:100%;
       background: var(--input-bg);
@@ -907,22 +829,19 @@
       font-size:14px;
     }
 
-    .history-list-wrap{
-      overflow:hidden;
-      transition: max-height .22s ease, opacity .18s ease;
-    }
-
     .history-list{
       padding:0;
       margin:0;
       list-style:none;
-      max-height: 540px;
-      overflow:auto;
+      display:grid;
+      gap:10px;
     }
 
     .history-item{
       padding:14px 16px;
-      border-top:1px solid rgba(255,255,255,.08);
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      border-radius:18px;
       display:grid;
       grid-template-columns: 1fr auto;
       gap:12px;
@@ -930,11 +849,11 @@
     }
 
     html[data-theme="light"] .history-item{
-      border-top:1px solid rgba(22,32,51,.07);
+      background: rgba(255,255,255,.70);
     }
 
     .history-time{
-      font-size:18px;
+      font-size:20px;
       font-weight:800;
       line-height:1;
       margin-bottom:6px;
@@ -979,8 +898,41 @@
       border-color: rgba(255,77,109,.24);
     }
 
-    .history-toggle{
-      display:none;
+    .bottom-nav{
+      position:sticky;
+      bottom:0;
+      inset-inline:0;
+      background: linear-gradient(180deg, rgba(0,0,0,0), var(--nav-bg) 20%);
+      backdrop-filter: blur(12px);
+      border-top:1px solid var(--border);
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:8px;
+      padding:12px 14px max(12px, env(safe-area-inset-bottom));
+      flex:0 0 auto;
+    }
+
+    .nav-btn{
+      border:none;
+      border-radius:18px;
+      padding:12px 10px;
+      cursor:pointer;
+      background: var(--button-bg);
+      border:1px solid var(--border);
+      color:var(--button-text);
+      font-weight:800;
+      font-size:14px;
+      transition: transform .08s ease, background .18s ease, color .18s ease;
+    }
+
+    .nav-btn:active{
+      transform:scale(.98);
+    }
+
+    .nav-btn.active{
+      background: var(--chip-active-bg);
+      color: var(--chip-active-color);
+      border-color: transparent;
     }
 
     .toast{
@@ -1113,44 +1065,15 @@
       cursor:pointer;
     }
 
-    .mono{ font-variant-numeric: tabular-nums; }
-
-    @media (min-width: 901px){
-      .sheet-backdrop,
-      .mobile-sheet{
-        display:none !important;
-      }
-    }
-
-    @media (max-width: 900px){
-      .settings-panel{
-        display:none !important;
-      }
-
-      .actions{
-        justify-content:flex-start;
-      }
-
-      .history-toggle{
-        display:inline-flex;
-      }
-
-      .history-list-wrap.collapsed{
-        max-height:0 !important;
-        opacity:0;
-      }
-
-      .history-list-wrap.expanded{
-        max-height:720px;
-        opacity:1;
-      }
+    .mono{
+      font-variant-numeric: tabular-nums;
     }
   </style>
 </head>
 
-<body class="mode-simple">
-  <div class="app">
-    <section class="card">
+<body>
+  <div class="app-shell">
+    <div class="app-card">
       <div class="header">
         <div>
           <h1>שעות האכלה</h1>
@@ -1163,78 +1086,127 @@
         </div>
       </div>
 
-      <div class="main">
-        <div class="view-switch">
-          <button id="modeSimpleBtn" class="view-btn" type="button">מצב פשוט</button>
-          <button id="modeAdvancedBtn" class="view-btn" type="button">מצב מתקדם</button>
-        </div>
+      <div class="screens">
+        <section id="screen-home" class="screen active">
+          <button id="feedBtn" class="bigbtn" aria-label="סמן האכלה עכשיו">
+            🍼 סימנתי האכלה עכשיו
+          </button>
 
-        <button id="feedBtn" class="bigbtn" aria-label="סמן האכלה עכשיו">
-          🍼 סימנתי האכלה עכשיו
-        </button>
+          <div id="nextCard" class="box next-card">
+            <div class="next-grid">
+              <div>
+                <div class="label">ההאכלה הבאה</div>
+                <div id="nextReminderMain" class="next-big mono">--:--</div>
+                <div id="nextReminderSub" class="next-sub">טרם נקבעה תזכורת</div>
+                <div id="nextReminderDay" class="next-day"></div>
+              </div>
 
-        <div id="nextCard" class="box next-card">
-          <div class="next-grid">
-            <div>
-              <div class="label">ההאכלה הבאה</div>
-              <div id="nextReminderMain" class="next-big mono">--:--</div>
-              <div id="nextReminderSub" class="next-sub">טרם נקבעה תזכורת</div>
-              <div id="nextReminderDay" class="next-day"></div>
-            </div>
+              <div class="progress-wrap">
+                <svg class="progress-svg" viewBox="0 0 120 120" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#19d3ff"></stop>
+                      <stop offset="100%" stop-color="#7c5cff"></stop>
+                    </linearGradient>
+                  </defs>
+                  <circle class="progress-bg" cx="60" cy="60" r="48"></circle>
+                  <circle id="progressRing" class="progress-ring" cx="60" cy="60" r="48"></circle>
+                </svg>
 
-            <div class="progress-wrap">
-              <svg class="progress-svg" viewBox="0 0 120 120" aria-hidden="true">
-                <defs>
-                  <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="#19d3ff"></stop>
-                    <stop offset="100%" stop-color="#7c5cff"></stop>
-                  </linearGradient>
-                </defs>
-                <circle class="progress-bg" cx="60" cy="60" r="48"></circle>
-                <circle id="progressRing" class="progress-ring" cx="60" cy="60" r="48"></circle>
-              </svg>
+                <div id="bottleWrap" class="bottle-wrap" aria-hidden="true">
+                  <div class="bottle-inner">
+                    <svg class="bottle-svg" viewBox="0 0 100 100" aria-hidden="true">
+                      <g id="bottleGroup">
+                        <path d="M40 30 C40 5, 60 5, 60 30 Z" fill="#FAD6A5" />
+                        <rect x="35" y="30" width="30" height="10" rx="3" fill="#81C784" />
+                        <path d="M35 40 L35 85 C35 95, 65 95, 65 85 L65 40 Z" fill="#E0F7FA" />
+                        <path d="M36 50 L36 85 C36 94, 64 94, 64 85 L64 50 Z" fill="#FFFFFF" />
+                        <path id="milkBody" d="M36 58 L36 85 C36 94, 64 94, 64 85 L64 58 Z" fill="#FFD66D" />
+                        <line x1="42" y1="55" x2="48" y2="55" stroke="#B2EBF2" stroke-width="2" stroke-linecap="round" />
+                        <line x1="42" y1="65" x2="52" y2="65" stroke="#B2EBF2" stroke-width="2" stroke-linecap="round" />
+                        <line x1="42" y1="75" x2="48" y2="75" stroke="#B2EBF2" stroke-width="2" stroke-linecap="round" />
+                      </g>
+                    </svg>
 
-              <div id="bottleWrap" class="bottle-wrap" aria-hidden="true">
-                <div class="bottle-inner">
-                  <svg class="bottle-svg" viewBox="0 0 100 100" aria-hidden="true">
-                    <g id="bottleGroup">
-                      <path d="M40 30 C40 5, 60 5, 60 30 Z" fill="#FAD6A5" />
-                      <rect x="35" y="30" width="30" height="10" rx="3" fill="#81C784" />
-                      <path d="M35 40 L35 85 C35 95, 65 95, 65 85 L65 40 Z" fill="#E0F7FA" />
-                      <path d="M36 50 L36 85 C36 94, 64 94, 64 85 L64 50 Z" fill="#FFFFFF" />
-                      <path id="milkBody" d="M36 58 L36 85 C36 94, 64 94, 64 85 L64 58 Z" fill="#FFD66D" />
-                      <line x1="42" y1="55" x2="48" y2="55" stroke="#B2EBF2" stroke-width="2" stroke-linecap="round" />
-                      <line x1="42" y1="65" x2="52" y2="65" stroke="#B2EBF2" stroke-width="2" stroke-linecap="round" />
-                      <line x1="42" y1="75" x2="48" y2="75" stroke="#B2EBF2" stroke-width="2" stroke-linecap="round" />
-                    </g>
-                  </svg>
-
-                  <div id="bottleCheck" class="bottle-check">✓</div>
+                    <div id="bottleCheck" class="bottle-check">✓</div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div id="lastFeedCard" class="last-feed-card">
-          <div class="last-feed-title">האכלה אחרונה</div>
-          <div id="lastFeedMain" class="last-feed-main mono">--:--</div>
-          <div id="lastFeedSub" class="last-feed-sub">עדיין אין האכלה שמורה</div>
-        </div>
+          <div id="lastFeedCard" class="last-feed-card">
+            <div class="last-feed-title">האכלה אחרונה</div>
+            <div id="lastFeedMain" class="last-feed-main mono">--:--</div>
+            <div id="lastFeedSub" class="last-feed-sub">עדיין אין האכלה שמורה</div>
+          </div>
 
-        <div class="box">
-          <div class="label">עבר מאז</div>
-          <div id="elapsedMain" class="human-main">עדיין אין האכלה</div>
-          <div id="elapsedDetail" class="human-detail">ברגע שתלחץ, יוצג הזמן בצורה ברורה.</div>
-        </div>
+          <div class="box">
+            <div class="label">עבר מאז</div>
+            <div id="elapsedMain" class="human-main">עדיין אין האכלה</div>
+            <div id="elapsedDetail" class="human-detail">ברגע שתלחץ, יוצג הזמן בצורה ברורה.</div>
+          </div>
 
-        <div id="statusBanner" class="status-banner advanced-only">
-          <div id="statusBannerTitle" class="status-banner-title">מצב נוכחי</div>
-          <div id="statusBannerText" class="status-banner-text">עדיין אין האכלה שמורה</div>
-          <div id="statusBannerSub" class="status-banner-sub">כשתסמן האכלה, המידע יוצג כאן בצורה ברורה.</div>
-        </div>
+          <div id="statusBanner" class="status-banner">
+            <div id="statusBannerTitle" class="status-banner-title">מצב נוכחי</div>
+            <div id="statusBannerText" class="status-banner-text">עדיין אין האכלה שמורה</div>
+            <div id="statusBannerSub" class="status-banner-sub">כשתסמן האכלה, המידע יוצג כאן בצורה ברורה.</div>
+          </div>
+        </section>
 
-        <div class="controls-grid advanced-only">
+        <section id="screen-history" class="screen">
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div id="historyTotalCount" class="stat-value mono">0</div>
+              <div class="stat-label">סה"כ רשומות</div>
+            </div>
+            <div class="stat-card">
+              <div id="todayCount" class="stat-value mono">0</div>
+              <div class="stat-label">האכלות היום</div>
+            </div>
+            <div class="stat-card">
+              <div id="todayAvg" class="stat-value">אין עדיין</div>
+              <div class="stat-label">ממוצע מרווח</div>
+            </div>
+          </div>
+
+          <div class="smart-grid">
+            <div id="smartPredictionCard" class="smart-card">
+              <div class="smart-title">תחזית חכמה</div>
+              <div id="smartPredictionMain" class="smart-main mono">--:--</div>
+              <div id="smartPredictionSub" class="smart-sub">אין מספיק נתונים עדיין</div>
+              <div id="smartPredictionNote" class="smart-note">התחזית מתבססת על ההיסטוריה האחרונה.</div>
+            </div>
+
+            <div id="smartAnomalyCard" class="smart-card">
+              <div class="smart-title">זיהוי חריגות</div>
+              <div id="smartAnomalyMain" class="smart-main">אין עדיין</div>
+              <div id="smartAnomalySub" class="smart-sub">ככל שתצטבר היסטוריה, האפליקציה תזהה דפוסים וחריגות.</div>
+              <div id="smartAnomalyNote" class="smart-note">ההשוואה מבוססת על המרווחים האחרונים.</div>
+            </div>
+          </div>
+
+          <div class="box">
+            <div class="label">סינון היסטוריה</div>
+            <div class="filter-row">
+              <button id="filterAllBtn" class="filter-btn active" type="button">הכל</button>
+              <button id="filterTodayBtn" class="filter-btn" type="button">היום</button>
+            </div>
+          </div>
+
+          <ul id="historyList" class="history-list"></ul>
+        </section>
+
+        <section id="screen-settings" class="screen">
+          <div class="box">
+            <div class="label">מצב תצוגה</div>
+            <div class="theme-row">
+              <button id="themeAutoBtn" class="theme-btn" type="button">אוטומטי</button>
+              <button id="themeDarkBtn" class="theme-btn" type="button">לילה</button>
+              <button id="themeLightBtn" class="theme-btn" type="button">יום</button>
+            </div>
+          </div>
+
           <div class="box">
             <div class="label">הוספה מהירה אם שכחת לסמן</div>
             <div class="quick-row">
@@ -1247,7 +1219,7 @@
           <div class="box">
             <div class="label">המרווח בין האכלות</div>
 
-            <div class="preset-row">
+            <div class="preset-row" style="margin-bottom:12px;">
               <button class="preset-btn" data-preset-minutes="120" type="button">2:00</button>
               <button class="preset-btn" data-preset-minutes="150" type="button">2:30</button>
               <button class="preset-btn" data-preset-minutes="180" type="button">3:00</button>
@@ -1273,214 +1245,66 @@
           </div>
 
           <div class="box">
-            <div class="label">סיכום היום</div>
-            <div class="stats-grid">
-              <div class="stat-card">
-                <div id="todayCount" class="stat-value mono">0</div>
-                <div class="stat-label">האכלות היום</div>
+            <div class="label">קביעת שעה ידנית</div>
+
+            <input id="manualDate" class="manual-date" type="date" />
+
+            <div class="stepper-row">
+              <div class="stepper">
+                <button id="decManualHour" class="stepper-btn" type="button">−</button>
+                <div id="manualHourValue" class="stepper-value mono">00</div>
+                <button id="incManualHour" class="stepper-btn" type="button">+</button>
+                <div class="stepper-label">שעה</div>
               </div>
-              <div class="stat-card">
-                <div id="todayAvg" class="stat-value">אין עדיין</div>
-                <div class="stat-label">ממוצע מרווח</div>
+
+              <div class="stepper">
+                <button id="decManualMin" class="stepper-btn" type="button">−</button>
+                <div id="manualMinValue" class="stepper-value mono">00</div>
+                <button id="incManualMin" class="stepper-btn" type="button">+</button>
+                <div class="stepper-label">דקה</div>
               </div>
+            </div>
+
+            <div style="margin-top:12px;">
+              <button id="setManualBtn" class="btn primary" type="button">עדכן שעה</button>
             </div>
           </div>
 
           <div class="box">
-            <div class="label">תובנות חכמות</div>
-            <div class="smart-grid">
-              <div id="smartPredictionCard" class="smart-card">
-                <div class="smart-title">תחזית חכמה</div>
-                <div id="smartPredictionMain" class="smart-main mono">--:--</div>
-                <div id="smartPredictionSub" class="smart-sub">אין מספיק נתונים עדיין</div>
-                <div id="smartPredictionNote" class="smart-note">התחזית מתבססת על ההיסטוריה האחרונה.</div>
-              </div>
-
-              <div id="smartAnomalyCard" class="smart-card">
-                <div class="smart-title">זיהוי חריגות</div>
-                <div id="smartAnomalyMain" class="smart-main">אין עדיין</div>
-                <div id="smartAnomalySub" class="smart-sub">ככל שתצטבר היסטוריה, האפליקציה תזהה דפוסים וחריגות.</div>
-                <div id="smartAnomalyNote" class="smart-note">ההשוואה מבוססת על המרווחים האחרונים.</div>
-              </div>
+            <div class="label">כלים</div>
+            <div class="actions">
+              <button id="enableNotifBtn" class="btn" type="button">אפשר התראות</button>
+              <button id="testReminderBtn" class="btn" type="button">בדיקת תזכורת</button>
+              <button id="exportBtn" class="btn" type="button">גיבוי JSON</button>
+              <button id="exportCsvBtn" class="btn" type="button">ייצוא CSV</button>
+              <button id="importBtn" class="btn" type="button">שחזור</button>
+              <input type="file" id="importFile" style="display:none" accept=".json">
+              <button id="installPwaBtn" class="btn install" type="button">התקן אפליקציה</button>
+              <button id="clearBtn" class="btn danger" type="button">איפוס נתונים</button>
             </div>
-          </div>
-        </div>
-
-        <div class="actions">
-          <button id="settingsToggleBtn" class="btn" type="button">הגדרות</button>
-        </div>
-
-        <div id="settingsPanel" class="settings-panel">
-          <div class="settings-section">
-            <div class="settings-title">מצב תצוגה</div>
-            <div class="theme-row" aria-label="מצב תצוגה">
-              <button id="themeAutoBtn" class="theme-btn" type="button">אוטומטי</button>
-              <button id="themeDarkBtn" class="theme-btn" type="button">לילה</button>
-              <button id="themeLightBtn" class="theme-btn" type="button">יום</button>
-            </div>
+            <p class="sub" style="margin-top:8px;">
+              התראות משמיעות את צליל מערכת ההפעלה. השינוי של הצליל נעשה דרך הגדרות ההתראות במכשיר.
+            </p>
           </div>
 
-          <div class="settings-grid">
-            <div class="settings-section">
-              <div class="settings-title">קביעת שעה ידנית</div>
-
-              <input id="manualDate" class="manual-date" type="date" />
-
-              <div class="stepper-row">
-                <div class="stepper">
-                  <button id="decManualHour" class="stepper-btn" type="button" aria-label="הפחת שעה ידנית">−</button>
-                  <div id="manualHourValue" class="stepper-value mono">00</div>
-                  <button id="incManualHour" class="stepper-btn" type="button" aria-label="הוסף שעה ידנית">+</button>
-                  <div class="stepper-label">שעה</div>
-                </div>
-
-                <div class="stepper">
-                  <button id="decManualMin" class="stepper-btn" type="button" aria-label="הפחת דקה ידנית">−</button>
-                  <div id="manualMinValue" class="stepper-value mono">00</div>
-                  <button id="incManualMin" class="stepper-btn" type="button" aria-label="הוסף דקה ידנית">+</button>
-                  <div class="stepper-label">דקה</div>
-                </div>
-              </div>
-
-              <div style="margin-top:12px;">
-                <button id="setManualBtn" class="btn primary" type="button">עדכן שעה</button>
-              </div>
-            </div>
-
-            <div class="settings-section">
-              <div class="settings-title">כלים</div>
-
-              <div class="actions">
-                <button id="enableNotifBtn" class="btn" type="button">אפשר התראות</button>
-                <button id="testReminderBtn" class="btn" type="button">בדיקת תזכורת</button>
-                <button id="exportBtn" class="btn" type="button">גיבוי JSON</button>
-                <button id="exportCsvBtn" class="btn" type="button">ייצוא CSV</button>
-                <button id="importBtn" class="btn" type="button">שחזור</button>
-                <input type="file" id="importFile" style="display:none" accept=".json">
-                <button id="installPwaBtn" class="btn install" type="button">התקן אפליקציה</button>
-                <button id="clearBtn" class="btn danger" type="button">איפוס נתונים</button>
-              </div>
-
-              <p class="sub" style="margin-top:4px;">
-                התראות משמיעות את צליל מערכת ההפעלה. השינוי של הצליל נעשה דרך הגדרות ההתראות במכשיר.
-              </p>
-            </div>
-          </div>
-
-          <div class="settings-section">
-            <div class="settings-title">אודות</div>
+          <div class="box">
+            <div class="label">אודות</div>
             <div class="about-box">
-              <div class="mono">נוצר ע"י קובי | גרסה <span id="appVersion">1.4</span></div>
+              <div class="mono">נוצר ע"י קובי | גרסה <span id="appVersion">1.5</span></div>
             </div>
           </div>
-        </div>
-      </div>
-    </section>
-
-    <aside id="historyCard" class="card advanced-only">
-      <div class="header">
-        <div>
-          <h1>היסטוריה</h1>
-          <p class="sub">רשימת האכלות אחרונות, כולל כמה זמן עבר מהקודמת.</p>
-        </div>
-
-        <div style="display:flex; gap:8px; align-items:center;">
-          <button id="historyToggleBtn" class="btn history-toggle" type="button">הצג היסטוריה</button>
-          <div class="pill">
-            <span class="mono" id="historyCount">0</span>
-            <span>אירועים</span>
-          </div>
-        </div>
+        </section>
       </div>
 
-      <div id="historyListWrap" class="history-list-wrap">
-        <ul id="historyList" class="history-list"></ul>
-      </div>
-    </aside>
+      <nav class="bottom-nav">
+        <button id="navHomeBtn" class="nav-btn active" type="button">בית</button>
+        <button id="navHistoryBtn" class="nav-btn" type="button">היסטוריה</button>
+        <button id="navSettingsBtn" class="nav-btn" type="button">הגדרות</button>
+      </nav>
+    </div>
   </div>
 
   <div id="sheetBackdrop" class="sheet-backdrop"></div>
-
-  <div id="settingsSheet" class="mobile-sheet" aria-hidden="true">
-    <div class="mobile-sheet-card">
-      <div id="settingsSheetHandle" class="sheet-handle"></div>
-      <div class="sheet-header">
-        <div class="sheet-title">הגדרות</div>
-        <button id="settingsSheetCloseBtn" class="sheet-close" type="button">סגור</button>
-      </div>
-
-      <div class="settings-section">
-        <div class="settings-title">מצב תצוגה</div>
-        <div class="view-switch">
-          <button id="modeSimpleBtnSheet" class="view-btn" type="button">מצב פשוט</button>
-          <button id="modeAdvancedBtnSheet" class="view-btn" type="button">מצב מתקדם</button>
-        </div>
-      </div>
-
-      <div class="settings-section">
-        <div class="settings-title">מצב תצוגה</div>
-        <div class="theme-row">
-          <button id="themeAutoBtnSheet" class="theme-btn" type="button">אוטומטי</button>
-          <button id="themeDarkBtnSheet" class="theme-btn" type="button">לילה</button>
-          <button id="themeLightBtnSheet" class="theme-btn" type="button">יום</button>
-        </div>
-      </div>
-
-      <div class="settings-section" style="margin-top:14px;">
-        <div class="settings-title">הוספה מהירה אם שכחת לסמן</div>
-        <div class="quick-row">
-          <button class="quick-btn" type="button" data-back-minutes="15">לפני 15 דק'</button>
-          <button class="quick-btn" type="button" data-back-minutes="30">לפני 30 דק'</button>
-          <button class="quick-btn" type="button" data-back-minutes="60">לפני שעה</button>
-        </div>
-      </div>
-
-      <div class="settings-section" style="margin-top:14px;">
-        <div class="settings-title">קביעת שעה ידנית</div>
-
-        <input id="manualDateSheet" class="manual-date" type="date" />
-
-        <div class="stepper-row">
-          <div class="stepper">
-            <button id="decManualHourSheet" class="stepper-btn" type="button">−</button>
-            <div id="manualHourValueSheet" class="stepper-value mono">00</div>
-            <button id="incManualHourSheet" class="stepper-btn" type="button">+</button>
-            <div class="stepper-label">שעה</div>
-          </div>
-
-          <div class="stepper">
-            <button id="decManualMinSheet" class="stepper-btn" type="button">−</button>
-            <div id="manualMinValueSheet" class="stepper-value mono">00</div>
-            <button id="incManualMinSheet" class="stepper-btn" type="button">+</button>
-            <div class="stepper-label">דקה</div>
-          </div>
-        </div>
-
-        <div style="margin-top:12px;">
-          <button id="setManualBtnSheet" class="btn primary" type="button">עדכן שעה</button>
-        </div>
-      </div>
-
-      <div class="settings-section" style="margin-top:14px;">
-        <div class="settings-title">כלים</div>
-        <div class="actions">
-          <button id="enableNotifBtnSheet" class="btn" type="button">אפשר התראות</button>
-          <button id="testReminderBtnSheet" class="btn" type="button">בדיקת תזכורת</button>
-          <button id="exportBtnSheet" class="btn" type="button">גיבוי JSON</button>
-          <button id="exportCsvBtnSheet" class="btn" type="button">ייצוא CSV</button>
-          <button id="importBtnSheet" class="btn" type="button">שחזור</button>
-          <button id="clearBtnSheet" class="btn danger" type="button">איפוס נתונים</button>
-        </div>
-      </div>
-
-      <div class="settings-section" style="margin-top:14px;">
-        <div class="settings-title">אודות</div>
-        <div class="about-box">
-          <div class="mono">נוצר ע"י קובי | גרסה <span id="appVersionSheet">1.4</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <div id="editSheet" class="mobile-sheet" aria-hidden="true">
     <div class="mobile-sheet-card">
@@ -1490,13 +1314,13 @@
         <button id="editSheetCloseBtn" class="sheet-close" type="button">סגור</button>
       </div>
 
-      <div class="settings-section">
-        <div class="settings-title">תאריך</div>
+      <div class="box" style="margin-bottom:12px;">
+        <div class="label">תאריך</div>
         <input id="editDate" class="manual-date" type="date" />
       </div>
 
-      <div class="settings-section">
-        <div class="settings-title">שעה</div>
+      <div class="box">
+        <div class="label">שעה</div>
         <div class="stepper-row">
           <div class="stepper">
             <button id="editDecHour" class="stepper-btn" type="button">−</button>
@@ -1529,15 +1353,14 @@
   </div>
 
   <script>
-    const APP_VERSION = "1.4";
+    const APP_VERSION = "1.5";
 
     const KEY = {
       last: "feed_last_ts",
       interval: "feed_interval_minutes",
       history: "feed_history",
       theme: "feed_theme_mode",
-      historyCollapsed: "feed_history_collapsed",
-      viewMode: "feed_view_mode"
+      screen: "feed_active_screen"
     };
 
     const RING_RADIUS = 48;
@@ -1554,29 +1377,31 @@
     let manualHour = 0;
     let manualMin = 0;
 
+    let editHour = 0;
+    let editMin = 0;
+    let editingIndex = null;
+
     let toastTimer = null;
     let toastActionHandler = null;
 
-    let activeSheet = null;
-
-    let editingIndex = null;
-    let editHour = 0;
-    let editMin = 0;
+    let historyFilter = "all";
 
     const mediaTheme = window.matchMedia("(prefers-color-scheme: dark)");
 
     const el = {
+      screenHome: document.getElementById("screen-home"),
+      screenHistory: document.getElementById("screen-history"),
+      screenSettings: document.getElementById("screen-settings"),
+
+      navHomeBtn: document.getElementById("navHomeBtn"),
+      navHistoryBtn: document.getElementById("navHistoryBtn"),
+      navSettingsBtn: document.getElementById("navSettingsBtn"),
+
       feedBtn: document.getElementById("feedBtn"),
 
-      modeSimpleBtn: document.getElementById("modeSimpleBtn"),
-      modeAdvancedBtn: document.getElementById("modeAdvancedBtn"),
-      modeSimpleBtnSheet: document.getElementById("modeSimpleBtnSheet"),
-      modeAdvancedBtnSheet: document.getElementById("modeAdvancedBtnSheet"),
+      statusDot: document.getElementById("statusDot"),
+      statusText: document.getElementById("statusText"),
 
-      lastFeedMain: document.getElementById("lastFeedMain"),
-      lastFeedSub: document.getElementById("lastFeedSub"),
-      elapsedMain: document.getElementById("elapsedMain"),
-      elapsedDetail: document.getElementById("elapsedDetail"),
       nextCard: document.getElementById("nextCard"),
       nextReminderMain: document.getElementById("nextReminderMain"),
       nextReminderSub: document.getElementById("nextReminderSub"),
@@ -1584,11 +1409,17 @@
       progressRing: document.getElementById("progressRing"),
       bottleWrap: document.getElementById("bottleWrap"),
 
+      lastFeedMain: document.getElementById("lastFeedMain"),
+      lastFeedSub: document.getElementById("lastFeedSub"),
+      elapsedMain: document.getElementById("elapsedMain"),
+      elapsedDetail: document.getElementById("elapsedDetail"),
+
       statusBanner: document.getElementById("statusBanner"),
       statusBannerTitle: document.getElementById("statusBannerTitle"),
       statusBannerText: document.getElementById("statusBannerText"),
       statusBannerSub: document.getElementById("statusBannerSub"),
 
+      historyTotalCount: document.getElementById("historyTotalCount"),
       todayCount: document.getElementById("todayCount"),
       todayAvg: document.getElementById("todayAvg"),
 
@@ -1602,38 +1433,16 @@
       smartAnomalySub: document.getElementById("smartAnomalySub"),
       smartAnomalyNote: document.getElementById("smartAnomalyNote"),
 
-      settingsToggleBtn: document.getElementById("settingsToggleBtn"),
-      settingsPanel: document.getElementById("settingsPanel"),
-
-      enableNotifBtn: document.getElementById("enableNotifBtn"),
-      testReminderBtn: document.getElementById("testReminderBtn"),
-      clearBtn: document.getElementById("clearBtn"),
-      exportBtn: document.getElementById("exportBtn"),
-      exportCsvBtn: document.getElementById("exportCsvBtn"),
-      importBtn: document.getElementById("importBtn"),
-
-      historyCard: document.getElementById("historyCard"),
-      historyListWrap: document.getElementById("historyListWrap"),
-      historyToggleBtn: document.getElementById("historyToggleBtn"),
+      filterAllBtn: document.getElementById("filterAllBtn"),
+      filterTodayBtn: document.getElementById("filterTodayBtn"),
       historyList: document.getElementById("historyList"),
-      historyCount: document.getElementById("historyCount"),
-
-      statusDot: document.getElementById("statusDot"),
-      statusText: document.getElementById("statusText"),
-      installPwaBtn: document.getElementById("installPwaBtn"),
-      importFile: document.getElementById("importFile"),
-
-      toastInner: document.getElementById("toastInner"),
-      toastText: document.getElementById("toastText"),
-      toastAction: document.getElementById("toastAction"),
 
       themeAutoBtn: document.getElementById("themeAutoBtn"),
       themeDarkBtn: document.getElementById("themeDarkBtn"),
       themeLightBtn: document.getElementById("themeLightBtn"),
 
-      themeAutoBtnSheet: document.getElementById("themeAutoBtnSheet"),
-      themeDarkBtnSheet: document.getElementById("themeDarkBtnSheet"),
-      themeLightBtnSheet: document.getElementById("themeLightBtnSheet"),
+      quickButtons: Array.from(document.querySelectorAll("[data-back-minutes]")),
+      presetButtons: Array.from(document.querySelectorAll("[data-preset-minutes]")),
 
       hoursValue: document.getElementById("hoursValue"),
       minutesValue: document.getElementById("minutesValue"),
@@ -1642,37 +1451,28 @@
       decHours: document.getElementById("decHours"),
       incMinutes: document.getElementById("incMinutes"),
       decMinutes: document.getElementById("decMinutes"),
-      presetButtons: Array.from(document.querySelectorAll("[data-preset-minutes]")),
-      quickButtons: Array.from(document.querySelectorAll("[data-back-minutes]")),
 
       manualDate: document.getElementById("manualDate"),
-      setManualBtn: document.getElementById("setManualBtn"),
       manualHourValue: document.getElementById("manualHourValue"),
       manualMinValue: document.getElementById("manualMinValue"),
       incManualHour: document.getElementById("incManualHour"),
       decManualHour: document.getElementById("decManualHour"),
       incManualMin: document.getElementById("incManualMin"),
       decManualMin: document.getElementById("decManualMin"),
+      setManualBtn: document.getElementById("setManualBtn"),
+
+      enableNotifBtn: document.getElementById("enableNotifBtn"),
+      testReminderBtn: document.getElementById("testReminderBtn"),
+      exportBtn: document.getElementById("exportBtn"),
+      exportCsvBtn: document.getElementById("exportCsvBtn"),
+      importBtn: document.getElementById("importBtn"),
+      importFile: document.getElementById("importFile"),
+      installPwaBtn: document.getElementById("installPwaBtn"),
+      clearBtn: document.getElementById("clearBtn"),
+
+      appVersion: document.getElementById("appVersion"),
 
       sheetBackdrop: document.getElementById("sheetBackdrop"),
-      settingsSheet: document.getElementById("settingsSheet"),
-      settingsSheetHandle: document.getElementById("settingsSheetHandle"),
-      settingsSheetCloseBtn: document.getElementById("settingsSheetCloseBtn"),
-      manualDateSheet: document.getElementById("manualDateSheet"),
-      setManualBtnSheet: document.getElementById("setManualBtnSheet"),
-      manualHourValueSheet: document.getElementById("manualHourValueSheet"),
-      manualMinValueSheet: document.getElementById("manualMinValueSheet"),
-      incManualHourSheet: document.getElementById("incManualHourSheet"),
-      decManualHourSheet: document.getElementById("decManualHourSheet"),
-      incManualMinSheet: document.getElementById("incManualMinSheet"),
-      decManualMinSheet: document.getElementById("decManualMinSheet"),
-      enableNotifBtnSheet: document.getElementById("enableNotifBtnSheet"),
-      testReminderBtnSheet: document.getElementById("testReminderBtnSheet"),
-      exportBtnSheet: document.getElementById("exportBtnSheet"),
-      exportCsvBtnSheet: document.getElementById("exportCsvBtnSheet"),
-      importBtnSheet: document.getElementById("importBtnSheet"),
-      clearBtnSheet: document.getElementById("clearBtnSheet"),
-
       editSheet: document.getElementById("editSheet"),
       editSheetHandle: document.getElementById("editSheetHandle"),
       editSheetCloseBtn: document.getElementById("editSheetCloseBtn"),
@@ -1686,13 +1486,10 @@
       editSaveBtn: document.getElementById("editSaveBtn"),
       editDeleteBtn: document.getElementById("editDeleteBtn"),
 
-      appVersion: document.getElementById("appVersion"),
-      appVersionSheet: document.getElementById("appVersionSheet"),
+      toastInner: document.getElementById("toastInner"),
+      toastText: document.getElementById("toastText"),
+      toastAction: document.getElementById("toastAction")
     };
-
-    function isMobile() {
-      return window.innerWidth <= 900;
-    }
 
     function nowTs() {
       return Date.now();
@@ -1707,14 +1504,14 @@
       return `${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
     }
 
-    function formatDateTime(ts) {
-      const d = new Date(ts);
-      return `${pad2(d.getDate())}/${pad2(d.getMonth() + 1)}/${d.getFullYear()} ${pad2(d.getHours())}:${pad2(d.getMinutes())}:${pad2(d.getSeconds())}`;
-    }
-
     function formatDateOnly(ts) {
       const d = new Date(ts);
       return `${pad2(d.getDate())}/${pad2(d.getMonth() + 1)}/${d.getFullYear()}`;
+    }
+
+    function formatDateTime(ts) {
+      const d = new Date(ts);
+      return `${pad2(d.getDate())}/${pad2(d.getMonth() + 1)}/${d.getFullYear()} ${pad2(d.getHours())}:${pad2(d.getMinutes())}:${pad2(d.getSeconds())}`;
     }
 
     function formatDateInputValue(ts) {
@@ -1807,9 +1604,7 @@
       if (ms <= 0) {
         return `עברו ${formatDurationShort(Math.abs(ms), 2)} מהמועד`;
       }
-
-      const { totalSec } = durationParts(ms);
-      if (totalSec < 60) return "נותרו פחות מדקה";
+      if (ms < 60000) return "נותרו פחות מדקה";
       return `נותרו עוד ${formatDurationShort(ms, 2)}`;
     }
 
@@ -1854,16 +1649,11 @@
     }
 
     function updateThemeButtons(choice) {
-      const map = [
+      [
         [el.themeAutoBtn, choice === "auto"],
         [el.themeDarkBtn, choice === "dark"],
-        [el.themeLightBtn, choice === "light"],
-        [el.themeAutoBtnSheet, choice === "auto"],
-        [el.themeDarkBtnSheet, choice === "dark"],
-        [el.themeLightBtnSheet, choice === "light"],
-      ];
-
-      map.forEach(([btn, active]) => {
+        [el.themeLightBtn, choice === "light"]
+      ].forEach(([btn, active]) => {
         btn.classList.toggle("active", active);
       });
     }
@@ -1883,141 +1673,24 @@
       if (getThemeChoice() === "auto") applyTheme("auto");
     });
 
-    function getViewMode() {
-      const saved = localStorage.getItem(KEY.viewMode);
-      if (saved === "advanced" || saved === "simple") return saved;
-      return isMobile() ? "simple" : "advanced";
+    function getScreen() {
+      const saved = localStorage.getItem(KEY.screen);
+      return ["home", "history", "settings"].includes(saved) ? saved : "home";
     }
 
-    function updateViewButtons(mode) {
-      const map = [
-        [el.modeSimpleBtn, mode === "simple"],
-        [el.modeAdvancedBtn, mode === "advanced"],
-        [el.modeSimpleBtnSheet, mode === "simple"],
-        [el.modeAdvancedBtnSheet, mode === "advanced"],
-      ];
-
-      map.forEach(([btn, active]) => {
-        btn.classList.toggle("active", active);
-      });
+    function setScreen(screen) {
+      localStorage.setItem(KEY.screen, screen);
+      applyScreen(screen);
     }
 
-    function applyViewMode(mode = getViewMode()) {
-      document.body.classList.toggle("mode-simple", mode === "simple");
-      document.body.classList.toggle("mode-advanced", mode === "advanced");
-      updateViewButtons(mode);
-    }
+    function applyScreen(screen = getScreen()) {
+      el.screenHome.classList.toggle("active", screen === "home");
+      el.screenHistory.classList.toggle("active", screen === "history");
+      el.screenSettings.classList.toggle("active", screen === "settings");
 
-    function setViewMode(mode) {
-      localStorage.setItem(KEY.viewMode, mode);
-      applyViewMode(mode);
-      applyHistoryCollapse();
-    }
-
-    function getHistoryCollapsed() {
-      const raw = localStorage.getItem(KEY.historyCollapsed);
-      if (raw === null) return isMobile();
-      return raw === "1";
-    }
-
-    function setHistoryCollapsed(v) {
-      localStorage.setItem(KEY.historyCollapsed, v ? "1" : "0");
-      applyHistoryCollapse();
-    }
-
-    function applyHistoryCollapse() {
-      if (getViewMode() === "simple") {
-        if (el.historyListWrap) {
-          el.historyListWrap.classList.remove("expanded");
-          el.historyListWrap.classList.add("collapsed");
-        }
-        return;
-      }
-
-      if (!isMobile()) {
-        el.historyListWrap.classList.remove("collapsed");
-        el.historyListWrap.classList.add("expanded");
-        el.historyToggleBtn.textContent = "הסתר היסטוריה";
-        return;
-      }
-
-      const collapsed = getHistoryCollapsed();
-      el.historyListWrap.classList.toggle("collapsed", collapsed);
-      el.historyListWrap.classList.toggle("expanded", !collapsed);
-      el.historyToggleBtn.textContent = collapsed ? "הצג היסטוריה" : "הסתר היסטוריה";
-    }
-
-    function setStatus(kind, text) {
-      el.statusText.textContent = text;
-      el.statusDot.classList.remove("ok", "warn");
-      if (kind === "ok") el.statusDot.classList.add("ok");
-      if (kind === "warn") el.statusDot.classList.add("warn");
-    }
-
-    function updateLastFeedCard(lastTs) {
-      if (!lastTs) {
-        el.lastFeedMain.textContent = "--:--";
-        el.lastFeedSub.textContent = "עדיין אין האכלה שמורה";
-        return;
-      }
-
-      el.lastFeedMain.textContent = formatClock(lastTs);
-      el.lastFeedSub.textContent = `${formatDateOnly(lastTs)} · ${formatDurationShort(nowTs() - lastTs, 2)} מאז`;
-    }
-
-    function updateStatusBanner(lastTs) {
-      el.statusBanner.classList.remove("ok", "warn", "overdue");
-
-      if (!lastTs) {
-        el.statusBannerTitle.textContent = "מצב נוכחי";
-        el.statusBannerText.textContent = "עדיין אין האכלה שמורה";
-        el.statusBannerSub.textContent = "כשתסמן האכלה, המידע יוצג כאן בצורה ברורה.";
-        return;
-      }
-
-      const dueTs = lastTs + getIntervalMinutes() * 60 * 1000;
-      const remainMs = dueTs - nowTs();
-
-      if (remainMs <= 0) {
-        el.statusBanner.classList.add("overdue");
-        el.statusBannerTitle.textContent = "צריך להאכיל";
-        el.statusBannerText.textContent = "זמן האכלה הגיע";
-        el.statusBannerSub.textContent = `האכלה אחרונה ב־${formatClock(lastTs)} · עברו ${formatDurationShort(Math.abs(remainMs), 2)} מהמועד`;
-        return;
-      }
-
-      if (remainMs <= 15 * 60 * 1000) {
-        el.statusBanner.classList.add("warn");
-        el.statusBannerTitle.textContent = "מתקרבים לזמן האכלה";
-        el.statusBannerText.textContent = `האכלה אחרונה ב־${formatClock(lastTs)}`;
-        el.statusBannerSub.textContent = `${formatRemainingHuman(remainMs)} · הבאה ב־${formatClock(dueTs)}`;
-        return;
-      }
-
-      el.statusBanner.classList.add("ok");
-      el.statusBannerTitle.textContent = "הכל תקין";
-      el.statusBannerText.textContent = `האכלה אחרונה ב־${formatClock(lastTs)}`;
-      el.statusBannerSub.textContent = `${formatRemainingHuman(remainMs)} · הבאה ב־${formatClock(dueTs)}`;
-    }
-
-    function updateTodayStats() {
-      const arr = getHistory().filter(isTodayTs);
-      el.todayCount.textContent = String(arr.length);
-
-      if (arr.length < 2) {
-        el.todayAvg.textContent = "אין עדיין";
-        return;
-      }
-
-      let total = 0;
-      let count = 0;
-
-      for (let i = 0; i < arr.length - 1; i++) {
-        total += (arr[i] - arr[i + 1]);
-        count += 1;
-      }
-
-      el.todayAvg.textContent = formatDurationShort(total / count, 2);
+      el.navHomeBtn.classList.toggle("active", screen === "home");
+      el.navHistoryBtn.classList.toggle("active", screen === "history");
+      el.navSettingsBtn.classList.toggle("active", screen === "settings");
     }
 
     function getIntervalMinutes() {
@@ -2089,7 +1762,6 @@
       let sum = 0;
       let weights = 0;
       const n = intervals.length;
-
       for (let i = 0; i < n; i++) {
         const weight = n - i;
         sum += intervals[i] * weight;
@@ -2145,95 +1817,6 @@
         baseMs: smartMs,
         sourceCount: intervals.length
       };
-    }
-
-    function updateSmartPrediction() {
-      const data = getSmartPredictionData();
-      el.smartPredictionCard.classList.remove("smart-state-ok", "smart-state-warn", "smart-state-danger");
-
-      if (!getLastTs()) {
-        el.smartPredictionMain.textContent = "--:--";
-        el.smartPredictionSub.textContent = "אין מספיק נתונים עדיין";
-        el.smartPredictionNote.textContent = "התחזית מתבססת על ההיסטוריה האחרונה.";
-        return;
-      }
-
-      const remain = data.targetTs - nowTs();
-
-      if (remain <= 0) {
-        el.smartPredictionCard.classList.add("smart-state-danger");
-      } else if (remain <= 15 * 60 * 1000) {
-        el.smartPredictionCard.classList.add("smart-state-warn");
-      } else {
-        el.smartPredictionCard.classList.add("smart-state-ok");
-      }
-
-      el.smartPredictionMain.textContent = formatClock(data.targetTs);
-
-      if (!data.hasData) {
-        el.smartPredictionSub.textContent = `כרגע משתמשים בעיקר במרווח הקבוע · סביב ${formatClock(data.lowerTs)} עד ${formatClock(data.upperTs)}`;
-        el.smartPredictionNote.textContent = "ככל שתצטבר היסטוריה, התחזית תהיה מדויקת יותר.";
-        return;
-      }
-
-      el.smartPredictionSub.textContent = `כנראה בין ${formatClock(data.lowerTs)} ל־${formatClock(data.upperTs)}`;
-      el.smartPredictionNote.textContent = `מבוסס על ${data.sourceCount} מרווחים אחרונים · ממוצע חכם ${formatDurationShort(data.baseMs, 2)}`;
-    }
-
-    function updateSmartAnomaly() {
-      const lastTs = getLastTs();
-      const intervals = getHistoryIntervals().slice(0, 6);
-      el.smartAnomalyCard.classList.remove("smart-state-ok", "smart-state-warn", "smart-state-danger");
-
-      if (!lastTs || intervals.length < 2) {
-        el.smartAnomalyMain.textContent = "אין עדיין";
-        el.smartAnomalySub.textContent = "ככל שתצטבר היסטוריה, האפליקציה תזהה דפוסים וחריגות.";
-        el.smartAnomalyNote.textContent = "ההשוואה מבוססת על המרווחים האחרונים.";
-        return;
-      }
-
-      const baseline = weightedAverage(intervals);
-      const currentElapsed = nowTs() - lastTs;
-      const latestInterval = intervals[0];
-      const shortRun = intervals.slice(0, 3);
-      const allShort = shortRun.length >= 3 && shortRun.every(v => v < baseline * 0.8);
-
-      if (currentElapsed > baseline * 1.9) {
-        el.smartAnomalyCard.classList.add("smart-state-danger");
-        el.smartAnomalyMain.textContent = "חריגה חזקה";
-        el.smartAnomalySub.textContent = "עבר הרבה יותר זמן מהרגיל מאז ההאכלה האחרונה.";
-        el.smartAnomalyNote.textContent = `הפער הנוכחי הוא ${formatDurationShort(currentElapsed, 2)} מול דפוס ממוצע של ${formatDurationShort(baseline, 2)}.`;
-        return;
-      }
-
-      if (currentElapsed > baseline * 1.25) {
-        el.smartAnomalyCard.classList.add("smart-state-warn");
-        el.smartAnomalyMain.textContent = "איחור מהרגיל";
-        el.smartAnomalySub.textContent = "עבר יותר זמן מהרגיל מאז ההאכלה האחרונה.";
-        el.smartAnomalyNote.textContent = `הפער הנוכחי הוא ${formatDurationShort(currentElapsed, 2)} מול דפוס ממוצע של ${formatDurationShort(baseline, 2)}.`;
-        return;
-      }
-
-      if (allShort) {
-        el.smartAnomalyCard.classList.add("smart-state-warn");
-        el.smartAnomalyMain.textContent = "רצף קצר";
-        el.smartAnomalySub.textContent = "שלוש האכלות אחרונות היו בפער קצר מהרגיל.";
-        el.smartAnomalyNote.textContent = `הממוצע הרגיל הוא ${formatDurationShort(baseline, 2)}.`;
-        return;
-      }
-
-      if (latestInterval > baseline * 1.35) {
-        el.smartAnomalyCard.classList.add("smart-state-warn");
-        el.smartAnomalyMain.textContent = "פער ארוך אחרון";
-        el.smartAnomalySub.textContent = "ההאכלה האחרונה הייתה אחרי פער ארוך מהרגיל.";
-        el.smartAnomalyNote.textContent = `הפער האחרון היה ${formatDurationShort(latestInterval, 2)} מול ממוצע של ${formatDurationShort(baseline, 2)}.`;
-        return;
-      }
-
-      el.smartAnomalyCard.classList.add("smart-state-ok");
-      el.smartAnomalyMain.textContent = "שגרה רגילה";
-      el.smartAnomalySub.textContent = "כרגע לא זוהתה חריגה מהדפוס האחרון.";
-      el.smartAnomalyNote.textContent = `המרווח הממוצע האחרון הוא ${formatDurationShort(baseline, 2)}.`;
     }
 
     function clearReminder() {
@@ -2336,11 +1919,33 @@
         el.feedBtn.textContent = "🍼 סימנתי האכלה עכשיו";
         return;
       }
-
       const dueTs = lastTs + getIntervalMinutes() * 60 * 1000;
       el.feedBtn.textContent = dueTs <= nowTs()
         ? "🍼 הגיע זמן האכלה - לחיצה לשמירה"
         : "🍼 סימנתי האכלה עכשיו";
+    }
+
+    function updateLastFeedCard(lastTs) {
+      if (!lastTs) {
+        el.lastFeedMain.textContent = "--:--";
+        el.lastFeedSub.textContent = "עדיין אין האכלה שמורה";
+        return;
+      }
+
+      el.lastFeedMain.textContent = formatClock(lastTs);
+      el.lastFeedSub.textContent = `${formatDateOnly(lastTs)} · ${formatDurationShort(nowTs() - lastTs, 2)} מאז`;
+    }
+
+    function updateElapsed(lastTs) {
+      if (!lastTs) {
+        el.elapsedMain.textContent = "עדיין אין האכלה";
+        el.elapsedDetail.textContent = "ברגע שתלחץ, יוצג הזמן בצורה ברורה.";
+        return;
+      }
+
+      const human = formatElapsedHuman(nowTs() - lastTs);
+      el.elapsedMain.textContent = human.main;
+      el.elapsedDetail.textContent = human.detail;
     }
 
     function updateNextCard(lastTs) {
@@ -2376,16 +1981,211 @@
       }
     }
 
-    function updateElapsed(lastTs) {
+    function setStatus(kind, text) {
+      el.statusText.textContent = text;
+      el.statusDot.classList.remove("ok", "warn");
+      if (kind === "ok") el.statusDot.classList.add("ok");
+      if (kind === "warn") el.statusDot.classList.add("warn");
+    }
+
+    function updateStatusBanner(lastTs) {
+      el.statusBanner.classList.remove("ok", "warn", "overdue");
+
       if (!lastTs) {
-        el.elapsedMain.textContent = "עדיין אין האכלה";
-        el.elapsedDetail.textContent = "ברגע שתלחץ, יוצג הזמן בצורה ברורה.";
+        el.statusBannerTitle.textContent = "מצב נוכחי";
+        el.statusBannerText.textContent = "עדיין אין האכלה שמורה";
+        el.statusBannerSub.textContent = "כשתסמן האכלה, המידע יוצג כאן בצורה ברורה.";
         return;
       }
 
-      const human = formatElapsedHuman(nowTs() - lastTs);
-      el.elapsedMain.textContent = human.main;
-      el.elapsedDetail.textContent = human.detail;
+      const dueTs = lastTs + getIntervalMinutes() * 60 * 1000;
+      const remainMs = dueTs - nowTs();
+
+      if (remainMs <= 0) {
+        el.statusBanner.classList.add("overdue");
+        el.statusBannerTitle.textContent = "צריך להאכיל";
+        el.statusBannerText.textContent = "זמן האכלה הגיע";
+        el.statusBannerSub.textContent = `האכלה אחרונה ב־${formatClock(lastTs)} · עברו ${formatDurationShort(Math.abs(remainMs), 2)} מהמועד`;
+        return;
+      }
+
+      if (remainMs <= 15 * 60 * 1000) {
+        el.statusBanner.classList.add("warn");
+        el.statusBannerTitle.textContent = "מתקרבים לזמן האכלה";
+        el.statusBannerText.textContent = `האכלה אחרונה ב־${formatClock(lastTs)}`;
+        el.statusBannerSub.textContent = `${formatRemainingHuman(remainMs)} · הבאה ב־${formatClock(dueTs)}`;
+        return;
+      }
+
+      el.statusBanner.classList.add("ok");
+      el.statusBannerTitle.textContent = "הכל תקין";
+      el.statusBannerText.textContent = `האכלה אחרונה ב־${formatClock(lastTs)}`;
+      el.statusBannerSub.textContent = `${formatRemainingHuman(remainMs)} · הבאה ב־${formatClock(dueTs)}`;
+    }
+
+    function updateHistorySummary() {
+      const all = getHistory();
+      const today = all.filter(isTodayTs);
+      el.historyTotalCount.textContent = String(all.length);
+      el.todayCount.textContent = String(today.length);
+
+      if (today.length < 2) {
+        el.todayAvg.textContent = "אין עדיין";
+        return;
+      }
+
+      let total = 0;
+      let count = 0;
+      for (let i = 0; i < today.length - 1; i++) {
+        total += (today[i] - today[i + 1]);
+        count += 1;
+      }
+      el.todayAvg.textContent = formatDurationShort(total / count, 2);
+    }
+
+    function updateSmartPrediction() {
+      const data = getSmartPredictionData();
+      el.smartPredictionCard.classList.remove("smart-state-ok", "smart-state-warn", "smart-state-danger");
+
+      if (!getLastTs()) {
+        el.smartPredictionMain.textContent = "--:--";
+        el.smartPredictionSub.textContent = "אין מספיק נתונים עדיין";
+        el.smartPredictionNote.textContent = "התחזית מתבססת על ההיסטוריה האחרונה.";
+        return;
+      }
+
+      const remain = data.targetTs - nowTs();
+
+      if (remain <= 0) {
+        el.smartPredictionCard.classList.add("smart-state-danger");
+      } else if (remain <= 15 * 60 * 1000) {
+        el.smartPredictionCard.classList.add("smart-state-warn");
+      } else {
+        el.smartPredictionCard.classList.add("smart-state-ok");
+      }
+
+      el.smartPredictionMain.textContent = formatClock(data.targetTs);
+
+      if (!data.hasData) {
+        el.smartPredictionSub.textContent = `כרגע משתמשים בעיקר במרווח הקבוע · סביב ${formatClock(data.lowerTs)} עד ${formatClock(data.upperTs)}`;
+        el.smartPredictionNote.textContent = "ככל שתצטבר היסטוריה, התחזית תהיה מדויקת יותר.";
+        return;
+      }
+
+      el.smartPredictionSub.textContent = `כנראה בין ${formatClock(data.lowerTs)} ל־${formatClock(data.upperTs)}`;
+      el.smartPredictionNote.textContent = `מבוסס על ${data.sourceCount} מרווחים אחרונים · ממוצע חכם ${formatDurationShort(data.baseMs, 2)}`;
+    }
+
+    function updateSmartAnomaly() {
+      const lastTs = getLastTs();
+      const intervals = getHistoryIntervals().slice(0, 6);
+      el.smartAnomalyCard.classList.remove("smart-state-ok", "smart-state-warn", "smart-state-danger");
+
+      if (!lastTs || intervals.length < 2) {
+        el.smartAnomalyMain.textContent = "אין עדיין";
+        el.smartAnomalySub.textContent = "ככל שתצטבר היסטוריה, האפליקציה תזהה דפוסים וחריגות.";
+        el.smartAnomalyNote.textContent = "ההשוואה מבוססת על המרווחים האחרונים.";
+        return;
+      }
+
+      const baseline = weightedAverage(intervals);
+      const currentElapsed = nowTs() - lastTs;
+      const latestInterval = intervals[0];
+      const shortRun = intervals.slice(0, 3);
+      const allShort = shortRun.length >= 3 && shortRun.every(v => v < baseline * 0.8);
+
+      if (currentElapsed > baseline * 1.9) {
+        el.smartAnomalyCard.classList.add("smart-state-danger");
+        el.smartAnomalyMain.textContent = "חריגה חזקה";
+        el.smartAnomalySub.textContent = "עבר הרבה יותר זמן מהרגיל מאז ההאכלה האחרונה.";
+        el.smartAnomalyNote.textContent = `הפער הנוכחי הוא ${formatDurationShort(currentElapsed, 2)} מול דפוס ממוצע של ${formatDurationShort(baseline, 2)}.`;
+        return;
+      }
+
+      if (currentElapsed > baseline * 1.25) {
+        el.smartAnomalyCard.classList.add("smart-state-warn");
+        el.smartAnomalyMain.textContent = "איחור מהרגיל";
+        el.smartAnomalySub.textContent = "עבר יותר זמן מהרגיל מאז ההאכלה האחרונה.";
+        el.smartAnomalyNote.textContent = `הפער הנוכחי הוא ${formatDurationShort(currentElapsed, 2)} מול דפוס ממוצע של ${formatDurationShort(baseline, 2)}.`;
+        return;
+      }
+
+      if (allShort) {
+        el.smartAnomalyCard.classList.add("smart-state-warn");
+        el.smartAnomalyMain.textContent = "רצף קצר";
+        el.smartAnomalySub.textContent = "שלוש האכלות אחרונות היו בפער קצר מהרגיל.";
+        el.smartAnomalyNote.textContent = `הממוצע הרגיל הוא ${formatDurationShort(baseline, 2)}.`;
+        return;
+      }
+
+      if (latestInterval > baseline * 1.35) {
+        el.smartAnomalyCard.classList.add("smart-state-warn");
+        el.smartAnomalyMain.textContent = "פער ארוך אחרון";
+        el.smartAnomalySub.textContent = "ההאכלה האחרונה הייתה אחרי פער ארוך מהרגיל.";
+        el.smartAnomalyNote.textContent = `הפער האחרון היה ${formatDurationShort(latestInterval, 2)} מול ממוצע של ${formatDurationShort(baseline, 2)}.`;
+        return;
+      }
+
+      el.smartAnomalyCard.classList.add("smart-state-ok");
+      el.smartAnomalyMain.textContent = "שגרה רגילה";
+      el.smartAnomalySub.textContent = "כרגע לא זוהתה חריגה מהדפוס האחרון.";
+      el.smartAnomalyNote.textContent = `המרווח הממוצע האחרון הוא ${formatDurationShort(baseline, 2)}.`;
+    }
+
+    function renderHistory() {
+      const all = getHistory();
+      const arr = historyFilter === "today" ? all.filter(isTodayTs) : all;
+      el.historyList.innerHTML = "";
+
+      if (arr.length === 0) {
+        const li = document.createElement("li");
+        li.className = "history-item";
+        li.innerHTML = `
+          <div>
+            <div class="history-time">אין נתונים עדיין</div>
+            <div class="history-gap">לחץ על הכפתור בזמן האכלה</div>
+          </div>
+          <div class="history-right">—</div>
+        `;
+        el.historyList.appendChild(li);
+        return;
+      }
+
+      arr.forEach((ts) => {
+        const actualIndex = all.indexOf(ts);
+        const prev = all[actualIndex + 1];
+        const gapText = prev
+          ? `${formatDurationShort(ts - prev, 2)} מהקודמת`
+          : "האכלה ראשונה ברשומה";
+
+        const li = document.createElement("li");
+        li.className = "history-item";
+        li.innerHTML = `
+          <div>
+            <div class="history-time mono">${formatClock(ts)}</div>
+            <div class="history-date mono">${formatDateTime(ts)}</div>
+            <div class="history-gap">${gapText}</div>
+          </div>
+          <div class="history-right">
+            <button class="mini-btn" type="button" data-edit-index="${actualIndex}">ערוך</button>
+            <button class="mini-btn delete" type="button" data-delete-index="${actualIndex}">מחק</button>
+          </div>
+        `;
+        el.historyList.appendChild(li);
+      });
+
+      el.historyList.querySelectorAll("[data-edit-index]").forEach(btn => {
+        btn.addEventListener("click", () => openEditSheet(parseInt(btn.dataset.editIndex, 10)));
+      });
+
+      el.historyList.querySelectorAll("[data-delete-index]").forEach(btn => {
+        btn.addEventListener("click", () => deleteHistoryItem(parseInt(btn.dataset.deleteIndex, 10)));
+      });
+    }
+
+    function updateFilterButtons() {
+      el.filterAllBtn.classList.toggle("active", historyFilter === "all");
+      el.filterTodayBtn.classList.toggle("active", historyFilter === "today");
     }
 
     function deleteHistoryItem(index) {
@@ -2415,61 +2215,13 @@
       if (!Number.isFinite(ts)) return;
 
       editingIndex = index;
-      editHour = new Date(ts).getHours();
-      editMin = new Date(ts).getMinutes();
+      const d = new Date(ts);
+      editHour = d.getHours();
+      editMin = d.getMinutes();
 
       el.editDate.value = formatDateInputValue(ts);
       renderEditTimeUI();
       openSheet(el.editSheet);
-    }
-
-    function renderHistory() {
-      const arr = getHistory();
-      el.historyCount.textContent = String(arr.length);
-      el.historyList.innerHTML = "";
-
-      if (arr.length === 0) {
-        const li = document.createElement("li");
-        li.className = "history-item";
-        li.innerHTML = `
-          <div>
-            <div class="history-time">אין נתונים עדיין</div>
-            <div class="history-gap">לחץ על הכפתור בזמן האכלה</div>
-          </div>
-          <div class="history-right">—</div>
-        `;
-        el.historyList.appendChild(li);
-        return;
-      }
-
-      arr.forEach((ts, idx) => {
-        const li = document.createElement("li");
-        li.className = "history-item";
-        const prev = arr[idx + 1];
-        const gapText = prev ? `${formatDurationShort(ts - prev, 2)} מהקודמת` : "האכלה ראשונה ברשומה";
-
-        li.innerHTML = `
-          <div>
-            <div class="history-time mono">${formatClock(ts)}</div>
-            <div class="history-date mono">${formatDateTime(ts)}</div>
-            <div class="history-gap">${gapText}</div>
-          </div>
-          <div class="history-right">
-            <button class="mini-btn" type="button" data-edit-index="${idx}">ערוך</button>
-            <button class="mini-btn delete" type="button" data-delete-index="${idx}">מחק</button>
-          </div>
-        `;
-
-        el.historyList.appendChild(li);
-      });
-
-      el.historyList.querySelectorAll("[data-edit-index]").forEach(btn => {
-        btn.addEventListener("click", () => openEditSheet(parseInt(btn.dataset.editIndex, 10)));
-      });
-
-      el.historyList.querySelectorAll("[data-delete-index]").forEach(btn => {
-        btn.addEventListener("click", () => deleteHistoryItem(parseInt(btn.dataset.deleteIndex, 10)));
-      });
     }
 
     function updatePresetButtons(totalMinutes) {
@@ -2528,9 +2280,6 @@
     function renderManualTimeUI() {
       el.manualHourValue.textContent = pad2(manualHour);
       el.manualMinValue.textContent = pad2(manualMin);
-      el.manualHourValueSheet.textContent = pad2(manualHour);
-      el.manualMinValueSheet.textContent = pad2(manualMin);
-      el.manualDateSheet.value = el.manualDate.value;
     }
 
     function getManualTimestamp(dateValue) {
@@ -2626,135 +2375,6 @@
     function addBackdatedFeed(minutesBack) {
       const ts = nowTs() - minutesBack * 60 * 1000;
       markFeed(ts, "quick");
-      closeSheets();
-    }
-
-    function openDesktopSettings(forceValue = null) {
-      const shouldOpen = forceValue === null
-        ? !el.settingsPanel.classList.contains("open")
-        : !!forceValue;
-
-      el.settingsPanel.classList.toggle("open", shouldOpen);
-      el.settingsToggleBtn.textContent = shouldOpen ? "סגור הגדרות" : "הגדרות";
-    }
-
-    function resetSheetStyle(sheetEl) {
-      sheetEl.style.transform = "";
-      el.sheetBackdrop.style.opacity = "";
-      sheetEl.style.transition = "";
-    }
-
-    function openSheet(sheetEl) {
-      activeSheet = sheetEl;
-      resetSheetStyle(sheetEl);
-      el.sheetBackdrop.classList.add("open");
-      sheetEl.classList.add("open");
-      sheetEl.setAttribute("aria-hidden", "false");
-    }
-
-    function closeSheets() {
-      activeSheet = null;
-      el.sheetBackdrop.classList.remove("open");
-      [el.settingsSheet, el.editSheet].forEach(sheet => {
-        sheet.classList.remove("open");
-        sheet.setAttribute("aria-hidden", "true");
-        resetSheetStyle(sheet);
-      });
-    }
-
-    function attachSheetDrag(sheetEl, handleEl) {
-      let startY = 0;
-      let deltaY = 0;
-      let dragging = false;
-      let moved = false;
-
-      function onMove(e) {
-        if (!dragging) return;
-        deltaY = Math.max(0, e.clientY - startY);
-        if (deltaY > 4) moved = true;
-
-        sheetEl.style.transition = "none";
-        sheetEl.style.transform = `translateY(${deltaY}px)`;
-        el.sheetBackdrop.style.opacity = String(Math.max(0, 1 - (deltaY / 260)));
-      }
-
-      function onEnd() {
-        if (!dragging) return;
-        dragging = false;
-        const shouldClose = deltaY > 110;
-        sheetEl.style.transition = "transform .22s ease";
-
-        if (shouldClose) {
-          closeSheets();
-        } else {
-          sheetEl.style.transform = "translateY(0px)";
-          el.sheetBackdrop.style.opacity = "";
-          setTimeout(() => resetSheetStyle(sheetEl), 240);
-        }
-
-        deltaY = 0;
-        setTimeout(() => { moved = false; }, 0);
-
-        window.removeEventListener("pointermove", onMove);
-        window.removeEventListener("pointerup", onEnd);
-        window.removeEventListener("pointercancel", onEnd);
-      }
-
-      handleEl.addEventListener("pointerdown", (e) => {
-        if (!isMobile()) return;
-        dragging = true;
-        moved = false;
-        startY = e.clientY;
-        deltaY = 0;
-
-        window.addEventListener("pointermove", onMove, { passive: true });
-        window.addEventListener("pointerup", onEnd, { passive: true });
-        window.addEventListener("pointercancel", onEnd, { passive: true });
-      });
-
-      handleEl.addEventListener("click", () => {
-        if (!isMobile() || moved) return;
-        closeSheets();
-      });
-    }
-
-    function openSettingsUI() {
-      if (isMobile()) {
-        openSheet(el.settingsSheet);
-      } else {
-        openDesktopSettings();
-      }
-    }
-
-    function refresh() {
-      const lastTs = getLastTs();
-
-      updateLastFeedCard(lastTs);
-      updateElapsed(lastTs);
-      updateNextCard(lastTs);
-      updateFeedButton(lastTs);
-      updateStatusBanner(lastTs);
-      updateTodayStats();
-      updateSmartPrediction();
-      updateSmartAnomaly();
-
-      if (!lastTs) {
-        setStatus("", "ממתין ללחיצה");
-      } else {
-        const dueTs = lastTs + getIntervalMinutes() * 60 * 1000;
-        if (dueTs <= nowTs()) setStatus("warn", "זמן האכלה הגיע");
-        else setStatus("ok", "תזכורת פעילה");
-      }
-
-      renderHistory();
-      refreshIntervalUI();
-      applyHistoryCollapse();
-      applyViewMode();
-    }
-
-    function startTicker() {
-      if (tickInterval) clearInterval(tickInterval);
-      tickInterval = setInterval(refresh, 1000);
     }
 
     function doExportJson() {
@@ -2823,7 +2443,6 @@
 
           refresh();
           showToast("שוחזר בהצלחה");
-          closeSheets();
         } catch {
           showToast("קובץ לא תקין");
         }
@@ -2862,6 +2481,65 @@
         } catch {}
 
         deferredInstallPrompt = null;
+      });
+    }
+
+    function openSheet(sheetEl) {
+      el.sheetBackdrop.classList.add("open");
+      sheetEl.classList.add("open");
+      sheetEl.setAttribute("aria-hidden", "false");
+    }
+
+    function closeSheets() {
+      el.sheetBackdrop.classList.remove("open");
+      el.editSheet.classList.remove("open");
+      el.editSheet.setAttribute("aria-hidden", "true");
+      el.editSheet.style.transform = "";
+      el.editSheet.style.transition = "";
+    }
+
+    function attachSheetDrag(sheetEl, handleEl) {
+      let startY = 0;
+      let deltaY = 0;
+      let dragging = false;
+
+      function onMove(e) {
+        if (!dragging) return;
+        deltaY = Math.max(0, e.clientY - startY);
+        sheetEl.style.transition = "none";
+        sheetEl.style.transform = `translateY(${deltaY}px)`;
+        el.sheetBackdrop.style.opacity = String(Math.max(0, 1 - (deltaY / 260)));
+      }
+
+      function onEnd() {
+        if (!dragging) return;
+        dragging = false;
+
+        if (deltaY > 110) {
+          closeSheets();
+        } else {
+          sheetEl.style.transition = "transform .22s ease";
+          sheetEl.style.transform = "translateY(0px)";
+          el.sheetBackdrop.style.opacity = "";
+          setTimeout(() => {
+            sheetEl.style.transform = "";
+            sheetEl.style.transition = "";
+          }, 240);
+        }
+
+        deltaY = 0;
+        window.removeEventListener("pointermove", onMove);
+        window.removeEventListener("pointerup", onEnd);
+        window.removeEventListener("pointercancel", onEnd);
+      }
+
+      handleEl.addEventListener("pointerdown", (e) => {
+        dragging = true;
+        startY = e.clientY;
+        deltaY = 0;
+        window.addEventListener("pointermove", onMove, { passive: true });
+        window.addEventListener("pointerup", onEnd, { passive: true });
+        window.addEventListener("pointercancel", onEnd, { passive: true });
       });
     }
 
@@ -2938,26 +2616,6 @@
         renderManualTimeUI();
       });
 
-      attachRepeatPress(el.incManualHourSheet, () => {
-        manualHour = (manualHour + 1) % 24;
-        renderManualTimeUI();
-      });
-
-      attachRepeatPress(el.decManualHourSheet, () => {
-        manualHour = (manualHour + 23) % 24;
-        renderManualTimeUI();
-      });
-
-      attachRepeatPress(el.incManualMinSheet, () => {
-        manualMin = (manualMin + 1) % 60;
-        renderManualTimeUI();
-      });
-
-      attachRepeatPress(el.decManualMinSheet, () => {
-        manualMin = (manualMin + 59) % 60;
-        renderManualTimeUI();
-      });
-
       attachRepeatPress(el.editIncHour, () => {
         editHour = (editHour + 1) % 24;
         renderEditTimeUI();
@@ -3005,14 +2663,13 @@
       });
     }
 
-    function handleManualSave(dateValue) {
-      const ts = getManualTimestamp(dateValue);
+    function handleManualSave() {
+      const ts = getManualTimestamp(el.manualDate.value);
       if (!ts) {
         showToast("בחר תאריך תקין");
         return;
       }
       markFeed(ts, "manual");
-      closeSheets();
     }
 
     function handleClear() {
@@ -3025,7 +2682,6 @@
       localStorage.removeItem(KEY.history);
       clearReminder();
       refresh();
-      closeSheets();
 
       showToast("הכל אופס", "בטל", () => {
         setLastTs(snapshot.last);
@@ -3036,17 +2692,53 @@
       }, 3000);
     }
 
-    el.modeSimpleBtn.addEventListener("click", () => setViewMode("simple"));
-    el.modeAdvancedBtn.addEventListener("click", () => setViewMode("advanced"));
-    el.modeSimpleBtnSheet.addEventListener("click", () => setViewMode("simple"));
-    el.modeAdvancedBtnSheet.addEventListener("click", () => setViewMode("advanced"));
+    function refresh() {
+      const lastTs = getLastTs();
+
+      updateLastFeedCard(lastTs);
+      updateElapsed(lastTs);
+      updateNextCard(lastTs);
+      updateFeedButton(lastTs);
+      updateStatusBanner(lastTs);
+      updateHistorySummary();
+      updateSmartPrediction();
+      updateSmartAnomaly();
+      renderHistory();
+      updateFilterButtons();
+      refreshIntervalUI();
+      applyScreen();
+
+      if (!lastTs) {
+        setStatus("", "ממתין ללחיצה");
+      } else {
+        const dueTs = lastTs + getIntervalMinutes() * 60 * 1000;
+        if (dueTs <= nowTs()) setStatus("warn", "זמן האכלה הגיע");
+        else setStatus("ok", "תזכורת פעילה");
+      }
+    }
+
+    function startTicker() {
+      if (tickInterval) clearInterval(tickInterval);
+      tickInterval = setInterval(refresh, 1000);
+    }
+
+    el.navHomeBtn.addEventListener("click", () => setScreen("home"));
+    el.navHistoryBtn.addEventListener("click", () => setScreen("history"));
+    el.navSettingsBtn.addEventListener("click", () => setScreen("settings"));
+
+    el.filterAllBtn.addEventListener("click", () => {
+      historyFilter = "all";
+      refresh();
+    });
+
+    el.filterTodayBtn.addEventListener("click", () => {
+      historyFilter = "today";
+      refresh();
+    });
 
     el.themeAutoBtn.addEventListener("click", () => setThemeChoice("auto"));
     el.themeDarkBtn.addEventListener("click", () => setThemeChoice("dark"));
     el.themeLightBtn.addEventListener("click", () => setThemeChoice("light"));
-    el.themeAutoBtnSheet.addEventListener("click", () => setThemeChoice("auto"));
-    el.themeDarkBtnSheet.addEventListener("click", () => setThemeChoice("dark"));
-    el.themeLightBtnSheet.addEventListener("click", () => setThemeChoice("light"));
 
     el.presetButtons.forEach(btn => {
       btn.addEventListener("click", () => {
@@ -3062,45 +2754,21 @@
       });
     });
 
-    el.historyToggleBtn.addEventListener("click", () => {
-      if (!isMobile() || getViewMode() === "simple") return;
-      setHistoryCollapsed(!getHistoryCollapsed());
-    });
-
-    el.settingsToggleBtn.addEventListener("click", openSettingsUI);
-    el.settingsSheetCloseBtn.addEventListener("click", closeSheets);
-    el.editSheetCloseBtn.addEventListener("click", closeSheets);
-    el.sheetBackdrop.addEventListener("click", closeSheets);
-
     el.feedBtn.addEventListener("click", (e) => {
       if (el.feedBtn.disabled) return;
       createRipple(el.feedBtn, e);
       markFeed(nowTs(), "normal");
     });
 
-    el.setManualBtn.addEventListener("click", () => handleManualSave(el.manualDate.value));
-    el.setManualBtnSheet.addEventListener("click", () => {
-      el.manualDate.value = el.manualDateSheet.value;
-      handleManualSave(el.manualDateSheet.value);
-    });
+    el.setManualBtn.addEventListener("click", handleManualSave);
 
     el.enableNotifBtn.addEventListener("click", handleEnableNotifications);
-    el.enableNotifBtnSheet.addEventListener("click", handleEnableNotifications);
-
     el.testReminderBtn.addEventListener("click", handleTestReminder);
-    el.testReminderBtnSheet.addEventListener("click", handleTestReminder);
-
     el.exportBtn.addEventListener("click", doExportJson);
-    el.exportBtnSheet.addEventListener("click", doExportJson);
-
     el.exportCsvBtn.addEventListener("click", doExportCsv);
-    el.exportCsvBtnSheet.addEventListener("click", doExportCsv);
+    el.clearBtn.addEventListener("click", handleClear);
 
     el.importBtn.addEventListener("click", () => {
-      el.importFile.value = "";
-      el.importFile.click();
-    });
-    el.importBtnSheet.addEventListener("click", () => {
       el.importFile.value = "";
       el.importFile.click();
     });
@@ -3110,8 +2778,8 @@
       if (file) doImportFile(file);
     });
 
-    el.clearBtn.addEventListener("click", handleClear);
-    el.clearBtnSheet.addEventListener("click", handleClear);
+    el.sheetBackdrop.addEventListener("click", closeSheets);
+    el.editSheetCloseBtn.addEventListener("click", closeSheets);
 
     el.editSaveBtn.addEventListener("click", () => {
       if (editingIndex === null) return;
@@ -3131,8 +2799,8 @@
 
       current[editingIndex] = ts;
       applyHistoryArray(current);
-
       closeSheets();
+
       showToast("הרשומה עודכנה", "בטל", () => {
         setLastTs(snapshot.last);
         setHistory(snapshot.history);
@@ -3153,36 +2821,24 @@
       if (e.key === "Escape") closeSheets();
     });
 
-    window.addEventListener("resize", () => {
-      if (!isMobile()) closeSheets();
-      applyHistoryCollapse();
-      applyViewMode();
-    });
-
     (function init() {
       el.appVersion.textContent = APP_VERSION;
-      el.appVersionSheet.textContent = APP_VERSION;
 
       applyTheme(getThemeChoice());
-      applyViewMode(getViewMode());
+      applyScreen(getScreen());
 
       if (!localStorage.getItem(KEY.interval)) {
         setIntervalMinutes(120);
       }
 
       const d = new Date();
-      const defaultDate = formatDateInputValue(d.getTime());
-      el.manualDate.value = defaultDate;
-      el.manualDateSheet.value = defaultDate;
-
+      el.manualDate.value = formatDateInputValue(d.getTime());
       manualHour = d.getHours();
       manualMin = d.getMinutes();
-      renderManualTimeUI();
 
+      renderManualTimeUI();
       loadInterval();
       initSteppers();
-
-      attachSheetDrag(el.settingsSheet, el.settingsSheetHandle);
       attachSheetDrag(el.editSheet, el.editSheetHandle);
 
       const lastTs = getLastTs();
@@ -3190,8 +2846,6 @@
 
       setupPwaInstall();
       setRingProgress(0);
-      openDesktopSettings(false);
-      applyHistoryCollapse();
       refresh();
       startTicker();
     })();
