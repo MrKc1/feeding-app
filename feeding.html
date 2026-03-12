@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>שעות האכלה</title>
+  <title>שלוק</title>
 
   <link rel="manifest" href="./manifest.json">
   <meta name="theme-color" content="#0b1220">
@@ -100,9 +100,8 @@
       display:flex;
       align-items:flex-start;
       justify-content:center;
-      padding:14px 14px 84px;
+      padding:14px 14px 76px;
       transition: background .25s ease, color .2s ease;
-      overscroll-behavior-y: contain;
       overflow-x:hidden;
     }
 
@@ -119,7 +118,7 @@
 
     .app-shell{
       width:min(760px, 100%);
-      padding-bottom:70px;
+      padding-bottom:60px;
     }
 
     .app-card{
@@ -197,16 +196,18 @@
       flex:1 1 auto;
       position:relative;
       min-height:0;
+      overflow:hidden;
     }
 
     .screen{
       display:none;
-      padding:14px 16px 82px;
+      padding:14px 16px 92px;
       gap:12px;
-      overflow:auto;
-      height:100%;
+      overflow-y:auto;
+      overflow-x:hidden;
+      min-height:0;
       -webkit-overflow-scrolling: touch;
-      overscroll-behavior-y: contain;
+      touch-action: pan-y;
     }
 
     .screen.active{
@@ -1152,18 +1153,19 @@
 
     .bottom-nav{
       position:fixed;
-      left:50%;
-      transform:translateX(-50%);
+      left:5px;
+      right:5px;
       bottom:max(8px, calc(env(safe-area-inset-bottom) + 8px));
-      width:min(700px, calc(100vw - 14px));
+      max-width:700px;
+      margin:0 auto;
       background: var(--nav-bg);
       backdrop-filter: blur(18px);
       border:1px solid var(--border);
       border-radius:22px;
       display:grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap:6px;
-      padding:8px;
+      gap:5px;
+      padding:7px;
       z-index:60;
       box-shadow: 0 14px 34px rgba(0,0,0,.20);
       overflow:hidden;
@@ -1172,13 +1174,13 @@
     .nav-btn{
       border:none;
       border-radius:16px;
-      padding:11px 6px;
+      padding:10px 4px;
       cursor:pointer;
       background: var(--button-bg);
       border:1px solid var(--border);
       color:var(--button-text);
       font-weight:800;
-      font-size:12px;
+      font-size:11px;
       min-width:0;
       transition: transform .08s ease, background .18s ease, color .18s ease, box-shadow .18s ease;
       -webkit-tap-highlight-color: transparent;
@@ -1204,14 +1206,14 @@
       display:flex;
       align-items:center;
       justify-content:center;
-      gap:5px;
+      gap:4px;
       direction:rtl;
       min-width:0;
     }
 
     .nav-icon{
-      width:18px;
-      height:18px;
+      width:17px;
+      height:17px;
       display:inline-flex;
       align-items:center;
       justify-content:center;
@@ -1219,8 +1221,8 @@
     }
 
     .nav-icon svg{
-      width:18px;
-      height:18px;
+      width:17px;
+      height:17px;
       display:block;
       overflow:visible;
     }
@@ -1228,33 +1230,6 @@
     .nav-label{
       line-height:1;
       white-space:nowrap;
-    }
-
-    @media (max-width: 520px){
-      .bottom-nav{
-        width:calc(100vw - 10px);
-        gap:5px;
-        padding:7px;
-      }
-
-      .nav-btn{
-        padding:10px 4px;
-        font-size:11px;
-      }
-
-      .nav-btn-content{
-        gap:4px;
-      }
-
-      .nav-icon{
-        width:17px;
-        height:17px;
-      }
-
-      .nav-icon svg{
-        width:17px;
-        height:17px;
-      }
     }
 
     @keyframes navHomeBounce{
@@ -1521,7 +1496,7 @@
     <div class="app-card">
       <div class="header">
         <div>
-          <h1>שעות האכלה</h1>
+          <h1>שלוק</h1>
           <p class="sub">כפתור אחד, תזכורת ברורה, ופחות טעויות בלילה.</p>
         </div>
 
@@ -1820,7 +1795,7 @@
           <div class="box">
             <div class="label">אודות</div>
             <div class="about-box">
-              <div class="mono">נוצר ע"י קובי | גרסה <span id="appVersion">1.10</span></div>
+              <div class="mono">נוצר ע"י קובי | גרסה <span id="appVersion">1.11</span></div>
             </div>
           </div>
         </section>
@@ -1932,7 +1907,7 @@
 
   <div id="onboardingBackdrop" class="onboarding-backdrop" aria-hidden="true">
     <div class="onboarding-card">
-      <div class="onboarding-title">ברוך הבא לשעות האכלה</div>
+      <div class="onboarding-title">ברוך הבא לשלוק</div>
       <div class="onboarding-text">מסך קצר להתחלה. אחר כך זה נעלם ולא חוזר, אלא אם תאפס נתונים מהדפדפן.</div>
 
       <ul class="onboarding-list">
@@ -1966,7 +1941,7 @@
 
   <script>
     const CONFIG = {
-      appVersion: "1.10",
+      appVersion: "1.11",
       reminderTestDelayMs: 10000,
       feedButtonLockMs: 2000,
       toastDurationMs: 2600,
@@ -2434,7 +2409,7 @@
         const msg = "הגיע הזמן להאכלה הבאה";
         vibrate();
         showToast(`תזכורת: ${msg}`);
-        await sendNotification("תזכורת האכלה", msg);
+        await sendNotification("שלוק", msg);
         setStatus("warn", "זמן האכלה הגיע");
         refresh();
       }, delay);
@@ -3530,7 +3505,7 @@
         window.addEventListener("appinstalled", () => {
           el.installPwaBtn.style.display = "none";
           AppState.deferredInstallPrompt = null;
-          showToast("האפליקציה הותקנה");
+          showToast("שלוק הותקנה");
         });
 
         if (registration.waiting) {
@@ -3628,7 +3603,7 @@
         const ok = await requestNotifyPermission();
         if (ok) {
           showToast("התראות הופעלו");
-          await sendNotification("שעות האכלה", "התראות מופעלות, תקבל תזכורת בזמן.");
+          await sendNotification("שלוק", "התראות מופעלות, תקבל תזכורת בזמן.");
         } else {
           showToast("לא אושרו התראות");
         }
@@ -3643,7 +3618,7 @@
         AppState.reminderTimeout = setTimeout(async () => {
           vibrate();
           showToast("בדיקה: תזכורת הופעלה");
-          if (ok) await sendNotification("בדיקה", "תזכורת בדיקה הופעלה");
+          if (ok) await sendNotification("שלוק", "תזכורת בדיקה הופעלה");
           refresh();
         }, CONFIG.reminderTestDelayMs);
       });
