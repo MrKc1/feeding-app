@@ -1,4 +1,4 @@
-const SW_VERSION = "1.10.0";
+const SW_VERSION = "1.11.0";
 const STATIC_CACHE = `feeding-static-${SW_VERSION}`;
 const RUNTIME_CACHE = `feeding-runtime-${SW_VERSION}`;
 
